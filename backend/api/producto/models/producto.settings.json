@@ -1,0 +1,65 @@
+{
+  "kind": "collectionType",
+  "collectionName": "productos",
+  "info": {
+    "name": "Producto",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titulo": {
+      "type": "string"
+    },
+    "precio": {
+      "type": "integer",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text",
+      "required": true
+    },
+    "imagenes": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": true,
+      "pluginOptions": {}
+    },
+    "caracteristicas": {
+      "type": "component",
+      "repeatable": true,
+      "component": "custom.custom-field"
+    },
+    "categories": {
+      "collection": "category",
+      "via": "productos",
+      "dominant": true
+    },
+    "vendidos": {
+      "type": "integer",
+      "default": 0,
+      "required": true
+    },
+    "precio_oferta": {
+      "type": "integer",
+      "min": 0,
+      "default": 0,
+      "required": true
+    },
+    "cantidad": {
+      "type": "integer",
+      "default": 1,
+      "required": true,
+      "min": 1
+    }
+  }
+}

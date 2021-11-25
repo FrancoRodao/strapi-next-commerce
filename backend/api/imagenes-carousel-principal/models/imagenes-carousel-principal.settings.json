@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "main-carrousel-images",
+  "info": {
+    "name": "Imagenes carousel principal"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "imagenes": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": true,
+      "pluginOptions": {}
+    }
+  }
+}
