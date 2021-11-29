@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
-const Container = styled.div`
+const Container = styled.span`
   height: 100%;
+  min-height: inherit;
   width: 100%;
   display: flex;
   justify-content: center;

@@ -5,7 +5,8 @@ const styledComponentsTheme = {
 
   success: '#28a745',
 
-  navbarHeight: '4.5rem'
+  navbarHeight: '4.5rem',
+  navbarBgColor: '#fff159'
 }
 
 export { styledComponentsTheme }

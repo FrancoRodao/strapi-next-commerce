@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import { numberToArray } from '../../helpers/numberToArray'
-import Loading from '../Loading'
+import { useCartContext } from '../../context/Cart/CartContext'
+import { types } from '../../context/Cart/types'
 
 const Aside = styled.aside`
   border: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
@@ -102,47 +104,62 @@ const Aside = styled.aside`
   }
 `
 
-export default function ProductInfo({ title, price, quantity, selled }) {
-  const data = title && price && quantity && selled
+export default function ProductInfo({ id, title, price, quantity, selled }) {
+  const [selectedQuantity, setSelectedQuantity] = useState(1)
+  const { dispatch } = useCartContext()
+
+  const addProductToCart = () => {
+    dispatch({
+      type: types.AddProduct,
+      payload: { id, title, quantity: selectedQuantity }
+    })
+  }
+
+  const selectQuantity = (e) => setSelectedQuantity(e.target.value)
 
   return (
     <Aside>
-      {data ? (
-        <>
-          <span className="product-info-selled">{selled} Vendidos</span>
-          <h1 className="product-info-title">{title}</h1>
-          <h2 className="product-info-price">$ {price}</h2>
-          <span className="product-info-stock">Stock disponible</span>
-          <div className="product-info-quantity">
-            <span>Cantidad: </span>
-            <select className="product-info-quantity-select">
-              {numberToArray(quantity).map((number) => (
-                <option key={number} value={number}>
-                  {number} {number === 1 ? 'unidad' : 'unidades'}
-                </option>
-              ))}
-            </select>
-            <span className="product-info-quantity-total">
-              ({quantity} disponibles)
-            </span>
-          </div>
-          <Link href="/checkout/product" passHref>
-            <a href="ignore" className="product-info-buynow">
-              Comprar ahora
-            </a>
-          </Link>
-          <button type="button" className="product-info-addtocart">
-            Agregar al carrito
-          </button>
-        </>
-      ) : (
-        <Loading />
-      )}
+      <>
+        <span className="product-info-selled">{selled} Vendidos</span>
+        <h1 className="product-info-title">{title}</h1>
+        <h2 className="product-info-price">$ {price}</h2>
+        <span className="product-info-stock">Stock disponible</span>
+        <div className="product-info-quantity">
+          <span>Cantidad: </span>
+          <select
+            // onClick={selectQuantity}
+            onChange={selectQuantity}
+            className="product-info-quantity-select"
+          >
+            {numberToArray(quantity).map((number) => (
+              <option key={number} value={number}>
+                {number} {number === 1 ? 'unidad' : 'unidades'}
+              </option>
+            ))}
+          </select>
+          <span className="product-info-quantity-total">
+            ({quantity} disponibles)
+          </span>
+        </div>
+        <Link href={`/checkout/${id}`} passHref>
+          <a href="ignore" className="product-info-buynow">
+            Comprar ahora
+          </a>
+        </Link>
+        <button
+          onClick={addProductToCart}
+          type="button"
+          className="product-info-addtocart"
+        >
+          Agregar al carrito
+        </button>
+      </>
     </Aside>
   )
 }
 
 ProductInfo.propTypes = {
+  id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   quantity: PropTypes.number.isRequired,

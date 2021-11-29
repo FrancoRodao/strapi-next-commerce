@@ -5,7 +5,7 @@ import styled from 'styled-components'
 const Header = styled.header`
   width: 100%;
   height: 4.5rem;
-  background-color: #fff159;
+  background-color: ${({ theme }) => `${theme.navbarBgColor}`};
 
   /*ICONS*/
   .bx-user,
@@ -177,7 +177,9 @@ export default function NavBar() {
           </Button>
           <p className="item">Franco</p>
           <Button className="item">
-            <i className="bx bx-cart" />
+            <Link href="/cart" passHref>
+              <i className="bx bx-cart" />
+            </Link>
           </Button>
         </Menu>
       </Nav>

@@ -3,14 +3,17 @@ import { useEffect, useState } from 'react'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import styled from 'styled-components'
 import { getProduct } from '../api/products/getProducts'
+import Loading from '../components/Loading'
 import ProductDescription from '../components/ProductPage/ProductDescription'
 import ProductFeatures from '../components/ProductPage/ProductFeatures'
 import ProductGallery from '../components/ProductPage/ProductGallery'
 import ProductImage from '../components/ProductPage/ProductImage'
 import ProductInfo from '../components/ProductPage/ProductInfo'
+import { CartContext } from '../context/Cart/CartContext'
 
 const MainContainer = styled.div`
   padding: 15px 20px;
+  min-height: 70vh;
 
   .breads {
     display: flex;
@@ -66,24 +69,33 @@ export default function Product({ productId }) {
             breadcumvs
           </div>
 
-          <ProductContainer>
-            <ProductGallery images={data?.imagenes} setImage={setImage} />
+          {data && image ? (
+            <>
+              <ProductContainer>
+                <ProductGallery images={data.imagenes} setImage={setImage} />
 
-            <article className="product">
-              <ProductImage image={image} />
+                <article className="product">
+                  <ProductImage image={image} />
+                  {data.caracteristicas.length > 0 && (
+                    <ProductFeatures features={data.caracteristicas} />
+                  )}
+                  <ProductDescription description={data.descripcion} />
+                </article>
 
-              <ProductFeatures features={data?.caracteristicas} />
-
-              <ProductDescription description={data?.descripcion} />
-            </article>
-
-            <ProductInfo
-              title={data?.titulo}
-              price={data?.precio}
-              quantity={data?.cantidad}
-              selled={data?.vendidos}
-            />
-          </ProductContainer>
+                <CartContext>
+                  <ProductInfo
+                    id={data.id}
+                    title={data.titulo}
+                    price={data.precio}
+                    quantity={data.cantidad}
+                    selled={data.vendidos}
+                  />
+                </CartContext>
+              </ProductContainer>
+            </>
+          ) : (
+            <Loading />
+          )}
         </>
       </MainContainer>
     </>

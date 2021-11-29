@@ -46,18 +46,12 @@ export default function ProductFeatures({ features }) {
       <h1 className="product-features-title">Características del producto</h1>
       <table className="product-features-table">
         <tbody>
-          {features ? (
-            features.map(({ descripcion, titulo, id }) => (
-              <tr key={id} className="product-features-tr">
-                <th className="product-features-item text-left">
-                  {descripcion}
-                </th>
-                <td className="product-features-item">{titulo}</td>
-              </tr>
-            ))
-          ) : (
-            <Loading />
-          )}
+          {features.map(({ descripcion, titulo, id }) => (
+            <tr key={id} className="product-features-tr">
+              <th className="product-features-item text-left">{descripcion}</th>
+              <td className="product-features-item">{titulo}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </Section>

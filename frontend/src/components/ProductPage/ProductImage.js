@@ -12,16 +12,12 @@ const Container = styled.div`
 export default function ProductImage({ image }) {
   return (
     <Container>
-      {image ? (
-        <Image
-          alt={image?.name?.split('.')[0]}
-          src={image.url}
-          layout="fill"
-          objectFit="cover"
-        />
-      ) : (
-        <Loading />
-      )}
+      <Image
+        alt={image?.name?.split('.')[0]}
+        src={image?.url}
+        layout="fill"
+        objectFit="cover"
+      />
     </Container>
   )
 }
