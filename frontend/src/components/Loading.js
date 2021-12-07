@@ -16,7 +16,7 @@ const Container = styled.span`
 
   circle {
     fill: none;
-    stroke: #3483fa;
+    stroke: ${({theme}) => theme.blue};
     stroke-width: 2;
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;

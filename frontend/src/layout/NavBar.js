@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 import Image from 'next/image'
 import Link from 'next/link'
 import styled from 'styled-components'
@@ -137,6 +138,13 @@ export default function NavBar() {
     alert('not implemented')
   }
 
+  let userData = null
+  const userIsLogged = Cookies.get('accessToken')
+  // client side
+  if (typeof window !== 'undefined' && Cookies.get('user')) {
+    userData = JSON.parse(Cookies.get('user'))
+  }
+
   return (
     <Header>
       <Nav>
@@ -173,13 +181,35 @@ export default function NavBar() {
 
         <Menu>
           <Button className="item">
-            <i className="bx bx-user" />
+            {userIsLogged ? (
+              <Link href="/profile" passHref>
+                <a href="ignore">
+                  <i className="bx bx-user" />
+                </a>
+              </Link>
+            ) : (
+              <Link href="/login" passHref>
+                <a href="ignore">
+                  <p>Iniciar sesion</p>
+                </a>
+              </Link>
+            )}
           </Button>
-          <p className="item">Franco</p>
+          {userIsLogged && <p className="item">{userData?.username}</p>}
           <Button className="item">
-            <Link href="/cart" passHref>
-              <i className="bx bx-cart" />
-            </Link>
+            {userIsLogged ? (
+              <Link href="/cart" passHref>
+                <a href="ignore">
+                  <i className="bx bx-cart" />
+                </a>
+              </Link>
+            ) : (
+              <Link href="/login" passHref>
+                <a href="ignore">
+                  <p>Registarse</p>
+                </a>
+              </Link>
+            )}
           </Button>
         </Menu>
       </Nav>

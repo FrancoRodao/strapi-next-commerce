@@ -9,7 +9,6 @@ import ProductFeatures from '../components/ProductPage/ProductFeatures'
 import ProductGallery from '../components/ProductPage/ProductGallery'
 import ProductImage from '../components/ProductPage/ProductImage'
 import ProductInfo from '../components/ProductPage/ProductInfo'
-import { CartContext } from '../context/Cart/CartContext'
 
 const MainContainer = styled.div`
   padding: 15px 20px;
@@ -82,15 +81,13 @@ export default function Product({ productId }) {
                   <ProductDescription description={data.descripcion} />
                 </article>
 
-                <CartContext>
-                  <ProductInfo
-                    id={data.id}
-                    title={data.titulo}
-                    price={data.precio}
-                    quantity={data.cantidad}
-                    selled={data.vendidos}
-                  />
-                </CartContext>
+                <ProductInfo
+                  id={data.id}
+                  title={data.titulo}
+                  price={data.precio}
+                  quantity={data.cantidad}
+                  selled={data.vendidos}
+                />
               </ProductContainer>
             </>
           ) : (
@@ -105,7 +102,6 @@ export default function Product({ productId }) {
 export async function getServerSideProps({ params }) {
   const { productId } = params
   const queryClient = new QueryClient()
-
   await queryClient.prefetchQuery('getProduct', () => getProduct(productId))
 
   return {

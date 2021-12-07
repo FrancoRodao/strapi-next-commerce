@@ -1,34 +1,62 @@
+import { dehydrate, QueryClient, useQuery } from 'react-query'
 import styled from 'styled-components'
+import { getUserCart } from '../api/user'
 import { CartCard } from '../components/Cards/CartCard.js/CartCard'
-import { CartContext, useCartContext } from '../context/Cart/CartContext'
+import Loading from '../components/Loading'
+import { ProtectedRoute } from '../routes/protectedRoute'
 
 const MainContainer = styled.div`
+  background-color: #fff;
+  padding: 30px;
+
   .nav {
     display: flex;
-    justify-content: center;
-    background-color: ${({ theme }) => `${theme.navbarBgColor}`};
-    margin-bottom: 20px;
+    ul {
+      border-bottom: 2px solid black;
+      padding: 20px 50px;
+    }
   }
 `
 
 export default function Cart() {
-  // TODO: FIX IT
-  const state = useCartContext()
+  const { data, isLoading } = useQuery('getUserCart', getUserCart)
+
+  const cart = data?.data
 
   return (
-    <CartContext>
-      <MainContainer>
-        <nav className="nav">
-          <ul>
-            <li>
-              <h3>Carrito (numero de productos)</h3>
-            </li>
-          </ul>
-        </nav>
-        {}
-        <CartCard />
-        <CartCard />
-      </MainContainer>
-    </CartContext>
+    <MainContainer>
+      <nav className="nav">
+        <ul>
+          <li>
+            <h3>Carrito ({cart && cart.length})</h3>
+          </li>
+        </ul>
+      </nav>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        cart.map(({ id, cantidad, producto }) => (
+          <CartCard
+            key={id}
+            cartItemId={id}
+            productId={producto.id}
+            title={producto.titulo}
+            price={producto.precio}
+            cartItemQuantity={cantidad}
+          />
+        ))
+      )}
+    </MainContainer>
   )
 }
+
+export const getServerSideProps = ProtectedRoute(async () => {
+  const queryClient = new QueryClient()
+  await queryClient.prefetchQuery('getUserCart', getUserCart)
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient)
+    }
+  }
+})

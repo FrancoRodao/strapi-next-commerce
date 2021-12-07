@@ -2,9 +2,11 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
+import cookies from 'js-cookie'
+import { useMutation } from 'react-query'
 import { numberToArray } from '../../helpers/numberToArray'
-import { useCartContext } from '../../context/Cart/CartContext'
-import { types } from '../../context/Cart/types'
+import { Auth } from '../../api/auth'
+import { CartAPI } from '../../api/cart'
 
 const Aside = styled.aside`
   border: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
@@ -71,7 +73,7 @@ const Aside = styled.aside`
       width: 100%;
       border: none;
       border-radius: 5px;
-      background-color: #3483fa;
+      background-color: ${({ theme }) => theme.blue};
       color: #fff;
       padding: 15px;
       cursor: pointer;
@@ -90,7 +92,7 @@ const Aside = styled.aside`
       border: none;
       border-radius: 5px;
       background-color: #d9e7fa;
-      color: #3483fa;
+      color: ${({ theme }) => theme.blue};
       padding: 15px;
       cursor: pointer;
       transition: background-color 0.2s;
@@ -106,13 +108,16 @@ const Aside = styled.aside`
 
 export default function ProductInfo({ id, title, price, quantity, selled }) {
   const [selectedQuantity, setSelectedQuantity] = useState(1)
-  const { dispatch } = useCartContext()
+  const mutation = useMutation((newProduct) => CartAPI.addProduct([newProduct]))
 
-  const addProductToCart = () => {
-    dispatch({
-      type: types.AddProduct,
-      payload: { id, title, quantity: selectedQuantity }
-    })
+  const addProductToCart = async () => {
+    const user = await Auth.checkToken(cookies.get('accessToken'))
+    if (user) {
+      mutation.mutate({
+        productId: id,
+        quantity: selectedQuantity
+      })
+    }
   }
 
   const selectQuantity = (e) => setSelectedQuantity(e.target.value)

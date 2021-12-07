@@ -12,21 +12,20 @@ import { useState } from 'react'
 import Layout from '../layout/Layout'
 import { styledComponentsTheme } from '../styles/styledComponentsTheme'
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 3
+    }
+  }
+})
+
 function MyApp({ Component, pageProps }) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false,
-            retry: 3
-          }
-        }
-      })
-  )
+  const [queryClientState] = useState(() => queryClient)
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClientState}>
       <Hydrate state={pageProps.dehydratedState}>
         <ThemeProvider theme={styledComponentsTheme}>
           <Layout>

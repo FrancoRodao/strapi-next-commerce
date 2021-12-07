@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_custom_productos",
+  "info": {
+    "name": "Productos",
+    "icon": "cart-plus",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "producto": {
+      "model": "producto"
+    },
+    "cantidad": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "required": true
+    }
+  }
+}

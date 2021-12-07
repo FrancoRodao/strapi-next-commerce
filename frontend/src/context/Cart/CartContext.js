@@ -17,6 +17,7 @@ const cartReducer = (state, action) => {
       */
 
       if (existProductInCartIndex > -1) {
+        // deep copy
         const cartCopy = JSON.parse(JSON.stringify(state.cart))
         cartCopy[existProductInCartIndex].quantity += action.payload.quantity
 

@@ -1,0 +1,70 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/users/me/cart",
+      "handler": "Cart.getCart",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "description": "description",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/users/me/cart",
+      "handler": "Cart.addToCart",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/me/cart",
+      "handler": "Cart.clearCart",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/me/cart/subtractOne/:cartItemId",
+      "handler": "Cart.subtractOne",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/users/me/cart/:cartItemId",
+      "handler": "Cart.removeItem",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    }
+  ]
+}

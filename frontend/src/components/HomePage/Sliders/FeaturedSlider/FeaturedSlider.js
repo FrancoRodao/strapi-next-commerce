@@ -38,7 +38,6 @@ export default function FeaturedSlider() {
 
 export async function getServerSideProps() {
   const queryClient = new QueryClient()
-
   await queryClient.prefetchQuery('main-carousel-images', getMainCarouselImages)
 
   return {
