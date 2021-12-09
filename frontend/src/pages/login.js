@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation } from 'react-query'
-import cookies from 'js-cookie'
 import { Auth } from '../api/auth'
 import { PublicRoute } from '../routes/publicRoute'
+import { useUserContext } from '../context/User/UserContext'
+import { types } from '../context/User/types'
 
 function Login() {
   const [errorUI, setErrorUI] = useState(null)
 
   const Router = useRouter()
+  const { dispatch } = useUserContext()
 
   const mutation = useMutation(Auth.login, {
     onSuccess: ({ data }) => {
@@ -17,12 +19,12 @@ function Login() {
       }
       delete userData.carrito
       delete userData.role
+      delete userData.provider
 
-      cookies.set('accessToken', data.jwt, {
-        sameSite: 'strict'
-      })
-      cookies.set('user', JSON.stringify(userData), {
-        sameSite: 'strict'
+      dispatch({
+        type: types.signIn,
+        jwt: data.jwt,
+        data: userData
       })
 
       Router.push('/')

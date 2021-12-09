@@ -3,7 +3,13 @@ import { Auth } from '../api/auth'
 const ProtectedRoute = (getServerSideProps) => async (context) => {
   if (!getServerSideProps) {
     // eslint-disable-next-line no-param-reassign
-    getServerSideProps = () => ({})
+    getServerSideProps = () => ({
+      /* 
+        It must return props even if they are empty, 
+        if not nextjs gives an error 
+      */
+      props: {}
+    })
   }
 
   const { req } = context

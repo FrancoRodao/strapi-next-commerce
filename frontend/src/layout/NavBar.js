@@ -1,7 +1,7 @@
-import Cookies from 'js-cookie'
 import Image from 'next/image'
 import Link from 'next/link'
 import styled from 'styled-components'
+import { useUserContext } from '../context/User/UserContext'
 
 const Header = styled.header`
   width: 100%;
@@ -89,6 +89,11 @@ const Button = styled.button`
   border: transparent;
   background-color: transparent;
   cursor: pointer;
+
+  .item {
+    margin-right: 10px;
+    cursor: pointer;
+  }
 `
 
 const SearchForm = styled.form`
@@ -133,16 +138,12 @@ const Menu = styled.div`
 `
 
 export default function NavBar() {
+  const { state } = useUserContext()
+  const { isAuthenticated, data: userData } = state
+
   const handleSubmit = (e) => {
     e.preventDefault()
     alert('not implemented')
-  }
-
-  let userData = null
-  const userIsLogged = Cookies.get('accessToken')
-  // client side
-  if (typeof window !== 'undefined' && Cookies.get('user')) {
-    userData = JSON.parse(Cookies.get('user'))
   }
 
   return (
@@ -181,7 +182,7 @@ export default function NavBar() {
 
         <Menu>
           <Button className="item">
-            {userIsLogged ? (
+            {isAuthenticated ? (
               <Link href="/profile" passHref>
                 <a href="ignore">
                   <i className="bx bx-user" />
@@ -195,9 +196,10 @@ export default function NavBar() {
               </Link>
             )}
           </Button>
-          {userIsLogged && <p className="item">{userData?.username}</p>}
+          <p className="item">{userData?.username}</p>
+
           <Button className="item">
-            {userIsLogged ? (
+            {isAuthenticated ? (
               <Link href="/cart" passHref>
                 <a href="ignore">
                   <i className="bx bx-cart" />

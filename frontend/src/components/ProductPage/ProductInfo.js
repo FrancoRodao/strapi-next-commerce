@@ -2,11 +2,10 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
-import cookies from 'js-cookie'
 import { useMutation } from 'react-query'
 import { numberToArray } from '../../helpers/numberToArray'
-import { Auth } from '../../api/auth'
 import { CartAPI } from '../../api/cart'
+import { useUserContext } from '../../context/User/UserContext'
 
 const Aside = styled.aside`
   border: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
@@ -107,12 +106,12 @@ const Aside = styled.aside`
 `
 
 export default function ProductInfo({ id, title, price, quantity, selled }) {
+  const { state } = useUserContext()
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const mutation = useMutation((newProduct) => CartAPI.addProduct([newProduct]))
 
   const addProductToCart = async () => {
-    const user = await Auth.checkToken(cookies.get('accessToken'))
-    if (user) {
+    if (state.isAuthenticated) {
       mutation.mutate({
         productId: id,
         quantity: selectedQuantity
@@ -132,7 +131,6 @@ export default function ProductInfo({ id, title, price, quantity, selled }) {
         <div className="product-info-quantity">
           <span>Cantidad: </span>
           <select
-            // onClick={selectQuantity}
             onChange={selectQuantity}
             className="product-info-quantity-select"
           >

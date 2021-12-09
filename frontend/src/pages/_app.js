@@ -11,6 +11,9 @@ import { useState } from 'react'
 
 import Layout from '../layout/Layout'
 import { styledComponentsTheme } from '../styles/styledComponentsTheme'
+import { UserContext, userReducer } from '../context/User/UserContext'
+import { Auth } from '../api/auth'
+import { types } from '../context/User/types'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,26 +24,61 @@ const queryClient = new QueryClient({
   }
 })
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps, userContextInitialState }) {
   const [queryClientState] = useState(() => queryClient)
 
   return (
     <QueryClientProvider client={queryClientState}>
       <Hydrate state={pageProps.dehydratedState}>
         <ThemeProvider theme={styledComponentsTheme}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <UserContext initialState={userContextInitialState}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </UserContext>
         </ThemeProvider>
       </Hydrate>
     </QueryClientProvider>
   )
 }
 
+/*
+  We need to get the initial state of the user context on the server; 
+  otherwise when getting the status on the client side 
+  there is a little lag when loading and for example 
+  the navbar component renders twice, once to show that the user is not 
+  authenticated (has not yet loaded the status on the client) 
+  and another when it finishes loading the status that shows 
+  that it was really already authenticated
+*/
+MyApp.getInitialProps = async (appContext) =>
+  Auth.checkToken(appContext.ctx.req.cookies.accessToken)
+    .then((res) => {
+      const userData = res.data
+      delete userData.carrito
+      delete userData.role
+      delete userData.provider
+
+      return {
+        userContextInitialState: userReducer(
+          {},
+          {
+            type: types.signIn,
+            data: userData
+          }
+        )
+      }
+    })
+    .catch(() => ({
+      userContextInitialState: userReducer({}, { type: types.logout })
+    }))
+
 export default MyApp
 
 MyApp.propTypes = {
   Component: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  pageProps: PropTypes.object.isRequired
+  pageProps: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  userContextInitialState: PropTypes.object.isRequired
 }
