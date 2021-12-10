@@ -1,11 +1,12 @@
 import styled from 'styled-components'
 import ProductsInfo from '../../components/CheckoutPage/ProductsInfo'
+import { ProtectedRoute } from '../../routes/protectedRoute'
 
 const Container = styled.div`
   display: flex;
 
   .bx-map {
-    color: ${({theme}) => theme.blue};
+    color: ${({ theme }) => theme.blue};
     font-size: 26px;
     background-color: #fff;
     border-radius: 100%;
@@ -50,7 +51,7 @@ const Container = styled.div`
       &-change {
         margin-left: auto;
         border: none;
-        color: ${({theme}) => theme.blue};
+        color: ${({ theme }) => theme.blue};
         background-color: transparent;
         cursor: pointer;
         font-size: 14px;
@@ -66,7 +67,7 @@ const Container = styled.div`
     padding: 12px 30px;
     background-color: #fff;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
-    border-left: 5px solid ${({theme}) => theme.blue};
+    border-left: 5px solid ${({ theme }) => theme.blue};
     border-radius: 5px;
 
     &-radio-container {
@@ -102,7 +103,7 @@ const Container = styled.div`
       margin-left: auto;
       border: none;
       border-radius: 5px;
-      background-color: ${({theme}) => `1px solid ${theme.blue}`};
+      background-color: ${({ theme }) => `1px solid ${theme.blue}`};
       color: #fff;
       padding: 15px;
       cursor: pointer;
@@ -178,3 +179,5 @@ export default function CheckoutProduct() {
     </Container>
   )
 }
+
+export const getServerSideProps = ProtectedRoute()

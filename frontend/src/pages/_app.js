@@ -75,11 +75,8 @@ MyApp.getInitialProps = async (appContext) => {
       }
     })
     .catch(() => ({
-      userContextInitialState: userReducer(
-        {},
-        { type: types.logout },
-        ...appProps
-      )
+      userContextInitialState: userReducer({}, { type: types.logout }),
+      ...appProps
     }))
 }
 
