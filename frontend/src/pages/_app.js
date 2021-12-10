@@ -4,6 +4,7 @@ import '../styles/fonts/index.css'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 
+import App from 'next/app'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
@@ -51,8 +52,11 @@ function MyApp({ Component, pageProps, userContextInitialState }) {
   and another when it finishes loading the status that shows 
   that it was really already authenticated
 */
-MyApp.getInitialProps = async (appContext) =>
-  Auth.checkToken(appContext.ctx.req.cookies.accessToken)
+MyApp.getInitialProps = async (appContext) => {
+  const appProps = await App.getInitialProps(appContext)
+
+  // TODO: REFACTOR RETURN
+  return Auth.checkToken(appContext.ctx.req.cookies.accessToken)
     .then((res) => {
       const userData = res.data
       delete userData.carrito
@@ -66,12 +70,18 @@ MyApp.getInitialProps = async (appContext) =>
             type: types.signIn,
             data: userData
           }
-        )
+        ),
+        ...appProps
       }
     })
     .catch(() => ({
-      userContextInitialState: userReducer({}, { type: types.logout })
+      userContextInitialState: userReducer(
+        {},
+        { type: types.logout },
+        ...appProps
+      )
     }))
+}
 
 export default MyApp
 

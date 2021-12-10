@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useMutation } from 'react-query'
 import styled from 'styled-components'
 import { CartAPI } from '../../../api/cart'
-import { sliceTitle } from '../../../helpers/sliceTitle'
 import Loading from '../../Loading'
 
 const Container = styled.article`
@@ -18,6 +17,13 @@ const Container = styled.article`
   .title {
     font-size: 20px;
     width: 55%;
+
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
   }
 
   .quantity {
@@ -92,7 +98,7 @@ export function CartCard({
   return (
     <Container>
       <div className="info">
-        <h1 className="title">{sliceTitle(title, 70)}</h1>
+        <h1 className="title">{title}</h1>
         <div className="quantity-container">
           <div className="quantity">
             {isLoading ? (

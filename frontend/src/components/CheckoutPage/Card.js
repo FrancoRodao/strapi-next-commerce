@@ -2,7 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { sliceTitle } from '../../helpers/sliceTitle'
 
 const CardContainer = styled.div`
   position: relative;
@@ -49,13 +48,18 @@ const CardContainer = styled.div`
       color: black;
       font-weight: 300;
       font-size: 16px;
-      word-wrap: break-word;
       overflow: auto hidden;
+
+      display: -webkit-box;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      word-break: break-word;
     }
 
     &-quantity {
       flex-shrink: 0;
-      margin-left: 5px;
+      margin-left: 15px;
     }
   }
 `
@@ -76,7 +80,7 @@ export function Card({ imageSrc, imageAlt, title, quantity }) {
               layout="fill"
             />{' '}
           </div>
-          <h3 className="product-card-title">{sliceTitle(title, 76)}</h3>
+          <h3 className="product-card-title">{title}</h3>
           <p className="product-card-quantity">Cantidad: {quantity} </p>
         </a>
       </Link>
