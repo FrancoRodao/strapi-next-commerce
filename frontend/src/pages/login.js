@@ -8,7 +8,7 @@ import { PublicRoute } from '../routes/publicRoute'
 import { useUserContext } from '../context/User/UserContext'
 import { types } from '../context/User/types'
 
-const CardContainer = styled.div`
+export const LoginContainer = styled.div`
   display: flex;
   margin: auto;
   min-height: inherit;
@@ -133,46 +133,44 @@ function Login() {
   }
 
   return (
-    <>
+    <LoginContainer>
       {errorUI}
-      <CardContainer>
-        <div>
-          <h1 className="title">
-            ¡Hola! Ingresa tus credenciales para iniciar sesion
-          </h1>
-          <form className="form" onSubmit={login}>
-            <p className="form__title">Usuario</p>
-            <input
-              name="username"
-              value={form.username}
-              type="text"
-              onChange={changeField}
-              className="form__input"
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
-              required
-            />
-            <p className="form__title">Contraseña</p>
-            <input
-              name="password"
-              value={form.password}
-              type="password"
-              onChange={changeField}
-              className="form__input"
-              required
-            />
-            <button className="form__submit-btn" type="submit">
-              Ingresar
-            </button>
-          </form>
-          <Link href="/register">
-            <a className="register-btn" href="ignore">
-              Crear cuenta
-            </a>
-          </Link>
-        </div>
-      </CardContainer>
-    </>
+      <div>
+        <h1 className="title">
+          ¡Hola! Ingresa tus credenciales para iniciar sesion
+        </h1>
+        <form className="form" onSubmit={login}>
+          <p className="form__title">Usuario</p>
+          <input
+            name="username"
+            value={form.username}
+            type="text"
+            onChange={changeField}
+            className="form__input"
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+            required
+          />
+          <p className="form__title">Contraseña</p>
+          <input
+            name="password"
+            value={form.password}
+            type="password"
+            onChange={changeField}
+            className="form__input"
+            required
+          />
+          <button className="form__submit-btn" type="submit">
+            Ingresar
+          </button>
+        </form>
+        <Link href="/signup">
+          <a className="register-btn" href="ignore">
+            Crear cuenta
+          </a>
+        </Link>
+      </div>
+    </LoginContainer>
   )
 }
 

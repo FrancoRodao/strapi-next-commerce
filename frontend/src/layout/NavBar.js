@@ -206,7 +206,7 @@ export default function NavBar() {
                 </a>
               </Link>
             ) : (
-              <Link href="/login" passHref>
+              <Link href="/signup" passHref>
                 <a href="ignore">
                   <p>Registarse</p>
                 </a>
