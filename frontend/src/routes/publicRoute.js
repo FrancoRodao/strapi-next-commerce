@@ -1,4 +1,4 @@
-import { Auth } from '../api/auth'
+import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 
 const PublicRoute = (getServerSideProps) => async (context) => {
   if (!getServerSideProps) {
@@ -12,11 +12,7 @@ const PublicRoute = (getServerSideProps) => async (context) => {
     })
   }
 
-  const { req } = context
-
-  const isAuthenticated = await Auth.checkToken(req.cookies.accessToken).catch(
-    () => null
-  )
+  const isAuthenticated = userIsAuthenticated(context)
 
   // can not access
   if (isAuthenticated) {

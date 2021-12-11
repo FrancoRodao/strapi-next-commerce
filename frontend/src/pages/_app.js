@@ -13,8 +13,8 @@ import { useState } from 'react'
 import Layout from '../layout/Layout'
 import { styledComponentsTheme } from '../styles/styledComponentsTheme'
 import { UserContext, userReducer } from '../context/User/UserContext'
-import { Auth } from '../api/auth'
 import { types } from '../context/User/types'
+import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,30 +54,25 @@ function MyApp({ Component, pageProps, userContextInitialState }) {
 */
 MyApp.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext)
+  const isAuthenticated = userIsAuthenticated(appContext)
 
-  // TODO: REFACTOR RETURN
-  return Auth.checkToken(appContext.ctx.req.cookies.accessToken)
-    .then((res) => {
-      const userData = res.data
-      delete userData.carrito
-      delete userData.role
-      delete userData.provider
-
-      return {
-        userContextInitialState: userReducer(
-          {},
-          {
-            type: types.signIn,
-            data: userData
-          }
-        ),
-        ...appProps
-      }
-    })
-    .catch(() => ({
-      userContextInitialState: userReducer({}, { type: types.logout }),
+  if (isAuthenticated) {
+    return {
+      userContextInitialState: userReducer(
+        {},
+        {
+          type: types.init,
+          data: JSON.parse(isAuthenticated.user)
+        }
+      ),
       ...appProps
-    }))
+    }
+  }
+
+  return {
+    userContextInitialState: userReducer({}, { type: types.logout }),
+    ...appProps
+  }
 }
 
 export default MyApp

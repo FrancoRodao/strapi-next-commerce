@@ -7,7 +7,7 @@ const Context = createContext()
 // eslint-disable-next-line consistent-return
 export const userReducer = (state, action) => {
   switch (action.type) {
-    case types.checkUserisAuthenticated: {
+    case types.init: {
       return {
         ...state,
         data: action.data,
