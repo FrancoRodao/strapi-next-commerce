@@ -31,13 +31,6 @@ export function PhoneCards({ queryData, placeHoldersCards }) {
 }
 
 function PhoneCard({ id, title, price, image, offerPrice }) {
-  const bodyCardProps = {
-    title,
-    price,
-    image,
-    offerPrice
-  }
-
   // offer price is optional
   const data = id && title && price && image
 
@@ -45,8 +38,16 @@ function PhoneCard({ id, title, price, image, offerPrice }) {
     <Link href={`/${id}`} passHref>
       <a style={{ width: '100%' }} href="passHref">
         <PhoneCardContainer>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          {data ? <PhoneCardBody {...bodyCardProps} /> : <Loading />}
+          {data ? (
+            <PhoneCardBody
+              title={title}
+              price={price}
+              image={image}
+              offerPrice={offerPrice}
+            />
+          ) : (
+            <Loading />
+          )}
         </PhoneCardContainer>
       </a>
     </Link>

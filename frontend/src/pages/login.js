@@ -1,10 +1,84 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation } from 'react-query'
+import styled from 'styled-components'
+import Link from 'next/link'
 import { Auth } from '../api/auth'
 import { PublicRoute } from '../routes/publicRoute'
 import { useUserContext } from '../context/User/UserContext'
 import { types } from '../context/User/types'
+
+const CardContainer = styled.div`
+  display: flex;
+  margin: auto;
+  min-height: inherit;
+  max-height: 50%;
+
+  .title {
+    font-size: 20px;
+    margin: 20px 0px;
+  }
+
+  div {
+    padding: 15px 55px;
+    width: 100%;
+    max-width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #fff;
+    margin: 50px auto;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+
+    &__input {
+      padding: 10px;
+      border: 1px solid gray;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+
+    &__title {
+      margin-bottom: 5px;
+    }
+
+    &__submit-btn {
+      border-color: transparent;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: ${({ theme }) => theme.blue};
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 15px 0;
+      transition: background-color 0.3s;
+
+      
+      &:hover {
+        background-color: #3877d6;
+      }
+    }
+  }
+
+  .register-btn {
+    text-align: center;
+    color: ${({ theme }) => theme.blue};
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding: 15px;
+    transition: background-color 0.3s;
+    
+    &:hover {
+        background-color: #ceddf2;
+      }
+    }
+  }
+`
 
 function Login() {
   const [errorUI, setErrorUI] = useState(null)
@@ -61,21 +135,43 @@ function Login() {
   return (
     <>
       {errorUI}
-      <form onSubmit={login}>
-        <input
-          name="username"
-          value={form.username}
-          type="text"
-          onChange={changeField}
-        />
-        <input
-          name="password"
-          value={form.password}
-          type="password"
-          onChange={changeField}
-        />
-        <button type="submit"> Login </button>
-      </form>
+      <CardContainer>
+        <div>
+          <h1 className="title">
+            ¡Hola! Ingresa tus credenciales para iniciar sesion
+          </h1>
+          <form className="form" onSubmit={login}>
+            <p className="form__title">Usuario</p>
+            <input
+              name="username"
+              value={form.username}
+              type="text"
+              onChange={changeField}
+              className="form__input"
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
+              required
+            />
+            <p className="form__title">Contraseña</p>
+            <input
+              name="password"
+              value={form.password}
+              type="password"
+              onChange={changeField}
+              className="form__input"
+              required
+            />
+            <button className="form__submit-btn" type="submit">
+              Ingresar
+            </button>
+          </form>
+          <Link href="/register">
+            <a className="register-btn" href="ignore">
+              Crear cuenta
+            </a>
+          </Link>
+        </div>
+      </CardContainer>
     </>
   )
 }

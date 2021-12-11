@@ -76,7 +76,7 @@ const Aside = styled.aside`
       color: #fff;
       padding: 15px;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: background-color 0.3s;
       font-weight: 600;
       font-size: 15px;
       margin-bottom: 10px;
@@ -94,7 +94,7 @@ const Aside = styled.aside`
       color: ${({ theme }) => theme.blue};
       padding: 15px;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: background-color 0.3s;
       font-weight: 600;
       font-size: 15px;
 
