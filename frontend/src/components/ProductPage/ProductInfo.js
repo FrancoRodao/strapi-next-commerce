@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-query'
+import { useRouter } from 'next/router'
 import { numberToArray } from '../../helpers/numberToArray'
 import { CartAPI } from '../../api/cart'
 import { useUserContext } from '../../context/User/UserContext'
@@ -107,8 +108,17 @@ const Aside = styled.aside`
 
 export default function ProductInfo({ id, title, price, quantity, selled }) {
   const { state } = useUserContext()
+  const router = useRouter()
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const mutation = useMutation((newProduct) => CartAPI.addProduct([newProduct]))
+
+  const buyProduct = () => {
+    if (state.isAuthenticated) {
+      router.push(`/checkout/${id}`)
+      return
+    }
+    router.push('/login')
+  }
 
   const addProductToCart = async () => {
     if (state.isAuthenticated) {
@@ -116,7 +126,10 @@ export default function ProductInfo({ id, title, price, quantity, selled }) {
         productId: id,
         quantity: selectedQuantity
       })
+      return
     }
+
+    router.push('/login')
   }
 
   const selectQuantity = (e) => setSelectedQuantity(e.target.value)
@@ -144,11 +157,13 @@ export default function ProductInfo({ id, title, price, quantity, selled }) {
             ({quantity} disponibles)
           </span>
         </div>
-        <Link href={`/checkout/${id}`} passHref>
-          <a href="ignore" className="product-info-buynow">
-            Comprar ahora
-          </a>
-        </Link>
+        <button
+          onClick={buyProduct}
+          type="button"
+          className="product-info-buynow"
+        >
+          Comprar ahora
+        </button>
         <button
           onClick={addProductToCart}
           type="button"
