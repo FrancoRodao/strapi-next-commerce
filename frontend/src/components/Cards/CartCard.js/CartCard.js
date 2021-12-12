@@ -28,20 +28,31 @@ const Container = styled.article`
 
   .quantity {
     &-container {
+      display: flex;
       width: 30%;
     }
+
     width: fit-content;
     display: flex;
     align-items: center;
     border: 1px solid ${({ theme }) => theme.borderGreylight};
     border-radius: 5px;
 
+    &-loading {
+      font-size: 9px;
+      margin-left: 10px;
+    }
+
+    &--disabled {
+      opacity: 0.5;
+    }
+
     &-btn {
       font-size: 25px;
       cursor: pointer;
       padding: 5px;
       border-color: transparent;
-      background-color: #fff;
+      background-color: inherit;
       color: ${({ theme }) => theme.blue};
       margin: 0px 5px;
     }
@@ -57,6 +68,10 @@ const Container = styled.article`
 
   .price {
     font-weight: 500;
+  }
+
+  .btn-disabled {
+    color: ${({ theme }) => theme.borderGreylight};
   }
 `
 
@@ -100,31 +115,33 @@ export function CartCard({
       <div className="info">
         <h1 className="title">{title}</h1>
         <div className="quantity-container">
-          <div className="quantity">
-            {isLoading ? (
-              <Loading />
-            ) : (
-              <>
-                <button
-                  onClick={handleSubtractCartItem}
-                  className="quantity-btn subtract"
-                  type="button"
-                >
-                  -
-                </button>
-                <p className="quantity-num">{quantity}</p>
-                <button
-                  onClick={handleSumCartItem}
-                  className="quantity-btn"
-                  type="button"
-                >
-                  +
-                </button>
-              </>
-            )}
+          <div className={`quantity ${isLoading ? 'quantity--disabled' : ''}`}>
+            <button
+              onClick={handleSubtractCartItem}
+              className={`quantity-btn subtract ${
+                quantity === 1 ? 'btn-disabled' : ''
+              }`}
+              type="button"
+              disabled={quantity === 1}
+            >
+              -
+            </button>
+            <p className="quantity-num">{quantity}</p>
+            <button
+              onClick={handleSumCartItem}
+              className="quantity-btn"
+              type="button"
+            >
+              +
+            </button>
           </div>
+          {isLoading && (
+            <div className="quantity-loading">
+              <Loading />
+            </div>
+          )}
         </div>
-        <h2 className="price">$ {price}</h2>
+        <h2 className="price">$ {price * quantity}</h2>
       </div>
     </Container>
   )

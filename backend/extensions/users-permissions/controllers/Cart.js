@@ -112,12 +112,12 @@ module.exports = {
     const userId = ctx.state.user.id
 
     const { cartItemId } = ctx.params
-    if (!cartItemId) {
+    if (!cartItemId || !Number(cartItemId)) {
       ctx.response.status = 400
       return ctx.send({
         statusCode: 400,
         error: 'Bad request',
-        message: 'Error: Cart item id must be an number'
+        message: 'Error: Cart item id must be a number'
       })
     }
 
@@ -126,12 +126,30 @@ module.exports = {
       id: userId
     })
 
+    let error = false
     const cartUpdated = userInfo.carrito.map((item) => {
       if (item.id === Number(cartItemId)) {
+        // The quantity of the item cannot reach 0 or negative number
+        if (item.cantidad === 1) {
+          error = true
+          return
+        }
+
         item.cantidad -= 1
       }
+
       return item
     })
+
+    if (error) {
+      ctx.response.status = 400
+      return ctx.send({
+        statusCode: 400,
+        error: 'Bad request',
+        message:
+          'Error: The quantity of the item cannot reach 0 or negative number'
+      })
+    }
 
     const userUpdated = await query.update(
       {
