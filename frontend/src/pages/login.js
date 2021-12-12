@@ -19,7 +19,7 @@ export const LoginContainer = styled.div`
     margin: 20px 0px;
   }
 
-  div {
+  .container {
     padding: 15px 55px;
     width: 100%;
     max-width: 40%;
@@ -36,9 +36,15 @@ export const LoginContainer = styled.div`
 
     &__input {
       padding: 10px;
-      border: 1px solid gray;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.25);      
       border-radius: 5px;
       margin-bottom: 15px;
+      outline: none;
+      border-color: transparent;
+
+      &:focus{
+        box-shadow: 0 0 0 .125em #3483fa;
+      }
     }
 
     &__title {
@@ -135,7 +141,7 @@ function Login() {
   return (
     <LoginContainer>
       {errorUI}
-      <div>
+      <div className="container">
         <h1 className="title">
           ¡Hola! Ingresa tus credenciales para iniciar sesion
         </h1>

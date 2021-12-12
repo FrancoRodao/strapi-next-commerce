@@ -63,7 +63,7 @@ export default function Signup() {
   return (
     <LoginContainer>
       {errorUI}
-      <div>
+      <div className="container">
         <h1 className="title">
           ¡Hola! Completa el formulario para el registro
         </h1>
