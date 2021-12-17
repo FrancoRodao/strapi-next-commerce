@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import Link from 'next/link'
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'

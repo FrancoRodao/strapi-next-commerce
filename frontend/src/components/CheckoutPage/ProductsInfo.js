@@ -3,7 +3,7 @@ import { Card } from './Card'
 
 const ProductContainer = styled.div`
   width: 40%;
-  background-color: #f5f5f5;
+  background-color: ${({ theme }) => theme.lightGrey};
   min-height: 100vh;
 
   .product {

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import styled from 'styled-components'
+import { types } from '../context/User/types'
 import { useUserContext } from '../context/User/UserContext'
 
 const Header = styled.header`
@@ -9,12 +10,13 @@ const Header = styled.header`
   background-color: ${({ theme }) => `${theme.navbarBgColor}`};
 
   /*ICONS*/
-  .bx-user,
   .bx-cart {
-    font-size: 19px !important;
+    margin-top: 3px;
   }
+
   .bx-search {
     font-size: 21px !important;
+    margin-top: 2px;
   }
 `
 
@@ -36,6 +38,7 @@ const Nav = styled.nav`
       height: 100%;
       width: 105px;
       clip-path: circle(50%);
+      user-select: none;
 
       &:hover {
         animation: shake 5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
@@ -90,6 +93,10 @@ const Button = styled.button`
   background-color: transparent;
   cursor: pointer;
 
+  &__search {
+    margin-top: 2px;
+  }
+
   .item {
     margin-right: 10px;
     cursor: pointer;
@@ -121,7 +128,7 @@ const SearchForm = styled.form`
     &::before {
       content: '';
       border-left: 1px solid gray;
-      margin-right: 3px;
+      margin-right: 8px;
       height: 25px;
     }
   }
@@ -131,19 +138,112 @@ const Menu = styled.div`
   display: flex;
   align-items: center;
 
-  .item {
-    margin-right: 10px;
+  .menu__item {
+    font-size: 18px;
+    margin-left: 8px;
     cursor: pointer;
+
+    &--login {
+      font-size: 16px;
+    }
+
+    &--cart {
+      margin-left: 20px;
+    }
+
+    &--profileinfo {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+
+      :hover {
+        background-color: ${({ theme }) => theme.lightGrey};
+      }
+    }
+
+    &--button {
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+  }
+
+  .menu__profileinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    top: 45px;
+    left: -60%;
+    width: 200%;
+    /* min-width: 200px; */
+    background-color: #fff;
+    z-index: 9999;
+    transition: visibility 0.2s, opacity 0.2s;
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      right: 32px;
+      bottom: 100%;
+      pointer-events: none;
+      border-bottom: 14px solid #fff;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+    }
+  }
+
+  .menu__profile {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 45px;
+    cursor: pointer;
+
+    &:after {
+      content: '';
+      border-style: solid;
+      border-width: 2px 2px 0 0;
+      height: 6px;
+      width: 6px;
+      margin-left: 5px;
+      color: rgba(0, 0, 0, 0.3);
+      transform: rotate(-45deg);
+      position: relative;
+      transition: transform 0.3s;
+    }
+
+    &:hover {
+      &:after {
+        transform: rotate(135deg);
+      }
+    }
+
+    &:hover .menu__profileinfo {
+      visibility: visible;
+      opacity: 1;
+    }
   }
 `
 
 export default function NavBar() {
-  const { state } = useUserContext()
+  const { state, dispatch } = useUserContext()
   const { isAuthenticated, data: userData } = state
 
   const handleSubmit = (e) => {
     e.preventDefault()
     alert('not implemented')
+  }
+
+  const logout = () => {
+    dispatch({
+      type: types.logout
+    })
   }
 
   return (
@@ -152,7 +252,6 @@ export default function NavBar() {
         <div className="logo">
           <Link href="/" passHref>
             <a href="ignore" className="logo-img-container">
-              {' '}
               <Image
                 className="img"
                 alt="logo"
@@ -181,34 +280,42 @@ export default function NavBar() {
         </SearchForm>
 
         <Menu>
-          <Button className="item">
-            {isAuthenticated ? (
-              <Link href="/profile" passHref>
-                <a href="ignore">
-                  <i className="bx bx-user" />
-                </a>
-              </Link>
-            ) : (
-              <Link href="/login" passHref>
-                <a href="ignore">
-                  <p>Iniciar sesion</p>
-                </a>
-              </Link>
-            )}
-          </Button>
-          <p className="item">{userData?.username}</p>
+          {isAuthenticated ? (
+            <div className="menu__profile">
+              <i className="menu__item bx bx-user" />
+              <p className="menu__item">{userData?.username}</p>
+              <div className="menu__profileinfo">
+                <Link href="/profile" passHref>
+                  <a className="menu__item--profileinfo" href="profile">
+                    Perfil
+                  </a>
+                </Link>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="menu__item--profileinfo menu__item--button"
+                >
+                  Salir
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Link href="/login" passHref>
+              <a href="ignore">
+                <p className="menu__item menu__item--login">Iniciar sesion</p>
+              </a>
+            </Link>
+          )}
 
-          <Button className="item">
+          <Button className="">
             {isAuthenticated ? (
               <Link href="/cart" passHref>
-                <a href="ignore">
-                  <i className="bx bx-cart" />
-                </a>
+                <i className="menu__item menu__item--cart bx bx-cart" />
               </Link>
             ) : (
               <Link href="/signup" passHref>
                 <a href="ignore">
-                  <p>Registarse</p>
+                  <p className="menu__item menu__item--login">Registarse</p>
                 </a>
               </Link>
             )}

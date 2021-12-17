@@ -36,7 +36,7 @@ const Container = styled.div`
       &-select-container {
         margin-bottom: 45px;
         padding: 12px 30px;
-        background-color: #f5f5f5;
+        background-color: ${({ theme }) => theme.lightGrey};
       }
 
       &-select {
