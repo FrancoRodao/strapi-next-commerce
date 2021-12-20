@@ -3,27 +3,36 @@ import Cookies from 'js-cookie'
 /**
  *
  * @param {object} serverSideContext context from getServerSideProps, getInitialProps or null if is client side
- * @returns {(object | null)} object with user data and accesstoken or null
+ * @returns {({accessToken, user, isAuthenticated})} object with userdata, accesstoken and isAuthenticated
  */
 function userIsAuthenticated(serverSideContext = null) {
   let accessTokenValue
   let userValue
 
   /* Client side case */
-  if (!serverSideContext) {
+  if (!serverSideContext && typeof window !== 'undefined') {
     accessTokenValue = Cookies.get('accessToken')
     userValue = Cookies.get('user')
+  } else if (!serverSideContext && typeof window === 'undefined') {
+    /* still on the server side */
+    return {
+      accessToken: null,
+      user: null,
+      isAuthenticated: false
+    }
   }
 
   /* 
-    in case of component.getInitialProps context 
+    in case of getInitialProps context 
   */
-  if (serverSideContext.ctx) {
+  if (serverSideContext?.ctx) {
     const { accessToken, user } = serverSideContext.ctx.req.cookies
     accessTokenValue = accessToken
     userValue = user
-  } else {
-    /* in case of ServerSideProps context */
+  }
+
+  /* in case of ServerSideProps context */
+  if (serverSideContext?.req) {
     const { accessToken, user } = serverSideContext.req.cookies
     accessTokenValue = accessToken
     userValue = user
@@ -32,11 +41,16 @@ function userIsAuthenticated(serverSideContext = null) {
   if (accessTokenValue && userValue) {
     return {
       accessToken: accessTokenValue,
-      user: userValue
+      user: userValue,
+      isAuthenticated: true
     }
   }
 
-  return null
+  return {
+    accessToken: null,
+    user: null,
+    isAuthenticated: false
+  }
 }
 
 export { userIsAuthenticated }

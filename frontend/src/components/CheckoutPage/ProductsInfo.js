@@ -1,7 +1,8 @@
 import styled from 'styled-components'
+import { getTotalPriceCart } from '../../helpers/getTotalPriceCart'
 import { Card } from './Card'
 
-const ProductContainer = styled.div`
+const Container = styled.div`
   width: 40%;
   background-color: ${({ theme }) => theme.lightGrey};
   min-height: 100vh;
@@ -23,79 +24,66 @@ const ProductContainer = styled.div`
       padding: 0px 5px;
     }
   }
+
+  .total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 30px 0px;
+    border-top: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
+
+    &-content {
+      font-size: 21px;
+      font-weight: 500;
+    }
+  }
 `
 
-export default function ProductsInfo() {
+/* 
+  The quantity that comes per URL (query parameters) cannot be greater
+  than the quantity that actually exists. 
+*/
+const selectedQuantityValidation = (product) =>
+  product.selectedQuantity > product.cantidad
+    ? product.cantidad
+    : product.selectedQuantity
+
+export default function ProductsInfo({ productOrCart }) {
+  const oneSpecificProduct = !Array.isArray(productOrCart)
+  const totalPrice = oneSpecificProduct
+    ? productOrCart.precio
+    : getTotalPriceCart(productOrCart)
+
   return (
-    <ProductContainer>
+    <Container>
       <div className="product-info">
         <div className="product-cards">
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto largooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />{' '}
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />{' '}
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />{' '}
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />{' '}
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />{' '}
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />{' '}
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />{' '}
-          <Card
-            imageSrc="/xiaomi9a.webp"
-            title="titulo del producto"
-            imageAlt="imagen del producto"
-            quantity={32}
-          />
+          {productOrCart && oneSpecificProduct ? (
+            <Card
+              imageSrc={productOrCart.imagenes[0].url}
+              title={productOrCart.titulo}
+              imageAlt={productOrCart.imagenes[0].alternativeText}
+              quantity={selectedQuantityValidation(productOrCart)}
+            />
+          ) : (
+            // CART PRODUCTS
+            productOrCart.map((cartItem) => (
+              <Card
+                key={cartItem.id}
+                imageSrc={cartItem.producto.imagenes[0].url}
+                title={cartItem.producto.titulo}
+                imageAlt={cartItem.producto.imagenes[0].alternativeText}
+                quantity={cartItem.cantidad}
+              />
+            ))
+          )}
         </div>
         <div className="total">
           <p className="total-content">Total</p>
-          <p className="total-content">$ 323223</p>
+          <p className="total-content">$ {totalPrice}</p>
         </div>
       </div>
-    </ProductContainer>
+    </Container>
   )
 }

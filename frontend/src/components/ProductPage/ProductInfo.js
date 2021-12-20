@@ -113,7 +113,7 @@ export default function ProductInfo({ id, title, price, quantity, selled }) {
 
   const buyProduct = () => {
     if (state.isAuthenticated) {
-      router.push(`/checkout/${id}`)
+      router.push(`/checkout/${id}?quantity=${selectedQuantity}`)
       return
     }
     router.push('/login')
@@ -131,7 +131,7 @@ export default function ProductInfo({ id, title, price, quantity, selled }) {
     router.push('/login')
   }
 
-  const selectQuantity = (e) => setSelectedQuantity(e.target.value)
+  const changeProductQuantity = (e) => setSelectedQuantity(e.target.value)
 
   return (
     <Aside>
@@ -143,7 +143,7 @@ export default function ProductInfo({ id, title, price, quantity, selled }) {
         <div className="product-info-quantity">
           <span>Cantidad: </span>
           <select
-            onChange={selectQuantity}
+            onChange={changeProductQuantity}
             className="product-info-quantity-select"
           >
             {numberToArray(quantity).map((number) => (

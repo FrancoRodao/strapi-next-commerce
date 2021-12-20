@@ -1,183 +1,43 @@
-import styled from 'styled-components'
+import { dehydrate, QueryClient, useQuery } from 'react-query'
+import { getProduct } from '../../api/products/getProducts'
+import Checkout from '../../components/CheckoutPage/Checkout'
+import { CheckoutPageContainer } from '../../components/CheckoutPage/CheckoutPage.style'
 import ProductsInfo from '../../components/CheckoutPage/ProductsInfo'
+import Loading from '../../components/Loading'
 import { ProtectedRoute } from '../../routes/protectedRoute'
 
-const Container = styled.div`
-  display: flex;
+export default function CheckoutProduct({ productId, selectedQuantity }) {
+  const { data: product } = useQuery(`checkout-product-${productId}`, () =>
+    getProduct(productId)
+  )
 
-  .bx-map {
-    color: ${({ theme }) => theme.blue};
-    font-size: 26px;
-    background-color: #fff;
-    border-radius: 100%;
-    padding: 10px;
-    margin-right: 25px;
-  }
-
-  .checkout {
-    &-container {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      padding: 56px 20px;
-      width: 60%;
-      overflow-y: auto;
-    }
-
-    &-title {
-      font-size: 22px;
-      font-weight: 500;
-      margin-bottom: 30px;
-    }
-
-    &-address {
-      font-weight: 500;
-
-      &-select-container {
-        margin-bottom: 45px;
-        padding: 12px 30px;
-        background-color: ${({ theme }) => theme.lightGrey};
-      }
-
-      &-select {
-        display: flex;
-        align-items: center;
-      }
-
-      &-selected p {
-        margin: 5px;
-      }
-
-      &-change {
-        margin-left: auto;
-        border: none;
-        color: ${({ theme }) => theme.blue};
-        background-color: transparent;
-        cursor: pointer;
-        font-size: 14px;
-      }
-    }
-  }
-
-  .withdraw {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 45px;
-    padding: 12px 30px;
-    background-color: #fff;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
-    border-left: 5px solid ${({ theme }) => theme.blue};
-    border-radius: 5px;
-
-    &-radio-container {
-      height: 16px;
-      width: 16px;
-
-      input {
-        height: 100%;
-        width: 100%;
-      }
-    }
-
-    &-direction {
-      display: flex;
-      flex-direction: column;
-
-      p {
-        margin: 5px;
-      }
-
-      p.text-gray {
-        color: ${({ theme }) => theme.borderGreylight};
-      }
-    }
-  }
-
-  .continue {
-    width: 100%;
-    display: flex;
-
-    &-button {
-      width: 25%;
-      margin-left: auto;
-      border: none;
-      border-radius: 5px;
-      background-color: ${({ theme }) => `1px solid ${theme.blue}`};
-      color: #fff;
-      padding: 15px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      font-weight: 500;
-      font-size: 15px;
-      text-align: center;
-
-      &:hover {
-        background-color: #3877d6;
-      }
-    }
-  }
-
-  .total {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 30px 0px;
-    border-top: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
-
-    &-content {
-      font-size: 21px;
-      font-weight: 500;
-    }
-  }
-`
-
-export default function CheckoutProduct() {
   return (
-    <Container>
-      <div className="checkout-container">
-        <div className="checkout">
-          <h1 className="checkout-title">
-            ¿Cómo querés recibir o retirar tu compra?
-          </h1>
+    <CheckoutPageContainer>
+      <Checkout />
 
-          <p className="checkout-address">Domicilio</p>
-          <div className="checkout-address-select-container">
-            <div className="checkout-address-select">
-              <i className="bx bx-map" />
-              <div className="checkout-address-selected">
-                <p>one</p>
-                <p>two</p>
-              </div>
-              <button type="button" className="checkout-address-change">
-                Modificar ubicación
-              </button>
-            </div>
-          </div>
-
-          <p className="checkout-address">Retirar compra</p>
-          <div className="withdraw">
-            <div className="withdraw-radio-container">
-              <input type="radio" />
-            </div>
-            <div className="withdraw-direction">
-              <p>En el domicilio del vendedor</p>
-              <p className="text-gray">direcction</p>
-            </div>
-          </div>
-
-          <div className="continue">
-            <a href="continue" className="continue-button">
-              Continuar
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <ProductsInfo />
-    </Container>
+      {product ? (
+        <ProductsInfo productOrCart={{ ...product, selectedQuantity }} />
+      ) : (
+        <Loading />
+      )}
+    </CheckoutPageContainer>
   )
 }
 
-export const getServerSideProps = ProtectedRoute()
+export const getServerSideProps = ProtectedRoute(async (ctx) => {
+  const { productId, quantity } = ctx.query
+  const queryClient = new QueryClient()
+
+  // specific product
+  await queryClient.prefetchQuery(`checkout-product-${productId}`, () =>
+    getProduct(productId)
+  )
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      productId,
+      selectedQuantity: Number(quantity) || 1
+    }
+  }
+})

@@ -12,7 +12,7 @@ const PublicRoute = (getServerSideProps) => async (context) => {
     })
   }
 
-  const isAuthenticated = userIsAuthenticated(context)
+  const { isAuthenticated } = userIsAuthenticated(context)
 
   // can not access
   if (isAuthenticated) {
