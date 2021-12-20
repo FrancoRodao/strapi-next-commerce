@@ -57,14 +57,18 @@ const CardContainer = styled.div`
       word-break: break-word;
     }
 
-    &-quantity {
+    &-info {
       flex-shrink: 0;
       margin-left: 15px;
+
+      &-item {
+        margin: 7px 0;
+      }
     }
   }
 `
 
-export function Card({ imageSrc, imageAlt, title, quantity }) {
+export function Card({ imageSrc, imageAlt, title, quantity, price }) {
   return (
     <CardContainer>
       <button type="button" className="product-card-remove">
@@ -81,7 +85,10 @@ export function Card({ imageSrc, imageAlt, title, quantity }) {
             />{' '}
           </div>
           <h3 className="product-card-title">{title}</h3>
-          <p className="product-card-quantity">Cantidad: {quantity} </p>
+          <div className="product-card-info">
+            <p className="product-card-info-item">Cantidad: {quantity} </p>
+            <p className="product-card-info-item">$ {price * quantity}</p>
+          </div>
         </a>
       </Link>
     </CardContainer>

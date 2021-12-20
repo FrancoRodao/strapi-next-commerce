@@ -50,9 +50,11 @@ const selectedQuantityValidation = (product) =>
     : product.selectedQuantity
 
 export default function ProductsInfo({ productOrCart }) {
+  const productQuantity = selectedQuantityValidation(productOrCart)
+
   const oneSpecificProduct = !Array.isArray(productOrCart)
   const totalPrice = oneSpecificProduct
-    ? productOrCart.precio
+    ? productOrCart.precio * productQuantity
     : getTotalPriceCart(productOrCart)
 
   return (
@@ -64,7 +66,8 @@ export default function ProductsInfo({ productOrCart }) {
               imageSrc={productOrCart.imagenes[0].url}
               title={productOrCart.titulo}
               imageAlt={productOrCart.imagenes[0].alternativeText}
-              quantity={selectedQuantityValidation(productOrCart)}
+              price={productOrCart.precio}
+              quantity={productQuantity}
             />
           ) : (
             // CART PRODUCTS
@@ -74,6 +77,7 @@ export default function ProductsInfo({ productOrCart }) {
                 imageSrc={cartItem.producto.imagenes[0].url}
                 title={cartItem.producto.titulo}
                 imageAlt={cartItem.producto.imagenes[0].alternativeText}
+                price={cartItem.producto.precio}
                 quantity={cartItem.cantidad}
               />
             ))
