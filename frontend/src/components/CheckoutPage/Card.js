@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { calculatePercentage } from '../../helpers/calculatePercentage'
 
 const CardContainer = styled.div`
   position: relative;
@@ -13,7 +14,6 @@ const CardContainer = styled.div`
   .product-card {
     &-container {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       width: 100%;
       cursor: pointer;
@@ -21,8 +21,8 @@ const CardContainer = styled.div`
 
     &-remove {
       position: absolute;
-      top: 3px;
-      right: 0;
+      top: 5px;
+      right: 5px;
       border: none;
       background-color: transparent;
       color: #c44239;
@@ -44,7 +44,7 @@ const CardContainer = styled.div`
     }
 
     &-title {
-      margin-right: auto;
+      width: 50%;
       color: black;
       font-weight: 300;
       font-size: 16px;
@@ -58,8 +58,9 @@ const CardContainer = styled.div`
     }
 
     &-info {
+      margin-right: auto;
+      margin-left: 10px;
       flex-shrink: 0;
-      margin-left: 15px;
 
       &-item {
         margin: 7px 0;
@@ -68,17 +69,42 @@ const CardContainer = styled.div`
   }
 `
 
+const Price = styled.span`
+  display: flex;
+  gap: 3px;
+
+  .offerPrice {
+    margin-top: 2px;
+    font-size: 14px;
+    color: #39b54a;
+  }
+`
+
+const OfferPrice = ({ price, offerPrice }) => (
+  <Price>
+    $ {offerPrice} c/u
+    <span className="offerPrice">
+      {calculatePercentage(price, offerPrice)} % OFF
+    </span>
+  </Price>
+)
+
 export function Card({
   productId,
   imageSrc,
   imageAlt,
   title,
   quantity,
-  price
+  price,
+  offerPrice
 }) {
   return (
     <CardContainer>
-      <button type="button" className="product-card-remove">
+      <button
+        title="Eliminar del carrito"
+        type="button"
+        className="product-card-remove"
+      >
         <i className="bx bx-x-circle" />
       </button>
       <Link href={`/${productId}`} passHref>
@@ -94,8 +120,16 @@ export function Card({
           <h3 className="product-card-title">{title}</h3>
           <div className="product-card-info">
             <p className="product-card-info-item">Cantidad: {quantity} </p>
-            <p className="product-card-info-item">$ {price * quantity}</p>
-            <p className="product-card-info-item">$ {price} c/u</p>
+            <p className="product-card-info-item">
+              $ {(offerPrice || price) * quantity}
+            </p>
+            <p className="product-card-info-item">
+              {offerPrice ? (
+                <OfferPrice price={price} offerPrice={offerPrice} />
+              ) : (
+                `$ ${price} c/u`
+              )}
+            </p>
           </div>
         </a>
       </Link>

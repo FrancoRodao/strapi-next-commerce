@@ -7,7 +7,7 @@ const CheckoutContainer = styled.div`
   top: 0;
   height: 100vh;
   padding: 56px 20px;
-  width: 60%;
+  width: 50%;
   overflow-y: auto;
 
   .bx-map {

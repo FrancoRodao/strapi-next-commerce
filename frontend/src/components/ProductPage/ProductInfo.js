@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { numberToArray } from '../../helpers/numberToArray'
 import { CartAPI } from '../../api/cart'
 import { useUserContext } from '../../context/User/UserContext'
+import { ProductPrice } from '../ProductPrice'
 
 const Aside = styled.aside`
   border: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
@@ -105,7 +106,14 @@ const Aside = styled.aside`
   }
 `
 
-export default function ProductInfo({ id, title, price, quantity, selled }) {
+export default function ProductInfo({
+  id,
+  title,
+  price,
+  offerPrice,
+  quantity,
+  selled
+}) {
   const { state } = useUserContext()
   const router = useRouter()
   const [selectedQuantity, setSelectedQuantity] = useState(1)
@@ -139,7 +147,7 @@ export default function ProductInfo({ id, title, price, quantity, selled }) {
       <>
         <span className="product-info-selled">{selled} Vendidos</span>
         <h1 className="product-info-title">{title}</h1>
-        <h2 className="product-info-price">$ {price}</h2>
+        <ProductPrice price={price} offerPrice={offerPrice} />
         <span className="product-info-stock">Stock disponible</span>
         <div className="product-info-quantity">
           <span>Cantidad: </span>

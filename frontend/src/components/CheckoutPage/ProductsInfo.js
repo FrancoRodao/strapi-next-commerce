@@ -3,7 +3,7 @@ import { getTotalPriceCart } from '../../helpers/getTotalPriceCart'
 import { Card } from './Card'
 
 const Container = styled.div`
-  width: 40%;
+  width: 50%;
   background-color: ${({ theme }) => theme.lightGrey};
   min-height: 100vh;
 
@@ -54,7 +54,7 @@ export default function ProductsInfo({ productOrCart }) {
 
   const oneSpecificProduct = !Array.isArray(productOrCart)
   const totalPrice = oneSpecificProduct
-    ? productOrCart.precio * productQuantity
+    ? (productOrCart.precio_oferta || productOrCart.precio) * productQuantity
     : getTotalPriceCart(productOrCart)
 
   return (
@@ -68,6 +68,7 @@ export default function ProductsInfo({ productOrCart }) {
               title={productOrCart.titulo}
               imageAlt={productOrCart.imagenes[0].alternativeText}
               price={productOrCart.precio}
+              offerPrice={productOrCart.precio_oferta}
               quantity={productQuantity}
             />
           ) : (
@@ -80,6 +81,7 @@ export default function ProductsInfo({ productOrCart }) {
                 title={cartItem.producto.titulo}
                 imageAlt={cartItem.producto.imagenes[0].alternativeText}
                 price={cartItem.producto.precio}
+                offerPrice={cartItem.producto.precio_oferta}
                 quantity={cartItem.cantidad}
               />
             ))

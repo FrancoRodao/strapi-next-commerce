@@ -85,6 +85,7 @@ export default function Product({ productId }) {
                   id={data.id}
                   title={data.titulo}
                   price={data.precio}
+                  offerPrice={data.precio_oferta}
                   quantity={data.cantidad}
                   selled={data.vendidos}
                 />

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import Image from 'next/image'
 import styled from 'styled-components'
 import { calculatePercentage } from '../../../helpers/calculatePercentage'
+import { ProductPrice } from '../../ProductPrice'
 
 const Container = styled.div`
   box-shadow: 0 1px 1px 0 rgb(0 0 0 / 10%);
@@ -18,31 +19,6 @@ const Container = styled.div`
 
   .footer {
     padding: 0 15px;
-  }
-
-  .price {
-    font-weight: 500;
-    margin-top: 25px;
-    margin-bottom: 10px;
-    color: #333;
-  }
-
-  .real-price {
-    margin-top: 5px;
-  }
-
-  .offerPrice {
-    color: #666;
-    margin-bottom: 0px;
-    margin-top: 5px;
-    text-decoration: line-through;
-    font-size: 14px;
-  }
-
-  .offer-percentage {
-    font-size: 14px;
-    color: #39b54a;
-    vertical-align: 3px;
   }
 
   .title {
@@ -67,16 +43,7 @@ export default function PhoneCardBody({ title, price, image, offerPrice }) {
         <Image src={image} alt="xiaomi9a" width="160" height="300" />
       </div>
       <div className="footer">
-        {offerPrice ? <h3 className="offerPrice price">U$S {price}</h3> : null}
-
-        <h2 className={`price ${offerPrice ? 'real-price' : null}`}>
-          U$S {offerPrice || price}{' '}
-          {offerPrice ? (
-            <span className="offer-percentage">
-              {calculatePercentage(price, offerPrice)}% OFF
-            </span>
-          ) : null}
-        </h2>
+        <ProductPrice price={price} offerPrice={offerPrice} />
 
         <h1 className="title">{title}</h1>
       </div>
