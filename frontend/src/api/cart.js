@@ -16,11 +16,13 @@ function getCart(accessToken) {
 }
 
 function addProduct(products) {
-  return instance.post('/users/me/cart', products)
+  return instance.post('/users/me/cart', products).then((res) => res.data)
 }
 
 function subtractOne(cartItemId) {
-  return instance.delete(`/users/me/cart/subtractOne/${cartItemId}`)
+  return instance
+    .delete(`/users/me/cart/subtractOne/${cartItemId}`)
+    .then((res) => res.data)
 }
 
 export const CartAPI = {

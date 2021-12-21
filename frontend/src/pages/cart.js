@@ -1,8 +1,9 @@
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import styled from 'styled-components'
-import { getUserCart } from '../api/user'
+import { CartAPI } from '../api/cart'
 import { CartCard } from '../components/Cards/CartCard.js/CartCard'
 import Loading from '../components/Loading'
+import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 import { ProtectedRoute } from '../routes/protectedRoute'
 
 const MainContainer = styled.div`
@@ -19,9 +20,9 @@ const MainContainer = styled.div`
 `
 
 export default function Cart() {
-  const { data, isLoading } = useQuery('getUserCart', getUserCart)
-
-  const cart = data?.data
+  const { data: cart, isLoading } = useQuery('getUserCart', () =>
+    CartAPI.getCart()
+  )
 
   return (
     <MainContainer>
@@ -50,9 +51,13 @@ export default function Cart() {
   )
 }
 
-export const getServerSideProps = ProtectedRoute(async () => {
+export const getServerSideProps = ProtectedRoute(async (ctx) => {
   const queryClient = new QueryClient()
-  await queryClient.prefetchQuery('getUserCart', getUserCart)
+  const { accessToken } = userIsAuthenticated(ctx)
+
+  await queryClient.prefetchQuery('getUserCart', () =>
+    CartAPI.getCart(accessToken)
+  )
 
   return {
     props: {

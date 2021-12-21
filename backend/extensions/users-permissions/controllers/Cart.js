@@ -77,6 +77,7 @@ module.exports = {
     const query = await strapi.query('user', 'users-permissions')
     const userInfo = await query.findOne({ id: userId })
     let itemsRepeated = []
+    let errorMsg = null
 
     userInfo.carrito.forEach((item, index) => {
       // the product already exists in the user's cart
@@ -87,12 +88,26 @@ module.exports = {
         // DO NOT add a new item to the cart, as they are the same
         element.cantidad += newItems[productIdIndex].cantidad
 
+        if (element.cantidad > element.producto.cantidad) {
+          errorMsg = "We don't have enough stock"
+          return
+        }
+
         // We remove the new product as the quantity
         // of the new product has been added to that of the product
         // that was in the cart.
         itemsRepeated.push(index)
       }
     })
+
+    if (errorMsg) {
+      ctx.response.status = 400
+      return ctx.send({
+        statusCode: 400,
+        error: 'Bad request',
+        message: errorMsg
+      })
+    }
 
     itemsRepeated.forEach((index) => (newItems = newItems.slice(index, index)))
 
@@ -126,12 +141,13 @@ module.exports = {
       id: userId
     })
 
-    let error = false
+    let errorMsg = null
     const cartUpdated = userInfo.carrito.map((item) => {
       if (item.id === Number(cartItemId)) {
         // The quantity of the item cannot reach 0 or negative number
         if (item.cantidad === 1) {
-          error = true
+          errorMsg =
+            'Error: The quantity of the item cannot reach 0 or negative number'
           return
         }
 
@@ -141,13 +157,12 @@ module.exports = {
       return item
     })
 
-    if (error) {
+    if (errorMsg) {
       ctx.response.status = 400
       return ctx.send({
         statusCode: 400,
         error: 'Bad request',
-        message:
-          'Error: The quantity of the item cannot reach 0 or negative number'
+        message: errorMsg
       })
     }
 

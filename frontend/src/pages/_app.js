@@ -54,7 +54,7 @@ function MyApp({ Component, pageProps, userContextInitialState }) {
 */
 MyApp.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext)
-  const isAuthenticated = userIsAuthenticated(appContext)
+  const { isAuthenticated, user } = userIsAuthenticated(appContext)
 
   if (isAuthenticated) {
     return {
@@ -62,7 +62,7 @@ MyApp.getInitialProps = async (appContext) => {
         {},
         {
           type: types.init,
-          data: JSON.parse(isAuthenticated.user)
+          data: JSON.parse(user)
         }
       ),
       ...appProps

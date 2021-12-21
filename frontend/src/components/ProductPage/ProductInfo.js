@@ -131,7 +131,8 @@ export default function ProductInfo({ id, title, price, quantity, selled }) {
     router.push('/login')
   }
 
-  const changeProductQuantity = (e) => setSelectedQuantity(e.target.value)
+  const changeProductQuantity = (e) =>
+    setSelectedQuantity(Number(e.target.value))
 
   return (
     <Aside>

@@ -122,7 +122,7 @@ export function CartCard({
                 quantity === 1 ? 'btn-disabled' : ''
               }`}
               type="button"
-              disabled={quantity === 1}
+              disabled={isLoading || quantity === 1}
             >
               -
             </button>
@@ -131,6 +131,7 @@ export function CartCard({
               onClick={handleSumCartItem}
               className="quantity-btn"
               type="button"
+              disabled={isLoading}
             >
               +
             </button>

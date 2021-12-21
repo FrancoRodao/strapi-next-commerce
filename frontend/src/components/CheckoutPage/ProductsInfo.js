@@ -63,6 +63,7 @@ export default function ProductsInfo({ productOrCart }) {
         <div className="product-cards">
           {productOrCart && oneSpecificProduct ? (
             <Card
+              productId={productOrCart.id}
               imageSrc={productOrCart.imagenes[0].url}
               title={productOrCart.titulo}
               imageAlt={productOrCart.imagenes[0].alternativeText}
@@ -74,6 +75,7 @@ export default function ProductsInfo({ productOrCart }) {
             productOrCart.map((cartItem) => (
               <Card
                 key={cartItem.id}
+                productId={cartItem.producto.id}
                 imageSrc={cartItem.producto.imagenes[0].url}
                 title={cartItem.producto.titulo}
                 imageAlt={cartItem.producto.imagenes[0].alternativeText}

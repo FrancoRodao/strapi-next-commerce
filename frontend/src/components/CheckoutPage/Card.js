@@ -68,13 +68,20 @@ const CardContainer = styled.div`
   }
 `
 
-export function Card({ imageSrc, imageAlt, title, quantity, price }) {
+export function Card({
+  productId,
+  imageSrc,
+  imageAlt,
+  title,
+  quantity,
+  price
+}) {
   return (
     <CardContainer>
       <button type="button" className="product-card-remove">
         <i className="bx bx-x-circle" />
       </button>
-      <Link href="/product" passHref>
+      <Link href={`/${productId}`} passHref>
         <a className="product-card-container" href="ignore">
           <div className="product-card-image">
             <Image
@@ -82,12 +89,13 @@ export function Card({ imageSrc, imageAlt, title, quantity, price }) {
               alt={imageAlt}
               objectFit="cover"
               layout="fill"
-            />{' '}
+            />
           </div>
           <h3 className="product-card-title">{title}</h3>
           <div className="product-card-info">
             <p className="product-card-info-item">Cantidad: {quantity} </p>
             <p className="product-card-info-item">$ {price * quantity}</p>
+            <p className="product-card-info-item">$ {price} c/u</p>
           </div>
         </a>
       </Link>
