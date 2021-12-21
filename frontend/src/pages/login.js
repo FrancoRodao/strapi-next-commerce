@@ -7,6 +7,8 @@ import { Auth } from '../api/auth'
 import { PublicRoute } from '../routes/publicRoute'
 import { useUserContext } from '../context/User/UserContext'
 import { types } from '../context/User/types'
+import { ErrorMessage } from '../components/ErrorMessage'
+import Loading from '../components/Loading'
 
 export const LoginContainer = styled.div`
   display: flex;
@@ -51,22 +53,36 @@ export const LoginContainer = styled.div`
       margin-bottom: 5px;
     }
 
-    &__submit-btn {
-      border-color: transparent;
-      padding: 15px;
-      border-radius: 5px;
-      background-color: ${({ theme }) => theme.blue};
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      margin: 15px 0;
-      transition: background-color 0.3s;
 
-      
-      &:hover {
-        background-color: #3877d6;
+    &__submit {
+      &--btn {
+        max-height: 53px;
+        border-color: transparent;
+        padding: 15px;
+        border-radius: 5px;
+        background-color: ${({ theme }) => theme.blue};
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 15px 0;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #3877d6;
+        }
       }
+
+      &--loading{
+        background-color: ${({ theme }) => theme.borderGreylight};
+
+        &:hover {
+          background-color: ${({ theme }) => theme.borderGreylight};
+        }
+      }
+
+
     }
+    
   }
 
   .register-btn {
@@ -126,6 +142,7 @@ function Login() {
 
   const login = (e) => {
     e.preventDefault()
+    setErrorUI(false)
     mutation.mutate(form)
   }
 
@@ -140,8 +157,8 @@ function Login() {
 
   return (
     <LoginContainer>
-      {errorUI}
       <div className="container">
+        {errorUI && <ErrorMessage>{errorUI}</ErrorMessage>}
         <h1 className="title">
           ¡Hola! Ingresa tus credenciales para iniciar sesion
         </h1>
@@ -166,8 +183,14 @@ function Login() {
             className="form__input"
             required
           />
-          <button className="form__submit-btn" type="submit">
-            Ingresar
+          <button
+            disabled={mutation.isLoading}
+            className={`form__submit--btn ${
+              mutation.isLoading ? 'form__submit--loading' : ''
+            }`}
+            type="submit"
+          >
+            {mutation.isLoading ? <Loading /> : 'Ingresar'}
           </button>
         </form>
         <Link href="/signup">

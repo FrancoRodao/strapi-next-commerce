@@ -7,6 +7,7 @@ import { types } from '../context/User/types'
 import { useUserContext } from '../context/User/UserContext'
 import { LoginContainer } from './login'
 import { PublicRoute } from '../routes/publicRoute'
+import Loading from '../components/Loading'
 
 export default function Signup() {
   const [errorUI, setErrorUI] = useState(null)
@@ -97,8 +98,14 @@ export default function Signup() {
             className="form__input"
             required
           />
-          <button className="form__submit-btn" type="submit">
-            Registrarse
+          <button
+            disabled={mutation.isLoading}
+            className={`form__submit--btn ${
+              mutation.isLoading ? 'form__submit--loading' : ''
+            }`}
+            type="submit"
+          >
+            {mutation.isLoading ? <Loading /> : 'Registrarse'}
           </button>
         </form>
         <Link href="/login">

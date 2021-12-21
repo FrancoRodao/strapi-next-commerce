@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { ErrorMessage } from '../ErrorMessage'
 
 const CheckoutContainer = styled.div`
   position: sticky;
@@ -68,13 +69,18 @@ const CheckoutContainer = styled.div`
       display: flex;
       align-items: center;
       gap: 20px;
-      margin-bottom: 45px;
+      margin-bottom: 35px;
       padding: 12px 30px;
       background-color: #fff;
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
       border-radius: 5px;
       border-left: 5px solid transparent;
       transition: border-left 0.2s;
+      border: 1px solid transparent;
+
+      &-error {
+        border: 1px solid ${({ theme }) => theme.error};
+      }
 
       &-directionChecked {
         border-left: 5px solid ${({ theme }) => theme.blue};
@@ -84,7 +90,7 @@ const CheckoutContainer = styled.div`
         position: absolute;
         bottom: -30px;
         left: 0;
-        color: rgb(230, 0, 0);
+        color: ${({ theme }) => theme.red};
         font-size: 17px;
       }
 
@@ -115,6 +121,7 @@ const CheckoutContainer = styled.div`
     .continue {
       width: 100%;
       display: flex;
+      margin-top: 15px;
 
       &-button {
         width: 25%;
@@ -142,18 +149,19 @@ export default function Checkout() {
   const [checkedDirection, setCheckedDirection] = useState(false)
   const [errorUI, setErrorUI] = useState(null)
 
-  const checkDirection = (e) => {
-    e.target.checked = !checkDirection
+  const changeDirection = (e) => {
+    e.target.checked = !checkedDirection
     setCheckedDirection(!checkedDirection)
+    if (!checkedDirection) {
+      setErrorUI(false)
+    }
   }
 
   const continueToPay = (e) => {
     e.preventDefault()
     if (!checkedDirection) {
-      setErrorUI('Error: Por favor confirma la dirección de retiro')
-      return
+      setErrorUI('Por favor confirma la dirección de retiro')
     }
-    setErrorUI(null)
   }
 
   return (
@@ -179,11 +187,11 @@ export default function Checkout() {
         <div
           className={`withdraw ${
             checkedDirection ? 'withdraw-directionChecked' : ''
-          }`}
+          } ${errorUI ? 'withdraw-error' : ''} `}
         >
           <div className="withdraw-radio-container">
             <input
-              onClick={checkDirection}
+              onClick={changeDirection}
               onChange={() => {}}
               checked={checkedDirection}
               type="radio"
@@ -193,8 +201,8 @@ export default function Checkout() {
             <p>En el domicilio del vendedor</p>
             <p className="text-gray">Placeholder dirección</p>
           </div>
-          {errorUI && <p className="withdraw-error-msg">{errorUI}</p>}
         </div>
+        {errorUI && <ErrorMessage>{errorUI}</ErrorMessage>}
 
         <div className="continue">
           <a
