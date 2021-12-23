@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useMutation } from 'react-query'
 import styled from 'styled-components'
 import Link from 'next/link'
-import { Auth } from '../api/auth'
+import { AuthAPI } from '../api/auth'
 import { PublicRoute } from '../routes/publicRoute'
 import { useUserContext } from '../context/User/UserContext'
 import { types } from '../context/User/types'
@@ -108,7 +108,7 @@ function Login() {
   const Router = useRouter()
   const { dispatch } = useUserContext()
 
-  const mutation = useMutation(Auth.login, {
+  const mutation = useMutation(AuthAPI.login, {
     onSuccess: ({ data }) => {
       const userData = {
         ...data.user

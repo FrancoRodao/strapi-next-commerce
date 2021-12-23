@@ -1,14 +1,14 @@
 import { dehydrate, QueryClient, useQuery } from 'react-query'
-import { getProduct } from '../../api/products/getProducts'
 import Checkout from '../../components/CheckoutPage/Checkout'
 import { CheckoutPageContainer } from '../../components/CheckoutPage/CheckoutPage.style'
 import ProductsInfo from '../../components/CheckoutPage/ProductsInfo'
 import Loading from '../../components/Loading'
 import { ProtectedRoute } from '../../routes/protectedRoute'
+import { ProductsAPI } from '../../api/products'
 
 export default function CheckoutProduct({ productId, selectedQuantity }) {
   const { data: product } = useQuery(`checkout-product-${productId}`, () =>
-    getProduct(productId)
+    ProductsAPI.getProduct(productId)
   )
 
   return (
@@ -30,7 +30,7 @@ export const getServerSideProps = ProtectedRoute(async (ctx) => {
 
   // specific product
   await queryClient.prefetchQuery(`checkout-product-${productId}`, () =>
-    getProduct(productId)
+    ProductsAPI.getProduct(productId)
   )
 
   return {

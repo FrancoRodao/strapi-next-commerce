@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import styled from 'styled-components'
-import { getProduct } from '../api/products/getProducts'
+import { ProductsAPI } from '../api/products'
 import Loading from '../components/Loading'
 import ProductDescription from '../components/ProductPage/ProductDescription'
 import ProductFeatures from '../components/ProductPage/ProductFeatures'
@@ -42,7 +42,7 @@ const ProductContainer = styled.div`
 
 export default function Product({ productId }) {
   const { data, isLoading } = useQuery(['getProduct', productId], () =>
-    getProduct(productId)
+    ProductsAPI.getProduct(productId)
   )
 
   const [image, setImage] = useState(null)
@@ -103,7 +103,9 @@ export default function Product({ productId }) {
 export async function getServerSideProps({ params }) {
   const { productId } = params
   const queryClient = new QueryClient()
-  await queryClient.prefetchQuery('getProduct', () => getProduct(productId))
+  await queryClient.prefetchQuery('getProduct', () =>
+    ProductsAPI.getProduct(productId)
+  )
 
   return {
     props: {

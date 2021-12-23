@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
 import Link from 'next/link'
-import { Auth } from '../api/auth'
+import { AuthAPI } from '../api/auth'
 import { types } from '../context/User/types'
 import { useUserContext } from '../context/User/UserContext'
 import { LoginContainer } from './login'
@@ -15,7 +15,7 @@ export default function Signup() {
   const Router = useRouter()
   const { dispatch } = useUserContext()
 
-  const mutation = useMutation(Auth.signUp, {
+  const mutation = useMutation(AuthAPI.signUp, {
     onSuccess: ({ data }) => {
       const userData = {
         ...data.user

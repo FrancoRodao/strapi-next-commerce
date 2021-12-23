@@ -2,12 +2,14 @@ import Slider from 'react-slick'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
 import NextArrow from '../Arrows/NextArrow'
 import BackArrow from '../Arrows/BackArrow'
-import { getMainCarouselImages } from '../../../../api/apparence/getMainCarouselImages'
 import Loading from '../../../Loading'
 import FeaturedSliderImage, { ImgContainer } from './Image'
+import { ApparenceAPI } from '../../../../api/apparence'
 
 export default function FeaturedSlider() {
-  const { data } = useQuery('main-carousel-images', getMainCarouselImages)
+  const { data } = useQuery('main-carousel-images', () =>
+    ApparenceAPI.getMainCarouselImages()
+  )
 
   return (
     <Slider
@@ -38,7 +40,9 @@ export default function FeaturedSlider() {
 
 export async function getServerSideProps() {
   const queryClient = new QueryClient()
-  await queryClient.prefetchQuery('main-carousel-images', getMainCarouselImages)
+  await queryClient.prefetchQuery('main-carousel-images', () =>
+    ApparenceAPI.getMainCarouselImages()
+  )
 
   return {
     props: {
