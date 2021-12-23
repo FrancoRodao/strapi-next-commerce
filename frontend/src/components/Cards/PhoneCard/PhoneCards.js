@@ -36,7 +36,7 @@ function PhoneCard({ id, title, price, image, offerPrice }) {
 
   return (
     <Link href={`/${id}`} passHref>
-      <a style={{ width: '100%' }} href="passHref">
+      <a style={{ width: '100%' }} href={`/${id}`}>
         <PhoneCardContainer>
           {data ? (
             <PhoneCardBody

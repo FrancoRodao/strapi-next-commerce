@@ -1,23 +1,39 @@
 import { useState } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import styled from 'styled-components'
+import Image from 'next/image'
+import Link from 'next/link'
 import { CartAPI } from '../../../api/cart'
 import Loading from '../../Loading'
+import { ProductPrice } from '../../ProductPrice'
 
 const Container = styled.article`
   padding: 30px 0px;
-  border-top: 1px solid ${({ theme }) => theme.borderGreylight};
+  border-bottom: 1px solid ${({ theme }) => theme.gray};
 
   .info {
-    display: flex;
-    align-items: center;
-    width: 100%;
+    &-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    &-body {
+      display: flex;
+      width: 45%;
+      flex-direction: column;
+      margin-right: 35px;
+    }
+  }
+
+  .image-container {
+    margin-right: 15px;
+    width: 5%;
+    text-align: center;
   }
 
   .title {
-    font-size: 20px;
-    width: 55%;
-
+    font-size: 18px;
     display: -webkit-box;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -26,21 +42,41 @@ const Container = styled.article`
     word-break: break-word;
   }
 
-  .quantity {
-    &-container {
-      display: flex;
-      width: 30%;
+  .btn {
+    border: none;
+    background-color: transparent;
+    color: ${({ theme }) => theme.blue};
+
+    &:hover {
+      cursor: pointer;
     }
 
-    width: fit-content;
+    &-container {
+      display: inline;
+      margin-top: 15px;
+    }
+  }
+
+  .quantity {
+    width: 100%;
+    position: relative;
     display: flex;
+    justify-content: space-around;
     align-items: center;
     border: 1px solid ${({ theme }) => theme.borderGreylight};
     border-radius: 5px;
 
+    &-container {
+      width: 12%;
+      display: flex;
+      flex-direction: column;
+    }
+
     &-loading {
+      position: absolute;
+      top: 10%;
+      right: -40%;
       font-size: 9px;
-      margin-left: 10px;
     }
 
     &--disabled {
@@ -54,20 +90,30 @@ const Container = styled.article`
       border-color: transparent;
       background-color: inherit;
       color: ${({ theme }) => theme.blue};
-      margin: 0px 5px;
+
+      &-subtract {
+        margin-bottom: 4px;
+      }
     }
 
     &-num {
-      margin: 0px 15px;
+      text-align: center;
+    }
+
+    &-stock {
+      color: ${({ theme }) => theme.gray};
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
     }
   }
 
-  .subtract {
-    margin-bottom: 2px;
-  }
-
-  .price {
+  .price-container {
     font-weight: 500;
+    font-size: 15px;
+    width: 15%;
+    margin-left: auto;
+    margin-bottom: 15px;
   }
 
   .btn-disabled {
@@ -80,13 +126,17 @@ export function CartCard({
   productId,
   title,
   price,
-  cartItemQuantity
+  offerPrice,
+  image,
+  cartItemQuantity,
+  productQuantity
 }) {
+  const queryClient = useQueryClient()
   const [quantity, setQuantity] = useState(cartItemQuantity)
   const [isLoading, setIsLoading] = useState(false)
 
   const sumCartItemMutation = useMutation(
-    () => CartAPI.addProduct([{ productId, quantity: 1 }]),
+    () => CartAPI.addItemCart([{ productId, quantity: 1 }]),
     {
       onSuccess: () => {
         setQuantity(quantity + 1)
@@ -107,18 +157,50 @@ export function CartCard({
     }
   )
 
+  const deleteItemCart = useMutation(() => CartAPI.deleteItemCart(cartItemId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('getUserCart')
+      setIsLoading(false)
+    },
+    onMutate: () => setIsLoading(true)
+  })
+
   const handleSumCartItem = () => sumCartItemMutation.mutate()
   const handleSubtractCartItem = () => subtractCartItemMutation.mutate()
+  const handleDeleteItemCart = () => deleteItemCart.mutate()
 
   return (
     <Container>
-      <div className="info">
-        <h1 className="title">{title}</h1>
+      <div className="info-container">
+        <div className="image-container">
+          <Image
+            src={image.url}
+            alt={image.alternativeText}
+            width={30}
+            height={50}
+          />
+        </div>
+        <div className="info-body">
+          <Link href={`/${productId}`}>
+            <a href={`/${productId}`}>
+              <h1 className="title">{title}</h1>
+            </a>
+          </Link>
+          <div className="btn-container">
+            <button
+              onClick={handleDeleteItemCart}
+              type="button"
+              className="btn"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
         <div className="quantity-container">
           <div className={`quantity ${isLoading ? 'quantity--disabled' : ''}`}>
             <button
               onClick={handleSubtractCartItem}
-              className={`quantity-btn subtract ${
+              className={`quantity-btn quantity-btn-subtract subtract ${
                 quantity === 1 ? 'btn-disabled' : ''
               }`}
               type="button"
@@ -135,14 +217,19 @@ export function CartCard({
             >
               +
             </button>
+            {isLoading && (
+              <div className="quantity-loading">
+                <Loading />
+              </div>
+            )}
           </div>
-          {isLoading && (
-            <div className="quantity-loading">
-              <Loading />
-            </div>
-          )}
+          <p className="quantity-stock">{productQuantity} Disponible</p>
         </div>
-        <h2 className="price">$ {price * quantity}</h2>
+        <h2 className="price-container">
+          <div>
+            <ProductPrice price={price} offerPrice={offerPrice} />
+          </div>
+        </h2>
       </div>
     </Container>
   )

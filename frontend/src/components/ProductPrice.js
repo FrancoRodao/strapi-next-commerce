@@ -6,8 +6,6 @@ const Container = styled.span`
 
   .price {
     font-weight: 500;
-    margin-top: 25px;
-    margin-bottom: 10px;
     color: #333;
   }
 
@@ -17,8 +15,6 @@ const Container = styled.span`
 
   .offerPrice {
     color: #666;
-    margin-bottom: 0px;
-    margin-top: 5px;
     text-decoration: line-through;
     font-size: 14px;
   }

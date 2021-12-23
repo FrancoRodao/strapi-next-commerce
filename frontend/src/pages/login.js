@@ -194,7 +194,7 @@ function Login() {
           </button>
         </form>
         <Link href="/signup">
-          <a className="register-btn" href="ignore">
+          <a className="register-btn" href="signup">
             Crear cuenta
           </a>
         </Link>

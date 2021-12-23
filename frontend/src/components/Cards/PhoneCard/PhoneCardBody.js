@@ -15,10 +15,12 @@ const Container = styled.div`
 
   .center {
     text-align: center;
+    margin-bottom: 5px;
   }
 
   .footer {
     padding: 0 15px;
+    height: 97px;
   }
 
   .title {

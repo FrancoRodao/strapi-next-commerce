@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { dehydrate, QueryClient, useQuery } from 'react-query'
@@ -61,7 +62,7 @@ export default function Product({ productId }) {
         <>
           <div className="breads">
             <Link href="/" passHref>
-              <a href="ignore" tabIndex={0} className="back">
+              <a href="/" tabIndex={0} className="back">
                 <i className="bx bx-left-arrow-alt" />
               </a>
             </Link>

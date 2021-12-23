@@ -109,7 +109,7 @@ export default function Signup() {
           </button>
         </form>
         <Link href="/login">
-          <a className="register-btn" href="ignore">
+          <a className="register-btn" href="login">
             Iniciar sesion
           </a>
         </Link>

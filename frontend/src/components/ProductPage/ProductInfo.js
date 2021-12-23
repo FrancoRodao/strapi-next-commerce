@@ -25,6 +25,7 @@ const Aside = styled.aside`
     &-title {
       font-size: 21px;
       font-weight: 600;
+      margin-bottom: 10px;
     }
 
     &-price {
@@ -39,6 +40,7 @@ const Aside = styled.aside`
     &-availables {
       display: block;
       color: ${({ theme }) => theme.success};
+      margin-top: 15px;
     }
 
     &-stock {
@@ -117,7 +119,9 @@ export default function ProductInfo({
   const { state } = useUserContext()
   const router = useRouter()
   const [selectedQuantity, setSelectedQuantity] = useState(1)
-  const mutation = useMutation((newProduct) => CartAPI.addProduct([newProduct]))
+  const mutation = useMutation((newProduct) =>
+    CartAPI.addItemCart([newProduct])
+  )
 
   const buyProduct = () => {
     if (state.isAuthenticated) {

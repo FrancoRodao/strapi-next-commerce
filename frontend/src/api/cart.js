@@ -15,7 +15,7 @@ function getCart(accessToken) {
   return instance.get('/users/me/cart', config).then((res) => res.data)
 }
 
-function addProduct(products) {
+function addItemCart(products) {
   return instance.post('/users/me/cart', products).then((res) => res.data)
 }
 
@@ -25,8 +25,13 @@ function subtractOne(cartItemId) {
     .then((res) => res.data)
 }
 
+function deleteItemCart(cartItemId) {
+  return instance.delete(`/users/me/cart/${cartItemId}`).then((res) => res.data)
+}
+
 export const CartAPI = {
   getCart,
-  addProduct,
-  subtractOne
+  addItemCart,
+  subtractOne,
+  deleteItemCart
 }

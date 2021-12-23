@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import Image from 'next/image'
 import Link from 'next/link'
 import styled from 'styled-components'
@@ -251,7 +252,7 @@ export default function NavBar() {
       <Nav>
         <div className="logo">
           <Link href="/" passHref>
-            <a href="ignore" className="logo-img-container">
+            <a href="/" className="logo-img-container">
               <Image
                 className="img"
                 alt="logo"
@@ -301,7 +302,7 @@ export default function NavBar() {
             </div>
           ) : (
             <Link href="/login" passHref>
-              <a href="ignore">
+              <a href="login">
                 <p className="menu__item menu__item--login">Iniciar sesion</p>
               </a>
             </Link>
@@ -310,11 +311,13 @@ export default function NavBar() {
           <Button className="">
             {isAuthenticated ? (
               <Link href="/cart" passHref>
-                <i className="menu__item menu__item--cart bx bx-cart" />
+                <a href="cart">
+                  <i className="menu__item menu__item--cart bx bx-cart" />
+                </a>
               </Link>
             ) : (
               <Link href="/signup" passHref>
-                <a href="ignore">
+                <a href="signup">
                   <p className="menu__item menu__item--login">Registarse</p>
                 </a>
               </Link>

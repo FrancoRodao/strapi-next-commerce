@@ -10,6 +10,7 @@ const styledComponentsTheme = {
   success: '#28a745',
   blue: '#3483fa',
   lightGrey: '#f5f5f5',
+  gray: '#999',
 
   // navbar
   navbarHeight: '4.5rem',
