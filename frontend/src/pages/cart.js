@@ -1,4 +1,4 @@
-import { dehydrate, QueryClient, useQuery } from 'react-query'
+import { dehydrate, QueryClient } from 'react-query'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { CartAPI } from '../api/cart'
@@ -7,6 +7,8 @@ import Loading from '../components/Loading'
 import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 import { ProtectedRoute } from '../routes/protectedRoute'
 import { getTotalPriceCart } from '../helpers/getTotalPriceCart'
+import { useGetUserCart } from '../hooks/cartHook'
+import { QueryKeys } from '../constants/queryKeys.constant'
 
 const MainContainer = styled.div`
   background-color: #fff;
@@ -53,9 +55,7 @@ const MainContainer = styled.div`
 `
 
 export default function Cart() {
-  const { data: cart, isLoading } = useQuery('getUserCart', () =>
-    CartAPI.getCart()
-  )
+  const { data: cart, isLoading } = useGetUserCart()
 
   return (
     <MainContainer>
@@ -99,7 +99,7 @@ export const getServerSideProps = ProtectedRoute(async (ctx) => {
   const queryClient = new QueryClient()
   const { accessToken } = userIsAuthenticated(ctx)
 
-  await queryClient.prefetchQuery('getUserCart', () =>
+  await queryClient.prefetchQuery(QueryKeys.GET_USER_CART, () =>
     CartAPI.getCart(accessToken)
   )
 

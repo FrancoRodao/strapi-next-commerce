@@ -1,14 +1,10 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
-import { useMutation } from 'react-query'
 import styled from 'styled-components'
 import Link from 'next/link'
-import { AuthAPI } from '../api/auth'
 import { PublicRoute } from '../routes/publicRoute'
-import { useUserContext } from '../context/User/UserContext'
-import { types } from '../context/User/types'
 import { ErrorMessage } from '../components/ErrorMessage'
 import Loading from '../components/Loading'
+import { useSignIn } from '../hooks/authHook'
 
 export const LoginContainer = styled.div`
   display: flex;
@@ -105,26 +101,7 @@ export const LoginContainer = styled.div`
 function Login() {
   const [errorUI, setErrorUI] = useState(null)
 
-  const Router = useRouter()
-  const { dispatch } = useUserContext()
-
-  const mutation = useMutation(AuthAPI.login, {
-    onSuccess: ({ data }) => {
-      const userData = {
-        ...data.user
-      }
-      delete userData.carrito
-      delete userData.role
-      delete userData.provider
-
-      dispatch({
-        type: types.signIn,
-        jwt: data.jwt,
-        data: userData
-      })
-
-      Router.push('/')
-    },
+  const signIn = useSignIn({
     onError: (error) => {
       if (error.response.data.statusCode === 400) {
         setErrorUI('Credenciales invalidas')
@@ -143,7 +120,7 @@ function Login() {
   const login = (e) => {
     e.preventDefault()
     setErrorUI(false)
-    mutation.mutate(form)
+    signIn.mutate(form)
   }
 
   const changeField = (e) => {
@@ -184,13 +161,13 @@ function Login() {
             required
           />
           <button
-            disabled={mutation.isLoading}
+            disabled={signIn.isLoading}
             className={`form__submit--btn ${
-              mutation.isLoading ? 'form__submit--loading' : ''
+              signIn.isLoading ? 'form__submit--loading' : ''
             }`}
             type="submit"
           >
-            {mutation.isLoading ? <Loading /> : 'Ingresar'}
+            {signIn.isLoading ? <Loading /> : 'Ingresar'}
           </button>
         </form>
         <Link href="/signup">

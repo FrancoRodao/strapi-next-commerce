@@ -1,9 +1,14 @@
 import styled from 'styled-components'
-import { dehydrate, QueryClient, useQuery } from 'react-query'
+import { dehydrate, QueryClient } from 'react-query'
 import FeaturedSlider from '../components/HomePage/Sliders/FeaturedSlider/FeaturedSlider'
 import BrandLogoSlider from '../components/HomePage/Sliders/BrandLogoSlider'
 import { PhoneCards } from '../components/Cards/PhoneCard/PhoneCards'
 import { ProductsAPI } from '../api/products'
+import {
+  useGetBestSellersProducts,
+  useGetOfferProducts
+} from '../hooks/productHook'
+import { QueryKeys } from '../constants/queryKeys.constant'
 
 const Container = styled.div`
   section {
@@ -36,12 +41,8 @@ const PhoneCardsContainer = styled.div`
 `
 
 export default function Home() {
-  const bestSellers = useQuery('getBestSellers', () =>
-    ProductsAPI.getBestSellers()
-  )
-  const offerProducts = useQuery('getOfferProducts', () =>
-    ProductsAPI.getOfferProducts()
-  )
+  const bestSellers = useGetBestSellersProducts()
+  const offerProducts = useGetOfferProducts()
 
   return (
     <Container>
@@ -73,11 +74,10 @@ export default function Home() {
 export async function getServerSideProps() {
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery('products', () => ProductsAPI.getProducts())
-  await queryClient.prefetchQuery('getBestSellers', () =>
+  await queryClient.prefetchQuery(QueryKeys.GET_BEST_SELLERS_PRODUCTS, () =>
     ProductsAPI.getBestSellers()
   )
-  await queryClient.prefetchQuery('getOfferProducts', () =>
+  await queryClient.prefetchQuery(QueryKeys.GET_OFFER_PRODUCTS, () =>
     ProductsAPI.getOfferProducts()
   )
 

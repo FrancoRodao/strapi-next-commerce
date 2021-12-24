@@ -18,11 +18,7 @@ ul {
 
 a {
   text-decoration: none;
-}
-
-a:visited {
-  text-decoration: none;
-  color: transparent;
+  color: inherit;
 }
 
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */

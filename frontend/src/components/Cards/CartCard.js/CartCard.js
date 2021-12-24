@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
 import styled from 'styled-components'
 import Image from 'next/image'
 import Link from 'next/link'
-import { CartAPI } from '../../../api/cart'
 import Loading from '../../Loading'
 import { ProductPrice } from '../../ProductPrice'
+import {
+  useAddCartItem,
+  useDeleteCartItem,
+  useRemoveOneToCartItem
+} from '../../../hooks/cartHook'
 
 const Container = styled.article`
   padding: 30px 0px;
@@ -131,43 +133,14 @@ export function CartCard({
   cartItemQuantity,
   productQuantity
 }) {
-  const queryClient = useQueryClient()
-  const [quantity, setQuantity] = useState(cartItemQuantity)
-  const [isLoading, setIsLoading] = useState(false)
+  const addOne = useAddCartItem(productId, 1)
 
-  const sumCartItemMutation = useMutation(
-    () => CartAPI.addItemCart([{ productId, quantity: 1 }]),
-    {
-      onSuccess: () => {
-        setQuantity(quantity + 1)
-        setIsLoading(false)
-      },
-      onMutate: () => setIsLoading(true)
-    }
-  )
+  const removeOne = useRemoveOneToCartItem(cartItemId)
 
-  const subtractCartItemMutation = useMutation(
-    () => CartAPI.subtractOne(cartItemId),
-    {
-      onSuccess: () => {
-        setQuantity(quantity - 1)
-        setIsLoading(false)
-      },
-      onMutate: () => setIsLoading(true)
-    }
-  )
+  const deleteCartItem = useDeleteCartItem(cartItemId)
 
-  const deleteItemCart = useMutation(() => CartAPI.deleteItemCart(cartItemId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('getUserCart')
-      setIsLoading(false)
-    },
-    onMutate: () => setIsLoading(true)
-  })
-
-  const handleSumCartItem = () => sumCartItemMutation.mutate()
-  const handleSubtractCartItem = () => subtractCartItemMutation.mutate()
-  const handleDeleteItemCart = () => deleteItemCart.mutate()
+  const isLoading =
+    addOne.isLoading || removeOne.isLoading || deleteCartItem.isLoading
 
   return (
     <Container>
@@ -188,7 +161,7 @@ export function CartCard({
           </Link>
           <div className="btn-container">
             <button
-              onClick={handleDeleteItemCart}
+              onClick={deleteCartItem.mutate}
               type="button"
               className="btn"
             >
@@ -199,18 +172,18 @@ export function CartCard({
         <div className="quantity-container">
           <div className={`quantity ${isLoading ? 'quantity--disabled' : ''}`}>
             <button
-              onClick={handleSubtractCartItem}
+              onClick={removeOne.mutate}
               className={`quantity-btn quantity-btn-subtract subtract ${
-                quantity === 1 ? 'btn-disabled' : ''
+                cartItemQuantity === 1 ? 'btn-disabled' : ''
               }`}
               type="button"
-              disabled={isLoading || quantity === 1}
+              disabled={isLoading || cartItemQuantity === 1}
             >
               -
             </button>
-            <p className="quantity-num">{quantity}</p>
+            <p className="quantity-num">{cartItemQuantity}</p>
             <button
-              onClick={handleSumCartItem}
+              onClick={addOne.mutate}
               className="quantity-btn"
               type="button"
               disabled={isLoading}

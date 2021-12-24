@@ -32,6 +32,7 @@ export default function ProductGallery({ images, setImage }) {
   const imagesRef = useRef([])
 
   const selectImage = (img) => (event) => {
+    // TODO: IMPROVE IT
     // unselect images
     imagesRef.current.forEach((imgRef) =>
       imgRef.classList.remove('gallery-item-selected')
@@ -58,7 +59,7 @@ export default function ProductGallery({ images, setImage }) {
             ref={(el) => (imagesRef.current[i] = el)}
             key={img.id}
             onClick={selectImage(img)}
-            className="gallery-item"
+            className={`gallery-item ${i === 0 ? 'gallery-item-selected' : ''}`}
           >
             <Image
               alt={img.name.split('.')[0]}

@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { useMutation } from 'react-query'
 import { useRouter } from 'next/router'
 import { numberToArray } from '../../helpers/numberToArray'
-import { CartAPI } from '../../api/cart'
 import { useUserContext } from '../../context/User/UserContext'
 import { ProductPrice } from '../ProductPrice'
+import { useAddCartItem } from '../../hooks/cartHook'
 
 const Aside = styled.aside`
   border: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
@@ -118,10 +117,9 @@ export default function ProductInfo({
 }) {
   const { state } = useUserContext()
   const router = useRouter()
+
   const [selectedQuantity, setSelectedQuantity] = useState(1)
-  const mutation = useMutation((newProduct) =>
-    CartAPI.addItemCart([newProduct])
-  )
+  const addCartItem = useAddCartItem(id, selectedQuantity)
 
   const buyProduct = () => {
     if (state.isAuthenticated) {
@@ -133,7 +131,7 @@ export default function ProductInfo({
 
   const addProductToCart = async () => {
     if (state.isAuthenticated) {
-      mutation.mutate({
+      addCartItem.mutate({
         productId: id,
         quantity: selectedQuantity
       })

@@ -1,6 +1,6 @@
 import { instance } from './instance'
 
-function login({ username, password }) {
+function signIn({ username, password }) {
   return instance
     .post('/auth/local', {
       identifier: username,
@@ -16,7 +16,7 @@ function signUp({ email, username, password }) {
       username,
       password
     })
-    .then((res) => res)
+    .then((res) => res.data)
 }
 
 function checkToken(token) {
@@ -26,11 +26,11 @@ function checkToken(token) {
         Authorization: `Bearer ${token}`
       }
     })
-    .then((res) => res)
+    .then((res) => res.data)
 }
 
 export const AuthAPI = {
-  login,
+  signIn,
   signUp,
   checkToken
 }

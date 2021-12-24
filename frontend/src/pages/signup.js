@@ -1,36 +1,15 @@
-import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { useMutation } from 'react-query'
 import Link from 'next/link'
-import { AuthAPI } from '../api/auth'
-import { types } from '../context/User/types'
-import { useUserContext } from '../context/User/UserContext'
 import { LoginContainer } from './login'
 import { PublicRoute } from '../routes/publicRoute'
 import Loading from '../components/Loading'
+import { useSignUp } from '../hooks/authHook'
+import { ErrorMessage } from '../components/ErrorMessage'
 
 export default function Signup() {
   const [errorUI, setErrorUI] = useState(null)
 
-  const Router = useRouter()
-  const { dispatch } = useUserContext()
-
-  const mutation = useMutation(AuthAPI.signUp, {
-    onSuccess: ({ data }) => {
-      const userData = {
-        ...data.user
-      }
-      delete userData.carrito
-      delete userData.role
-      delete userData.provsignup
-      dispatch({
-        type: types.signIn,
-        jwt: data.jwt,
-        data: userData
-      })
-
-      Router.push('/')
-    },
+  const signUp = useSignUp({
     onError: (error) => {
       if (error.response.data.statusCode === 400) {
         setErrorUI('El usuario ya existe')
@@ -49,7 +28,7 @@ export default function Signup() {
 
   const signup = (e) => {
     e.preventDefault()
-    mutation.mutate(form)
+    signUp.mutate(form)
   }
 
   const changeField = (e) => {
@@ -65,6 +44,7 @@ export default function Signup() {
     <LoginContainer>
       {errorUI}
       <div className="container">
+        {errorUI && <ErrorMessage>{errorUI}</ErrorMessage>}
         <h1 className="title">
           ¡Hola! Completa el formulario para el registro
         </h1>
@@ -99,13 +79,13 @@ export default function Signup() {
             required
           />
           <button
-            disabled={mutation.isLoading}
+            disabled={signUp.isLoading}
             className={`form__submit--btn ${
-              mutation.isLoading ? 'form__submit--loading' : ''
+              signUp.isLoading ? 'form__submit--loading' : ''
             }`}
             type="submit"
           >
-            {mutation.isLoading ? <Loading /> : 'Registrarse'}
+            {signUp.isLoading ? <Loading /> : 'Registrarse'}
           </button>
         </form>
         <Link href="/login">

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { dehydrate, QueryClient, useQuery } from 'react-query'
+import { dehydrate, QueryClient } from 'react-query'
 import styled from 'styled-components'
 import { ProductsAPI } from '../api/products'
 import Loading from '../components/Loading'
@@ -10,6 +10,8 @@ import ProductFeatures from '../components/ProductPage/ProductFeatures'
 import ProductGallery from '../components/ProductPage/ProductGallery'
 import ProductImage from '../components/ProductPage/ProductImage'
 import ProductInfo from '../components/ProductPage/ProductInfo'
+import { QueryKeys } from '../constants/queryKeys.constant'
+import { useGetProduct } from '../hooks/productHook'
 
 const MainContainer = styled.div`
   padding: 15px 20px;
@@ -42,9 +44,7 @@ const ProductContainer = styled.div`
 `
 
 export default function Product({ productId }) {
-  const { data, isLoading } = useQuery(['getProduct', productId], () =>
-    ProductsAPI.getProduct(productId)
-  )
+  const { data, isLoading } = useGetProduct(productId)
 
   const [image, setImage] = useState(null)
 
@@ -104,7 +104,7 @@ export default function Product({ productId }) {
 export async function getServerSideProps({ params }) {
   const { productId } = params
   const queryClient = new QueryClient()
-  await queryClient.prefetchQuery('getProduct', () =>
+  await queryClient.prefetchQuery(QueryKeys.GET_PRODUCT, () =>
     ProductsAPI.getProduct(productId)
   )
 
