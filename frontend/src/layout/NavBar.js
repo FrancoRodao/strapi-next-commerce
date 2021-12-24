@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { types } from '../context/User/types'
 import { useUserContext } from '../context/User/UserContext'
@@ -213,6 +214,7 @@ const Menu = styled.div`
       height: 6px;
       width: 6px;
       margin-left: 5px;
+      margin-top: 5px;
       color: rgba(0, 0, 0, 0.3);
       transform: rotate(-45deg);
       position: relative;
@@ -221,6 +223,7 @@ const Menu = styled.div`
 
     &:hover {
       &:after {
+        margin-top: 0;
         transform: rotate(135deg);
       }
     }
@@ -234,6 +237,7 @@ const Menu = styled.div`
 
 export default function NavBar() {
   const { state, dispatch } = useUserContext()
+  const router = useRouter()
   const { isAuthenticated, data: userData } = state
 
   const handleSubmit = (e) => {
@@ -245,6 +249,7 @@ export default function NavBar() {
     dispatch({
       type: types.logout
     })
+    router.push('/')
   }
 
   return (
