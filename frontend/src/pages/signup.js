@@ -11,8 +11,11 @@ export default function Signup() {
 
   const signUp = useSignUp({
     onError: (error) => {
-      if (error.response.data.statusCode === 400) {
-        setErrorUI('El usuario ya existe')
+      if (
+        error.response.data.message[0].messages[0].id ===
+        'Auth.form.error.email.taken'
+      ) {
+        setErrorUI('El email o el usuario ya estan en uso')
         return
       }
 
@@ -42,7 +45,6 @@ export default function Signup() {
 
   return (
     <LoginContainer>
-      {errorUI}
       <div className="container">
         {errorUI && <ErrorMessage>{errorUI}</ErrorMessage>}
         <h1 className="title">

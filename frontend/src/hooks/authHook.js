@@ -56,10 +56,10 @@ export function useSignUp(
 
   return useMutation(AuthAPI.signUp, {
     onSuccess: (response) => {
-      const { data } = response
+      const { user, jwt } = response
 
       const userData = {
-        ...data.user
+        ...user
       }
       delete userData.carrito
       delete userData.role
@@ -67,7 +67,7 @@ export function useSignUp(
 
       dispatch({
         type: types.signIn,
-        jwt: data.jwt,
+        jwt,
         data: userData
       })
 
