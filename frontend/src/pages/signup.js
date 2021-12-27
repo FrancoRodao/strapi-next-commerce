@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import { LoginContainer } from './signin'
 import { PublicRoute } from '../routes/publicRoute'
 import Loading from '../components/Loading'
 import { useSignUp } from '../hooks/authHook'
-import { ErrorMessage } from '../components/ErrorMessage'
+import Login from '../components/Login/Login'
+import LoginForm from '../components/Login/LoginForm'
+import LoginField from '../components/Login/LoginField'
+import { Button } from '../components/Button'
 
 export default function Signup() {
   const [errorUI, setErrorUI] = useState(null)
 
-  const { signUp } = useSignUp({
+  const { signUp, isLoading } = useSignUp({
     onError: (error) => {
       if (
         error.response.data.message[0].messages[0].id ===
@@ -29,7 +31,7 @@ export default function Signup() {
     password: ''
   })
 
-  const handleSignUp = (e) => {
+  const formSubmit = (e) => {
     e.preventDefault()
     signUp(form)
   }
@@ -44,59 +46,41 @@ export default function Signup() {
   }
 
   return (
-    <LoginContainer>
-      <div className="container">
-        {errorUI && <ErrorMessage>{errorUI}</ErrorMessage>}
-        <h1 className="title">
-          ¡Hola! Completa el formulario para el registro
-        </h1>
-        <form className="form" onSubmit={handleSignUp}>
-          <p className="form__title">Email</p>
-          <input
-            name="email"
-            value={form.email}
-            type="text"
-            onChange={changeField}
-            className="form__input"
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
-            required
-          />
-          <p className="form__title">Usuario</p>
-          <input
-            name="username"
-            value={form.username}
-            type="text"
-            onChange={changeField}
-            className="form__input"
-            required
-          />
-          <p className="form__title">Contraseña</p>
-          <input
-            name="password"
-            value={form.password}
-            type="password"
-            onChange={changeField}
-            className="form__input"
-            required
-          />
-          <button
-            disabled={signUp.isLoading}
-            className={`form__submit--btn ${
-              signUp.isLoading ? 'form__submit--loading' : ''
-            }`}
-            type="submit"
-          >
-            {signUp.isLoading ? <Loading /> : 'Registrarse'}
-          </button>
-        </form>
-        <Link href="/signin">
-          <a className="register-btn" href="login">
-            Iniciar sesion
-          </a>
-        </Link>
-      </div>
-    </LoginContainer>
+    <Login
+      title="¡Hola! Completa el formulario para el registro"
+      errorUI={errorUI}
+    >
+      <LoginForm onSubmit={formSubmit}>
+        <LoginField
+          fieldTitle="Email"
+          inputName="email"
+          inputOnChangeValue={changeField}
+          inputValue={form.email}
+          type="email"
+        />
+        <LoginField
+          fieldTitle="Usuario"
+          inputName="username"
+          inputOnChangeValue={changeField}
+          inputValue={form.username}
+        />
+        <LoginField
+          fieldTitle="Contraseña"
+          inputName="password"
+          inputOnChangeValue={changeField}
+          inputValue={form.password}
+          inputType="password"
+        />
+        <Button isLoading={isLoading} disabled={isLoading} type="submit">
+          {isLoading ? <Loading /> : 'Registrarse'}
+        </Button>
+      </LoginForm>
+      <Link href="/signin" passHref>
+        <a href="/signin">
+          <Button outline>Iniciar sesion</Button>
+        </a>
+      </Link>
+    </Login>
   )
 }
 

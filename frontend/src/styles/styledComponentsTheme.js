@@ -9,6 +9,7 @@ const styledComponentsTheme = {
   error: '#f04449',
   success: '#28a745',
   blue: '#3483fa',
+  darkBlue: '#3877d6',
   lightGrey: '#f5f5f5',
   gray: '#999',
 

@@ -6,6 +6,7 @@ import { numberToArray } from '../../helpers/numberToArray'
 import { useUserContext } from '../../context/User/UserContext'
 import { ProductPrice } from '../ProductPrice'
 import { useAddCartItem } from '../../hooks/cartHook'
+import { Button } from '../Button'
 
 const Aside = styled.aside`
   border: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
@@ -68,37 +69,9 @@ const Aside = styled.aside`
       }
     }
 
-    &-buynow {
-      display: block;
-      text-align: center;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
-      background-color: ${({ theme }) => theme.blue};
-      color: #fff;
-      padding: 15px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      font-weight: 600;
-      font-size: 15px;
-      margin-bottom: 10px;
-
-      &:hover {
-        background-color: #3877d6;
-      }
-    }
-
     &-addtocart {
-      width: 100%;
-      border: none;
-      border-radius: 5px;
       background-color: #d9e7fa;
       color: ${({ theme }) => theme.blue};
-      padding: 15px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      font-weight: 600;
-      font-size: 15px;
 
       &:hover {
         background-color: #ceddf2;
@@ -167,20 +140,16 @@ export default function ProductInfo({
             ({quantity} disponibles)
           </span>
         </div>
-        <button
-          onClick={buyProduct}
-          type="button"
-          className="product-info-buynow"
-        >
+        <Button onClick={buyProduct} type="button">
           Comprar ahora
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={addProductToCart}
           type="button"
           className="product-info-addtocart"
         >
           Agregar al carrito
-        </button>
+        </Button>
       </>
     </Aside>
   )

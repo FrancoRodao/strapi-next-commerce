@@ -9,6 +9,7 @@ import { ProtectedRoute } from '../routes/protectedRoute'
 import { getTotalPriceCart } from '../helpers/getTotalPriceCart'
 import { useGetUserCart } from '../hooks/cartHook'
 import { QueryKeys } from '../constants/queryKeys.constant'
+import { Button } from '../components/Button'
 
 const MainContainer = styled.div`
   background-color: #fff;
@@ -37,20 +38,6 @@ const MainContainer = styled.div`
     margin-left: auto;
     width: fit-content;
     font-weight: 500;
-
-    border: none;
-    border-radius: 5px;
-    background-color: ${({ theme }) => theme.blue};
-    color: #fff;
-    padding: 15px 25px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 15px;
-    margin-bottom: 10px;
-
-    &:hover {
-      background-color: #3877d6;
-    }
   }
 `
 
@@ -87,8 +74,8 @@ export default function Cart() {
       <p className="total">Total: ${getTotalPriceCart(cart)}</p>
 
       <Link href="checkout/cart">
-        <a href="checkout/cart" className="buy">
-          Continuar compra
+        <a href="checkout/cart">
+          <Button className="buy">Continuar compra</Button>
         </a>
       </Link>
     </MainContainer>

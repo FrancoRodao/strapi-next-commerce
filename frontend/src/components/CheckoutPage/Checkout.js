@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { Button } from '../Button'
 import { ErrorMessage } from '../ErrorMessage'
 
 const CheckoutContainer = styled.div`
@@ -118,29 +119,12 @@ const CheckoutContainer = styled.div`
       }
     }
 
-    .continue {
-      width: 100%;
-      display: flex;
-      margin-top: 15px;
-
-      &-button {
-        width: 25%;
-        margin-left: auto;
-        border: none;
-        border-radius: 5px;
-        background-color: ${({ theme }) => theme.blue};
-        color: #fff;
-        padding: 15px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        font-weight: 500;
-        font-size: 15px;
-        text-align: center;
-
-        &:hover {
-          background-color: #3877d6;
-        }
-      }
+    .continue-button {
+      display: block;
+      width: 30%;
+      margin-left: auto;
+      font-weight: 500;
+      font-size: 15px;
     }
   }
 `
@@ -204,15 +188,9 @@ export default function Checkout() {
         </div>
         {errorUI && <ErrorMessage>{errorUI}</ErrorMessage>}
 
-        <div className="continue">
-          <a
-            onClick={continueToPay}
-            href="continue"
-            className="continue-button"
-          >
-            Continuar
-          </a>
-        </div>
+        <a onClick={continueToPay} href="continue">
+          <Button className="continue-button">Continuar</Button>
+        </a>
       </div>
     </CheckoutContainer>
   )
