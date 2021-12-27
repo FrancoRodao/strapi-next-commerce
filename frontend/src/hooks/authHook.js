@@ -14,7 +14,7 @@ export function useSignIn(
   const Router = useRouter()
   const { dispatch } = useUserContext()
 
-  return useMutation(AuthAPI.signIn, {
+  const { mutate, ...rest } = useMutation(AuthAPI.signIn, {
     onSuccess: (response) => {
       const { data } = response
 
@@ -43,6 +43,11 @@ export function useSignIn(
       }
     }
   })
+
+  return {
+    signIn: mutate,
+    ...rest
+  }
 }
 
 export function useSignUp(
@@ -54,7 +59,7 @@ export function useSignUp(
   const Router = useRouter()
   const { dispatch } = useUserContext()
 
-  return useMutation(AuthAPI.signUp, {
+  const { mutate, ...rest } = useMutation(AuthAPI.signUp, {
     onSuccess: (response) => {
       const { user, jwt } = response
 
@@ -83,4 +88,9 @@ export function useSignUp(
       }
     }
   })
+
+  return {
+    signUp: mutate,
+    ...rest
+  }
 }

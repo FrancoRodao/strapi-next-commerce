@@ -119,26 +119,26 @@ export default function ProductInfo({
   const router = useRouter()
 
   const [selectedQuantity, setSelectedQuantity] = useState(1)
-  const addCartItem = useAddCartItem(id, selectedQuantity)
+  const { addCartItem } = useAddCartItem(id, selectedQuantity)
 
   const buyProduct = () => {
     if (state.isAuthenticated) {
       router.push(`/checkout/${id}?quantity=${selectedQuantity}`)
       return
     }
-    router.push('/login')
+    router.push('/signin')
   }
 
   const addProductToCart = async () => {
     if (state.isAuthenticated) {
-      addCartItem.mutate({
+      addCartItem({
         productId: id,
         quantity: selectedQuantity
       })
       return
     }
 
-    router.push('/login')
+    router.push('/signin')
   }
 
   const changeProductQuantity = (e) =>

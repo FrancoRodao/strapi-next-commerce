@@ -107,8 +107,8 @@ export function Card({
       >
         <i className="bx bx-x-circle" />
       </button>
-      <Link href={`/${productId}`} passHref>
-        <a className="product-card-container" href={`/${productId}`}>
+      <Link href={`/product/${productId}`} passHref>
+        <a className="product-card-container" href={`/product/${productId}`}>
           <div className="product-card-image">
             <Image
               src={imageSrc}

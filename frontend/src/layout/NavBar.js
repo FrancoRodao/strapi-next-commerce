@@ -186,18 +186,6 @@ const Menu = styled.div`
     background-color: #fff;
     z-index: 9999;
     transition: visibility 0.2s, opacity 0.2s;
-
-    &::before {
-      content: '';
-      display: block;
-      position: absolute;
-      right: 32px;
-      bottom: 100%;
-      pointer-events: none;
-      border-bottom: 14px solid #fff;
-      border-left: 14px solid transparent;
-      border-right: 14px solid transparent;
-    }
   }
 
   .menu__profile {
@@ -206,6 +194,21 @@ const Menu = styled.div`
     position: relative;
     height: 45px;
     cursor: pointer;
+
+    &::before {
+      content: '';
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      top: 80%;
+      right: -10px;
+      bottom: 100%;
+      pointer-events: none;
+      border-bottom: 14px solid #fff;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      transition: visibility 0.2s, opacity 0.2s;
+    }
 
     &:after {
       content: '';
@@ -218,10 +221,15 @@ const Menu = styled.div`
       color: rgba(0, 0, 0, 0.3);
       transform: rotate(-45deg);
       position: relative;
-      transition: transform 0.3s;
+      transition: transform 0.3s, margin 0.3s;
     }
 
     &:hover {
+      &::before {
+        visibility: visible;
+        opacity: 1;
+      }
+
       &:after {
         margin-top: 0;
         transform: rotate(135deg);
@@ -306,8 +314,8 @@ export default function NavBar() {
               </div>
             </div>
           ) : (
-            <Link href="/login" passHref>
-              <a href="login">
+            <Link href="/signin" passHref>
+              <a href="/signin">
                 <p className="menu__item menu__item--login">Iniciar sesion</p>
               </a>
             </Link>

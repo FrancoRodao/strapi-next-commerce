@@ -133,14 +133,19 @@ export function CartCard({
   cartItemQuantity,
   productQuantity
 }) {
-  const addOne = useAddCartItem(productId, 1)
+  const { addCartItem, isLoading: addCartItemLoading } = useAddCartItem(
+    productId,
+    1
+  )
 
-  const removeOne = useRemoveOneToCartItem(cartItemId)
+  const { removeOneToCartItem, isLoading: removeOneToCartItemLoading } =
+    useRemoveOneToCartItem(cartItemId)
 
-  const deleteCartItem = useDeleteCartItem(cartItemId)
+  const { deleteCartItem, isLoading: deleteCartItemLoading } =
+    useDeleteCartItem(cartItemId)
 
   const isLoading =
-    addOne.isLoading || removeOne.isLoading || deleteCartItem.isLoading
+    addCartItemLoading || removeOneToCartItemLoading || deleteCartItemLoading
 
   return (
     <Container>
@@ -154,8 +159,8 @@ export function CartCard({
           />
         </div>
         <div className="info-body">
-          <Link href={`/${productId}`}>
-            <a href={`/${productId}`}>
+          <Link href={`/product/${productId}`}>
+            <a href={`/product/${productId}`}>
               <h1 className="title">{title}</h1>
             </a>
           </Link>
@@ -172,7 +177,7 @@ export function CartCard({
         <div className="quantity-container">
           <div className={`quantity ${isLoading ? 'quantity--disabled' : ''}`}>
             <button
-              onClick={removeOne.mutate}
+              onClick={removeOneToCartItem.mutate}
               className={`quantity-btn quantity-btn-subtract subtract ${
                 cartItemQuantity === 1 ? 'btn-disabled' : ''
               }`}
@@ -183,7 +188,7 @@ export function CartCard({
             </button>
             <p className="quantity-num">{cartItemQuantity}</p>
             <button
-              onClick={addOne.mutate}
+              onClick={addCartItem}
               className="quantity-btn"
               type="button"
               disabled={isLoading}

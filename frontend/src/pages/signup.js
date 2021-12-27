@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import { LoginContainer } from './login'
+import { LoginContainer } from './signin'
 import { PublicRoute } from '../routes/publicRoute'
 import Loading from '../components/Loading'
 import { useSignUp } from '../hooks/authHook'
@@ -9,7 +9,7 @@ import { ErrorMessage } from '../components/ErrorMessage'
 export default function Signup() {
   const [errorUI, setErrorUI] = useState(null)
 
-  const signUp = useSignUp({
+  const { signUp } = useSignUp({
     onError: (error) => {
       if (
         error.response.data.message[0].messages[0].id ===
@@ -29,9 +29,9 @@ export default function Signup() {
     password: ''
   })
 
-  const signup = (e) => {
+  const handleSignUp = (e) => {
     e.preventDefault()
-    signUp.mutate(form)
+    signUp(form)
   }
 
   const changeField = (e) => {
@@ -50,7 +50,7 @@ export default function Signup() {
         <h1 className="title">
           ¡Hola! Completa el formulario para el registro
         </h1>
-        <form className="form" onSubmit={signup}>
+        <form className="form" onSubmit={handleSignUp}>
           <p className="form__title">Email</p>
           <input
             name="email"
@@ -90,7 +90,7 @@ export default function Signup() {
             {signUp.isLoading ? <Loading /> : 'Registrarse'}
           </button>
         </form>
-        <Link href="/login">
+        <Link href="/signin">
           <a className="register-btn" href="login">
             Iniciar sesion
           </a>

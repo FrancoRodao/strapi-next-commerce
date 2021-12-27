@@ -98,10 +98,10 @@ export const LoginContainer = styled.div`
   }
 `
 
-function Login() {
+function SignIn() {
   const [errorUI, setErrorUI] = useState(null)
 
-  const signIn = useSignIn({
+  const { signIn } = useSignIn({
     onError: (error) => {
       if (error.response.data.statusCode === 400) {
         setErrorUI('Credenciales invalidas')
@@ -117,10 +117,10 @@ function Login() {
     password: ''
   })
 
-  const login = (e) => {
+  const handleSignIn = (e) => {
     e.preventDefault()
     setErrorUI(false)
-    signIn.mutate(form)
+    signIn(form)
   }
 
   const changeField = (e) => {
@@ -139,7 +139,7 @@ function Login() {
         <h1 className="title">
           ¡Hola! Ingresa tus credenciales para iniciar sesion
         </h1>
-        <form className="form" onSubmit={login}>
+        <form className="form" onSubmit={handleSignIn}>
           <p className="form__title">Usuario</p>
           <input
             name="username"
@@ -183,4 +183,4 @@ function Login() {
 // If the user is logged in, they should not access the page
 export const getServerSideProps = PublicRoute()
 
-export default Login
+export default SignIn

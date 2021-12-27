@@ -17,23 +17,47 @@ export function useGetUserCart() {
 export function useAddCartItem(productId, quantity = 1) {
   const queryClient = useQueryClient()
 
-  return useMutation(() => CartAPI.addCartItem([{ productId, quantity }]), {
-    onSuccess: () => queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
-  })
+  const { mutate, ...rest } = useMutation(
+    () => CartAPI.addCartItem([{ productId, quantity }]),
+    {
+      onSuccess: () => queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
+    }
+  )
+
+  return {
+    addCartItem: mutate,
+    ...rest
+  }
 }
 
 export function useRemoveOneToCartItem(cartItemId) {
   const queryClient = useQueryClient()
 
-  return useMutation(() => CartAPI.subtractOne(cartItemId), {
-    onSuccess: () => queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
-  })
+  const { mutate, ...rest } = useMutation(
+    () => CartAPI.subtractOne(cartItemId),
+    {
+      onSuccess: () => queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
+    }
+  )
+
+  return {
+    removeOneToCartItem: mutate,
+    ...rest
+  }
 }
 
 export function useDeleteCartItem(cartItemId) {
   const queryClient = useQueryClient()
 
-  return useMutation(() => CartAPI.deleteCartItem(cartItemId), {
-    onSuccess: () => queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
-  })
+  const { mutate, ...rest } = useMutation(
+    () => CartAPI.deleteCartItem(cartItemId),
+    {
+      onSuccess: () => queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
+    }
+  )
+
+  return {
+    deleteCartItem: mutate,
+    ...rest
+  }
 }
