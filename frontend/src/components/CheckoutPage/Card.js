@@ -19,20 +19,6 @@ const CardContainer = styled.div`
       cursor: pointer;
     }
 
-    &-remove {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      border: none;
-      background-color: transparent;
-      color: #c44239;
-      cursor: pointer;
-
-      &:hover {
-        color: #eb3b2f;
-      }
-    }
-
     &-image {
       position: relative;
       width: 50px;
@@ -100,13 +86,6 @@ export function Card({
 }) {
   return (
     <CardContainer>
-      <button
-        title="Eliminar del carrito"
-        type="button"
-        className="product-card-remove"
-      >
-        <i className="bx bx-x-circle" />
-      </button>
       <Link href={`/product/${productId}`} passHref>
         <a className="product-card-container" href={`/product/${productId}`}>
           <div className="product-card-image">
