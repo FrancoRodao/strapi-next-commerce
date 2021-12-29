@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 import { PublicRoute } from '../routes/publicRoute'
 import Loading from '../components/Loading'
 import { useSignUp } from '../hooks/authHook'
@@ -12,6 +13,16 @@ export default function Signup() {
   const [errorUI, setErrorUI] = useState(null)
 
   const { signUp, isLoading } = useSignUp({
+    onSuccess: (response) => {
+      toast(
+        <span>
+          Bienvenido <b>{response.user.username}</b>
+        </span>,
+        {
+          icon: '👋'
+        }
+      )
+    },
     onError: (error) => {
       if (
         error.response.data.message[0].messages[0].id ===
@@ -57,6 +68,7 @@ export default function Signup() {
           inputOnChangeValue={changeField}
           inputValue={form.email}
           type="email"
+          autoFocus
         />
         <LoginField
           fieldTitle="Usuario"

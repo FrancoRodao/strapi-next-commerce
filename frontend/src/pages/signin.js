@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 import { PublicRoute } from '../routes/publicRoute'
 import Loading from '../components/Loading'
 import { useSignIn } from '../hooks/authHook'
@@ -12,6 +13,16 @@ function SignIn() {
   const [errorUI, setErrorUI] = useState(null)
 
   const { signIn, isLoading } = useSignIn({
+    onSuccess: (response) => {
+      toast(
+        <span>
+          Bienvenido <b>{response.data.user.username}</b>
+        </span>,
+        {
+          icon: '👋'
+        }
+      )
+    },
     onError: (error) => {
       if (error.response.data.statusCode === 400) {
         setErrorUI('Credenciales invalidas')
@@ -53,6 +64,7 @@ function SignIn() {
           inputName="username"
           inputOnChangeValue={changeField}
           inputValue={form.username}
+          autoFocus
         />
         <LoginField
           fieldTitle="Contraseña"

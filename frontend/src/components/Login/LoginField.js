@@ -23,7 +23,8 @@ export default function LoginField({
   inputName,
   inputValue,
   inputOnChangeValue,
-  inputType
+  inputType,
+  ...rest
 }) {
   return (
     <>
@@ -35,8 +36,9 @@ export default function LoginField({
         onChange={inputOnChangeValue}
         className="form__input"
         // eslint-disable-next-line jsx-a11y/no-autofocus
-        autoFocus
         required
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...rest}
       />
     </>
   )

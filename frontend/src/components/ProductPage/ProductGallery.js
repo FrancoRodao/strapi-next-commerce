@@ -38,11 +38,14 @@ export default function ProductGallery({ images, setImage }) {
       imgRef.classList.remove('gallery-item-selected')
     )
 
+    // click on li
     if (event.target.classList.contains('gallery-item')) {
       event.target.classList.add('gallery-item-selected')
+      setImage(img)
       return
     }
 
+    // click on image
     event.target.parentElement.parentElement.classList.add(
       'gallery-item-selected'
     )

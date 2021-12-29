@@ -2,6 +2,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 import { numberToArray } from '../../helpers/numberToArray'
 import { useUserContext } from '../../context/User/UserContext'
 import { ProductPrice } from '../ProductPrice'
@@ -99,6 +100,8 @@ export default function ProductInfo({
       router.push(`/checkout/${id}?quantity=${selectedQuantity}`)
       return
     }
+
+    toast.error('Debe iniciar sesion antes de comprar')
     router.push('/signin')
   }
 
@@ -111,6 +114,7 @@ export default function ProductInfo({
       return
     }
 
+    toast.error('Debe iniciar sesion antes de agregar productos al carrito')
     router.push('/signin')
   }
 

@@ -10,6 +10,7 @@ import { ThemeProvider } from 'styled-components'
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { useState } from 'react'
 
+import { Toaster } from 'react-hot-toast'
 import Layout from '../layout/Layout'
 import { styledComponentsTheme } from '../styles/styledComponentsTheme'
 import { UserContext, userReducer } from '../context/User/UserContext'
@@ -33,6 +34,7 @@ function MyApp({ Component, pageProps, userContextInitialState }) {
       <Hydrate state={pageProps.dehydratedState}>
         <ThemeProvider theme={styledComponentsTheme}>
           <UserContext initialState={userContextInitialState}>
+            <Toaster position="top-right" />
             <Layout>
               <Component {...pageProps} />
             </Layout>
