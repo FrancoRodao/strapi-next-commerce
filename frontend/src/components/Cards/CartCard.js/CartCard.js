@@ -177,7 +177,7 @@ export function CartCard({
         <div className="quantity-container">
           <div className={`quantity ${isLoading ? 'quantity--disabled' : ''}`}>
             <button
-              onClick={removeOneToCartItem.mutate}
+              onClick={removeOneToCartItem}
               className={`quantity-btn quantity-btn-subtract subtract ${
                 cartItemQuantity === 1 ? 'btn-disabled' : ''
               }`}
@@ -189,9 +189,11 @@ export function CartCard({
             <p className="quantity-num">{cartItemQuantity}</p>
             <button
               onClick={addCartItem}
-              className="quantity-btn"
+              className={`quantity-btn ${
+                cartItemQuantity === productQuantity ? 'btn-disabled' : ''
+              }`}
               type="button"
-              disabled={isLoading}
+              disabled={isLoading || cartItemQuantity === productQuantity}
             >
               +
             </button>
