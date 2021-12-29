@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import Image from 'next/image'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 import Loading from '../../Loading'
 import { ProductPrice } from '../../ProductPrice'
 import {
@@ -142,7 +143,12 @@ export function CartCard({
     useRemoveOneToCartItem(cartItemId)
 
   const { deleteCartItem, isLoading: deleteCartItemLoading } =
-    useDeleteCartItem(cartItemId)
+    useDeleteCartItem(cartItemId, {
+      onSuccess: () =>
+        toast('Producto eliminado', {
+          icon: <i style={{ color: '#17a2b8' }} className="bx bx-info-circle" />
+        })
+    })
 
   const isLoading =
     addCartItemLoading || removeOneToCartItemLoading || deleteCartItemLoading
@@ -165,11 +171,7 @@ export function CartCard({
             </a>
           </Link>
           <div className="btn-container">
-            <button
-              onClick={deleteCartItem.mutate}
-              type="button"
-              className="btn"
-            >
+            <button onClick={deleteCartItem} type="button" className="btn">
               Eliminar
             </button>
           </div>

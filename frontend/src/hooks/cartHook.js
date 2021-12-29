@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { CartAPI } from '../api/cart'
 import { QueryKeys } from '../constants/queryKeys.constant'
@@ -46,13 +47,24 @@ export function useRemoveOneToCartItem(cartItemId) {
   }
 }
 
-export function useDeleteCartItem(cartItemId) {
+export function useDeleteCartItem(
+  cartItemId,
+  options = {
+    onSuccess: (response) => {}
+  }
+) {
   const queryClient = useQueryClient()
 
   const { mutate, ...rest } = useMutation(
     () => CartAPI.deleteCartItem(cartItemId),
     {
-      onSuccess: () => queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
+      onSuccess: () => {
+        queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
+
+        if (options?.onSuccess) {
+          options.onSuccess()
+        }
+      }
     }
   )
 

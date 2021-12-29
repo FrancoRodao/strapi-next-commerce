@@ -39,7 +39,50 @@ const MainContainer = styled.div`
     width: fit-content;
     font-weight: 500;
   }
+
+  .no-items-container {
+    display: flex;
+    justify-content: center;
+    padding: 50px 0px;
+    font-size: 25px;
+    color: ${({ theme }) => theme.gray};
+  }
 `
+
+function RenderCart({ cart }) {
+  return (
+    <>
+      {cart.length > 0 ? (
+        <>
+          {cart.map(({ id, cantidad, producto }) => (
+            <CartCard
+              key={id}
+              cartItemId={id}
+              productId={producto.id}
+              title={producto.titulo}
+              price={producto.precio}
+              offerPrice={producto.precio_oferta}
+              image={producto.imagenes[0]}
+              cartItemQuantity={cantidad}
+              productQuantity={producto.cantidad}
+            />
+          ))}
+
+          <p className="total">Total: ${getTotalPriceCart(cart)}</p>
+          <Link href="checkout/cart">
+            <a href="checkout/cart">
+              <Button className="buy">Continuar compra</Button>
+            </a>
+          </Link>
+        </>
+      ) : (
+        <div className="no-items-container">
+          <p>Tu carrito está vacío</p>
+        </div>
+      )}
+    </>
+  )
+}
 
 export default function Cart() {
   const { data: cart, isLoading } = useGetUserCart()
@@ -53,31 +96,8 @@ export default function Cart() {
           </li>
         </ul>
       </nav>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        cart.map(({ id, cantidad, producto }) => (
-          <CartCard
-            key={id}
-            cartItemId={id}
-            productId={producto.id}
-            title={producto.titulo}
-            price={producto.precio}
-            offerPrice={producto.precio_oferta}
-            image={producto.imagenes[0]}
-            cartItemQuantity={cantidad}
-            productQuantity={producto.cantidad}
-          />
-        ))
-      )}
 
-      <p className="total">Total: ${getTotalPriceCart(cart)}</p>
-
-      <Link href="checkout/cart">
-        <a href="checkout/cart">
-          <Button className="buy">Continuar compra</Button>
-        </a>
-      </Link>
+      {isLoading ? <Loading /> : <RenderCart cart={cart} />}
     </MainContainer>
   )
 }
