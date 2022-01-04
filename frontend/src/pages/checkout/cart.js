@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { dehydrate, QueryClient } from 'react-query'
+import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 import { CartAPI } from '../../api/cart'
 import Checkout from '../../components/CheckoutPage/Checkout'
 import { CheckoutPageContainer } from '../../components/CheckoutPage/CheckoutPage.style'
@@ -12,8 +14,17 @@ import { useGetUserCart } from '../../hooks/cartHook'
 import { ProtectedRoute } from '../../routes/protectedRoute'
 
 export default function CheckoutCartPage() {
-  const { data: cart } = useGetUserCart()
+  const { data: cart, isLoading, isError } = useGetUserCart()
   const [paymentStep, setPaymentStep] = useState(false)
+  const router = useRouter()
+
+  // THE CART MUST HAVE AT LEAST ONE PRODUCT
+  useEffect(() => {
+    if (!isLoading && !isError && cart.length <= 0) {
+      toast.error('No tienes ningún producto en el carrito para comprar')
+      router.push('/cart')
+    }
+  }, [])
 
   const goToPaymentStep = () => setPaymentStep(true)
 
