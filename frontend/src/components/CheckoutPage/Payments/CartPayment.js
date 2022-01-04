@@ -1,9 +1,7 @@
-import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { getTotalPriceCart } from '../../../helpers/getTotalPriceCart'
 import { useGetUserCart } from '../../../hooks/cartHook'
 import Loading from '../../Loading'
 import { PaypalPaymentOption } from './options/PaypalPaymentOption'
-import { PaymentContainer } from './Payment.style'
 
 const cartToPaypalItems = (cart) => {
   if (!Array.isArray(cart)) {
@@ -68,22 +66,9 @@ export function CartPayment() {
     })
 
   return (
-    <PaymentContainer>
-      {/* LOADING Height WHILE LOADING PAPYAL SDK */}
-      <div style={{ minHeight: '200px' }}>
-        <PayPalScriptProvider
-          options={{
-            'client-id': process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-            locale: 'es_UY',
-            components: 'buttons'
-          }}
-        >
-          <PaypalPaymentOption
-            createOrder={handleCreateOrder}
-            onApprove={handleOnApprove}
-          />
-        </PayPalScriptProvider>
-      </div>
-    </PaymentContainer>
+    <PaypalPaymentOption
+      createOrder={handleCreateOrder}
+      onApprove={handleOnApprove}
+    />
   )
 }

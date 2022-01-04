@@ -1,3 +1,4 @@
+import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { useGetProduct } from '../../../hooks/productHook'
 import Loading from '../../Loading'
 import { PaypalPaymentOption } from './options/PaypalPaymentOption'
@@ -63,11 +64,9 @@ export function ProductPayment({ productId, selectedQuantity }) {
     })
 
   return (
-    <PaymentContainer>
-      <PaypalPaymentOption
-        createOrder={handleCreateOrder}
-        onApprove={handleOnApprove}
-      />
-    </PaymentContainer>
+    <PaypalPaymentOption
+      createOrder={handleCreateOrder}
+      onApprove={handleOnApprove}
+    />
   )
 }
