@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_pagos_informacion_adicionals",
+  "info": {
+    "name": "info_de_pago",
+    "icon": "address-card",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "metodo_de_pago": {
+      "type": "enumeration",
+      "enum": [
+        "Paypal"
+      ],
+      "required": true
+    },
+    "correo_de_pago": {
+      "type": "email",
+      "required": true
+    },
+    "nombre_de_pago": {
+      "type": "string",
+      "required": true
+    },
+    "apellido_de_pago": {
+      "type": "string",
+      "required": false
+    }
+  }
+}

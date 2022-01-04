@@ -1,11 +1,11 @@
-import { PayPalScriptProvider } from '@paypal/react-paypal-js'
+import { useCreateOrder } from '../../../hooks/ordersHook'
 import { useGetProduct } from '../../../hooks/productHook'
 import Loading from '../../Loading'
 import { PaypalPaymentOption } from './options/PaypalPaymentOption'
-import { PaymentContainer } from './Payment.style'
 
 export function ProductPayment({ productId, selectedQuantity }) {
   const { data: product, isLoading, isError } = useGetProduct(productId)
+  const { createOrder } = useCreateOrder()
 
   // TODO: IMPROVE THE LOADING / ERROR SCREEN
   if (isLoading || isError) {
@@ -57,10 +57,19 @@ export function ProductPayment({ productId, selectedQuantity }) {
       }
     })
 
-  const handleOnApprove = (data, actions) =>
-    actions.order.capture().then(() => {
-      // Your code here after capture the order
-      console.log('GOOD', data)
+  const handleOnApprove = (_, actions) =>
+    actions.order.capture().then((data) => {
+      createOrder({
+        products: [{ productId: product.id, quantity: selectedQuantity }],
+        total: totalPrice,
+        delivered: false,
+        paymentInfo: {
+          method: 'Paypal',
+          email: data.payer.email_address,
+          name: data.payer.name.given_name,
+          surname: data.payer.name.surname
+        }
+      })
     })
 
   return (

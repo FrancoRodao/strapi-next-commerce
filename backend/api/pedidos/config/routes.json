@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/orders",
+      "handler": "pedidos.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/orders/count",
+      "handler": "pedidos.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/orders/:id",
+      "handler": "pedidos.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/orders",
+      "handler": "pedidos.createOrder",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/orders/:id",
+      "handler": "pedidos.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/orders/:id",
+      "handler": "pedidos.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

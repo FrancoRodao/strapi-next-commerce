@@ -1,5 +1,6 @@
 import { getTotalPriceCart } from '../../../helpers/getTotalPriceCart'
 import { useGetUserCart } from '../../../hooks/cartHook'
+import { useCreateOrder } from '../../../hooks/ordersHook'
 import Loading from '../../Loading'
 import { PaypalPaymentOption } from './options/PaypalPaymentOption'
 
@@ -20,6 +21,7 @@ const cartToPaypalItems = (cart) => {
 
 export function CartPayment() {
   const { data: cart, isLoading, isError } = useGetUserCart()
+  const { createOrder } = useCreateOrder()
 
   // TODO: IMPROVE THE LOADING / ERROR SCREEN
   if (isLoading || isError) {
@@ -59,10 +61,24 @@ export function CartPayment() {
       }
     })
 
-  const handleOnApprove = (data, actions) =>
-    actions.order.capture().then(() => {
-      // Your code here after capture the order
-      console.log('GOOD', data)
+  const handleOnApprove = (_, actions) =>
+    actions.order.capture().then((data) => {
+      const products = cart.map((cartItem) => ({
+        productId: cartItem.producto.id,
+        quantity: cartItem.cantidad
+      }))
+
+      createOrder({
+        products,
+        total: getTotalPriceCart(cart),
+        delivered: false,
+        paymentInfo: {
+          method: 'Paypal',
+          email: data.payer.email_address,
+          name: data.payer.name.given_name,
+          surname: data.payer.name.surname
+        }
+      })
     })
 
   return (

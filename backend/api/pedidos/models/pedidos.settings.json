@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "name": "Pedidos",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pedidos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "custom.productos",
+      "required": true
+    },
+    "user": {
+      "via": "pedidos",
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "total": {
+      "type": "integer",
+      "required": true
+    },
+    "entregado": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "info_de_pago": {
+      "type": "component",
+      "repeatable": false,
+      "component": "pagos.informacion-adicional",
+      "required": true
+    }
+  }
+}
