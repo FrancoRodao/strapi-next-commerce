@@ -10,6 +10,7 @@
     "prettier": "prettier --find-config-path --write --check src/**/*.{js,css}"
   },
   "dependencies": {
+    "@paypal/react-paypal-js": "^7.5.0",
     "axios": "^0.24.0",
     "babel-plugin-styled-components": "^2.0.2",
     "js-cookie": "^3.0.1",

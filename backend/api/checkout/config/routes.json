@@ -1,0 +1,20 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/checkout/getBrainTreeClientToken",
+      "handler": "checkout.getBrainTreeClientToken",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/checkout",
+      "handler": "checkout.checkout",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

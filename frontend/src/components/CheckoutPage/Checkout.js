@@ -129,7 +129,7 @@ const CheckoutContainer = styled.div`
   }
 `
 
-export default function Checkout() {
+export default function Checkout({ goToPaymentStep }) {
   const [checkedDirection, setCheckedDirection] = useState(false)
   const [errorUI, setErrorUI] = useState(null)
 
@@ -145,28 +145,16 @@ export default function Checkout() {
     e.preventDefault()
     if (!checkedDirection) {
       setErrorUI('Por favor confirma la dirección de retiro')
+      return
     }
+
+    goToPaymentStep(true)
   }
 
   return (
     <CheckoutContainer>
       <div className="checkout">
         <h1 className="checkout-title">Confirma la compra</h1>
-
-        {/* <p className="checkout-address">Domicilio</p>
-          <div className="checkout-address-select-container">
-            <div className="checkout-address-select">
-              <i className="bx bx-map" />
-              <div className="checkout-address-selected">
-                <p>one</p>
-                <p>two</p>
-              </div>
-              <button type="button" className="checkout-address-change">
-                Modificar ubicación
-              </button>
-            </div>
-          </div> */}
-
         <p className="checkout-address">Retirar compra</p>
         <div
           className={`withdraw ${

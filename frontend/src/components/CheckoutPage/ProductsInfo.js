@@ -40,21 +40,11 @@ const Container = styled.div`
   }
 `
 
-/* 
-  The quantity that comes per URL (query parameters) cannot be greater
-  than the quantity that actually exists. 
-*/
-const selectedQuantityValidation = (product) =>
-  product.selectedQuantity > product.cantidad
-    ? product.cantidad
-    : product.selectedQuantity
-
 export default function ProductsInfo({ productOrCart }) {
-  const productQuantity = selectedQuantityValidation(productOrCart)
-
   const oneSpecificProduct = !Array.isArray(productOrCart)
   const totalPrice = oneSpecificProduct
-    ? (productOrCart.precio_oferta || productOrCart.precio) * productQuantity
+    ? (productOrCart.precio_oferta || productOrCart.precio) *
+      productOrCart.selectedQuantity
     : getTotalPriceCart(productOrCart)
 
   return (
@@ -69,7 +59,7 @@ export default function ProductsInfo({ productOrCart }) {
               imageAlt={productOrCart.imagenes[0].alternativeText}
               price={productOrCart.precio}
               offerPrice={productOrCart.precio_oferta}
-              quantity={productQuantity}
+              quantity={productOrCart.selectedQuantity}
             />
           ) : (
             // CART PRODUCTS
