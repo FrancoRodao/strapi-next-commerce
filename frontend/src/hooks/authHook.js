@@ -24,6 +24,7 @@ export function useSignIn(
       delete userData.carrito
       delete userData.role
       delete userData.provider
+      delete userData.pedidos
 
       dispatch({
         type: types.signIn,
