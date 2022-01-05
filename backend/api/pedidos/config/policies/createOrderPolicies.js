@@ -40,11 +40,6 @@ module.exports = async (ctx, next) => {
   const paymentsEnum =
     strapi.components['pagos.info_de_pago'].allAttributes.metodo_de_pago.enum
 
-  console.log(
-    strapi.components['pagos.info_de_pago'].allAttributes.metodo_de_pago.enum,
-    'MIDDLEWARE MODELS'
-  )
-
   if (
     !paymentInfo.method ||
     !paymentInfo.email ||
