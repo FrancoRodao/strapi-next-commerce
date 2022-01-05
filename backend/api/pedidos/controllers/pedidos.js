@@ -7,7 +7,6 @@
 
 module.exports = {
   async createOrder(ctx) {
-    //TODO: MIDDLEWARE VLIDATIONS
     const userId = ctx.state.user.id
     const { products, total, delivered, paymentInfo } = ctx.request.body
     const query = await strapi.query('pedidos')

@@ -35,7 +35,7 @@
     "info_de_pago": {
       "type": "component",
       "repeatable": false,
-      "component": "pagos.informacion-adicional",
+      "component": "pagos.info_de_pago",
       "required": true
     }
   }

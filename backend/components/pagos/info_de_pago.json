@@ -1,5 +1,5 @@
 {
-  "collectionName": "components_pagos_informacion_adicionals",
+  "collectionName": "components_pagos_info_de_pago",
   "info": {
     "name": "info_de_pago",
     "icon": "address-card",
@@ -9,9 +9,7 @@
   "attributes": {
     "metodo_de_pago": {
       "type": "enumeration",
-      "enum": [
-        "Paypal"
-      ],
+      "enum": ["Paypal"],
       "required": true
     },
     "correo_de_pago": {
