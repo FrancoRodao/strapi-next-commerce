@@ -1,7 +1,15 @@
 module.exports = async (ctx, next) => {
-  const { products, total, delivered, paymentInfo } = ctx.request.body
+  const body = ctx.request.body
+  const { products, total, delivered, paymentInfo } = body
 
-  if (!products || !total || !delivered || !paymentInfo) {
+  console.log(body)
+
+  if (
+    !body.hasOwnProperty('products') ||
+    !body.hasOwnProperty('total') ||
+    !body.hasOwnProperty('delivered') ||
+    !body.hasOwnProperty('paymentInfo')
+  ) {
     ctx.response.status = 400
     ctx.response.body = {
       statusCode: 400,
@@ -19,7 +27,11 @@ module.exports = async (ctx, next) => {
     return
   }
 
-  if (!products.every((product) => product.quantity && product.productId)) {
+  if (
+    !products.every(
+      (product) => product.quantity && product.hasOwnProperty('productId')
+    )
+  ) {
     ctx.response.status = 400
     ctx.response.body = {
       statusCode: 400,
@@ -40,11 +52,12 @@ module.exports = async (ctx, next) => {
   const paymentsEnum =
     strapi.components['pagos.info_de_pago'].allAttributes.metodo_de_pago.enum
 
+  //TODO: ADD VALDATION PAYMENTINFO PROPS MUST BE A STRING
   if (
-    !paymentInfo.method ||
-    !paymentInfo.email ||
-    !paymentInfo.name ||
-    !paymentInfo.surname
+    !paymentInfo.hasOwnProperty('method') ||
+    !paymentInfo.hasOwnProperty('email') ||
+    !paymentInfo.hasOwnProperty('name') ||
+    !paymentInfo.hasOwnProperty('surname')
   ) {
     ctx.response.status = 400
     ctx.response.body = {
