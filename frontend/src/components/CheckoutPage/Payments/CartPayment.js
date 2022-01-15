@@ -70,7 +70,6 @@ export function CartPayment() {
 
       createOrder({
         products,
-        total: getTotalPriceCart(cart),
         delivered: false,
         paymentInfo: {
           method: 'Paypal',

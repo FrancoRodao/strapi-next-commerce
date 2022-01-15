@@ -9,7 +9,7 @@ module.exports = {
   async createOrder(ctx) {
     try {
       const userId = ctx.state.user.id
-      const { products, total, delivered, paymentInfo } = ctx.request.body
+      const { products, delivered, paymentInfo } = ctx.request.body
 
       /*extract products from body*/
       const orderedProducts = products.map((product) => ({
@@ -20,10 +20,14 @@ module.exports = {
 
       /* UPDATE STOCK  */
       const productsQuery = await strapi.query('producto')
+
       const productsUpdatesPromises = []
+      let orderTotalPrice = 0
 
       for (const item of orderedProducts) {
         const dbProduct = await productsQuery.findOne({ id: item.producto.id })
+        orderTotalPrice +=
+          (dbProduct.precio_oferta || dbProduct.precio) * item.cantidad
 
         if (item.cantidad > dbProduct.cantidad) {
           ctx.response.status = 400
@@ -47,14 +51,7 @@ module.exports = {
         )
       }
 
-      Promise.all(productsUpdatesPromises).catch((e) => {
-        ctx.response.status = 500
-        ctx.body = {
-          statusCode: 500,
-          msg: 'Unexpected error'
-        }
-        return
-      })
+      await Promise.all(productsUpdatesPromises)
 
       /* UPDATE STOCK  */
 
@@ -63,7 +60,7 @@ module.exports = {
 
       const order = await orderQuery.create({
         pedidos: orderedProducts,
-        total,
+        total: orderTotalPrice,
         user: userId,
         entregado: delivered || false,
         info_de_pago: {
@@ -87,7 +84,6 @@ module.exports = {
         statusCode: 500,
         msg: 'Unexpected error'
       }
-      return
     }
   }
 }

@@ -1,19 +1,16 @@
 module.exports = async (ctx, next) => {
   const body = ctx.request.body
-  const { products, total, delivered, paymentInfo } = body
-
-  console.log(body)
+  const { products, delivered, paymentInfo } = body
 
   if (
     !body.hasOwnProperty('products') ||
-    !body.hasOwnProperty('total') ||
     !body.hasOwnProperty('delivered') ||
     !body.hasOwnProperty('paymentInfo')
   ) {
     ctx.response.status = 400
     ctx.response.body = {
       statusCode: 400,
-      msg: 'products, total, delivered and paymentinfo is required'
+      msg: 'products, delivered and paymentinfo is required'
     }
     return
   }
