@@ -26,6 +26,7 @@ module.exports = {
 
       for (const item of orderedProducts) {
         const dbProduct = await productsQuery.findOne({ id: item.producto.id })
+
         orderTotalPrice +=
           (dbProduct.precio_oferta || dbProduct.precio) * item.cantidad
 
@@ -38,6 +39,18 @@ module.exports = {
           return
         }
 
+        if (!dbProduct.published_at) {
+          ctx.response.status = 400
+          ctx.body = {
+            statusCode: 400,
+            msg: `the product ${dbProduct.titulo} is not published`
+          }
+          return
+        }
+
+        const quantityUpdate = dbProduct.cantidad - item.cantidad
+        const unpublishProductBool = quantityUpdate === 0
+
         productsUpdatesPromises.push(
           productsQuery.update(
             {
@@ -45,7 +58,9 @@ module.exports = {
             },
             {
               vendidos: dbProduct.vendidos + item.cantidad,
-              cantidad: dbProduct.cantidad - item.cantidad
+              cantidad: quantityUpdate,
+              // published_at: null --> unpublish the product
+              published_at: unpublishProductBool ? null : dbProduct.published_at
             }
           )
         )

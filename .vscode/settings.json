@@ -1,4 +1,4 @@
 // eslint workspaces
 {
-	"eslint.workingDirectories": ["./backend", "./frontend"]
+  "eslint.workingDirectories": ["./backend", "./frontend"]
 }
