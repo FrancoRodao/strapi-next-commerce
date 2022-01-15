@@ -3,7 +3,7 @@
     {
       "method": "GET",
       "path": "/users/me/cart",
-      "handler": "Cart.getCart",
+      "handler": "cart.getCart",
       "config": {
         "policies": [],
         "prefix": "",
@@ -17,9 +17,9 @@
     {
       "method": "POST",
       "path": "/users/me/cart",
-      "handler": "Cart.addToCart",
+      "handler": "cart.addToCart",
       "config": {
-        "policies": [],
+        "policies": ["plugins::users-permissions.addToCartPolicies"],
         "prefix": "",
         "tag": {
           "plugin": "users-permissions",
@@ -30,7 +30,7 @@
     {
       "method": "DELETE",
       "path": "/users/me/cart",
-      "handler": "Cart.clearCart",
+      "handler": "cart.clearCart",
       "config": {
         "policies": [],
         "prefix": "",
@@ -43,7 +43,7 @@
     {
       "method": "DELETE",
       "path": "/users/me/cart/subtractOne/:cartItemId",
-      "handler": "Cart.subtractOne",
+      "handler": "cart.subtractOne",
       "config": {
         "policies": [],
         "prefix": "",
@@ -56,7 +56,7 @@
     {
       "method": "DELETE",
       "path": "/users/me/cart/:cartItemId",
-      "handler": "Cart.removeItem",
+      "handler": "cart.removeItem",
       "config": {
         "policies": [],
         "prefix": "",

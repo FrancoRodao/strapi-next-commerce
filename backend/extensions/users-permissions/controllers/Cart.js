@@ -1,5 +1,3 @@
-const addToCartMiddleware = require('../middlewares/Cart/addToCart.middleware')
-
 module.exports = {
   async getCart(ctx) {
     const userId = ctx.state.user.id
@@ -56,7 +54,7 @@ module.exports = {
   },
 
   async addToCart(ctx) {
-    //TODO: TRY TO IMPROVE IT
+    //TODO: TRY TO IMPROVE IT - ONE ONLY PRODUCT KEEP IT SIMPLE STUPID
     const userId = ctx.state.user.id
     const cartItems = ctx.request.body
 
@@ -68,11 +66,6 @@ module.exports = {
     }))
 
     const newItemsProductsIds = newItems.map((item) => item.producto.id)
-
-    /* VALIDATIONS */
-    const error = await addToCartMiddleware(ctx, cartItems, newItemsProductsIds)
-    if (error) return ctx.send(error)
-    /* VALIDATIONS */
 
     const query = await strapi.query('user', 'users-permissions')
     const userInfo = await query.findOne({ id: userId })
