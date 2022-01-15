@@ -1,49 +1,30 @@
+const Joi = require('joi')
+
 module.exports = async (ctx, next) => {
-  //TODO: KEEP IT SIMPLE STUPID - ONE ONLY PRODUCT
   const cartItems = ctx.request.body
 
-  if (!Array.isArray(cartItems)) {
-    ctx.response.status = 400
-    ctx.response.body = {
-      statusCode: 400,
-      error: 'Bad request',
-      message: 'Error: body must be an array'
-    }
-    return
-  }
-
-  if (
-    !cartItems.every(
-      (cartItem) =>
-        Number.isInteger(cartItem.productId) &&
-        Number.isInteger(cartItem.quantity) &&
-        cartItem.quantity > 0
+  const schema = Joi.array()
+    .items(
+      Joi.object({
+        productId: Joi.number().required(),
+        quantity: Joi.number().positive().integer().required()
+      })
     )
-  ) {
+    .validate(cartItems, {
+      presence: 'required'
+    })
+
+  if (schema.error) {
     ctx.response.status = 400
     ctx.response.body = {
       statusCode: 400,
       error: 'Bad request',
-      message:
-        'Error: productId must be a int number and quantity must be a positive int number'
+      message: schema.error.message
     }
     return
   }
 
-  if (
-    !cartItems.every(
-      (cartItem) => cartItem.hasOwnProperty('productId') && cartItem.quantity
-    )
-  ) {
-    ctx.response.status = 400
-    ctx.response.body = {
-      statusCode: 400,
-      error: 'Bad request',
-      message: 'Error: Array objects do not have productId or quantity property'
-    }
-    return
-  }
-
+  //TODO: KEEP IT SIMPLE STUPID - ONE ONLY PRODUCT
   const newItems = cartItems.map((cartItem) => ({
     __component: 'custom.productos',
     producto: { id: cartItem.productId },
