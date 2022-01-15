@@ -7,66 +7,87 @@
 
 module.exports = {
   async createOrder(ctx) {
-    const userId = ctx.state.user.id
-    const { products, total, delivered, paymentInfo } = ctx.request.body
+    try {
+      const userId = ctx.state.user.id
+      const { products, total, delivered, paymentInfo } = ctx.request.body
 
-    /*extract products from body*/
-    let newProducts = products.map((product) => ({
-      __component: 'custom.productos',
-      producto: { id: product.productId },
-      cantidad: product.quantity
-    }))
+      /*extract products from body*/
+      const orderedProducts = products.map((product) => ({
+        __component: 'custom.productos',
+        producto: { id: product.productId },
+        cantidad: product.quantity
+      }))
 
-    /* UPDATE STOCK  */
-    const productsQuery = await strapi.query('producto')
+      /* UPDATE STOCK  */
+      const productsQuery = await strapi.query('producto')
+      const productsUpdatesPromises = []
 
-    for (let index = 0; index < newProducts.length; index++) {
-      const item = newProducts[index]
-      const dbProduct = await productsQuery.findOne({ id: item.producto.id })
+      for (const item of orderedProducts) {
+        const dbProduct = await productsQuery.findOne({ id: item.producto.id })
 
-      if (item.cantidad > dbProduct.cantidad) {
-        ctx.response.status = 400
+        if (item.cantidad > dbProduct.cantidad) {
+          ctx.response.status = 400
+          ctx.body = {
+            statusCode: 400,
+            msg: `We don't have enough stock of ${dbProduct.titulo}`
+          }
+          return
+        }
+
+        productsUpdatesPromises.push(
+          productsQuery.update(
+            {
+              id: item.producto.id
+            },
+            {
+              vendidos: dbProduct.vendidos + item.cantidad,
+              cantidad: dbProduct.cantidad - item.cantidad
+            }
+          )
+        )
+      }
+
+      Promise.all(productsUpdatesPromises).catch((e) => {
+        ctx.response.status = 500
         ctx.body = {
-          statusCode: 400,
-          msg: "We don't have enough stock"
+          statusCode: 500,
+          msg: 'Unexpected error'
         }
         return
-      }
+      })
 
-      await productsQuery.update(
-        {
-          id: item.producto.id
-        },
-        {
-          vendidos: dbProduct.vendidos + item.cantidad,
-          cantidad: dbProduct.cantidad - item.cantidad
+      /* UPDATE STOCK  */
+
+      /*  CREATE ORDER  */
+      const orderQuery = await strapi.query('pedidos')
+
+      const order = await orderQuery.create({
+        pedidos: orderedProducts,
+        total,
+        user: userId,
+        entregado: delivered || false,
+        info_de_pago: {
+          __component: 'pagos.info_de_pago',
+          metodo_de_pago: paymentInfo.method,
+          correo_de_pago: paymentInfo.email,
+          nombre_de_pago: paymentInfo.name,
+          apellido_de_pago: paymentInfo.surname
         }
-      )
-    }
-    /* UPDATE STOCK  */
+      })
+      /*  CREATE ORDER  */
 
-    /*  CREATE ORDER  */
-    const pedidosQuery = await strapi.query('pedidos')
-
-    const order = await pedidosQuery.create({
-      pedidos: newProducts,
-      total,
-      user: userId,
-      entregado: delivered || false,
-      info_de_pago: {
-        __component: 'pagos.info_de_pago',
-        metodo_de_pago: paymentInfo.method,
-        correo_de_pago: paymentInfo.email,
-        nombre_de_pago: paymentInfo.name,
-        apellido_de_pago: paymentInfo.surname
+      ctx.response.status = 201
+      ctx.body = {
+        statusCode: 201,
+        order
       }
-    })
-    /*  CREATE ORDER  */
-
-    ctx.response.status = 201
-    ctx.body = {
-      statusCode: 201,
-      order
+    } catch (error) {
+      ctx.response.status = 500
+      ctx.body = {
+        statusCode: 500,
+        msg: 'Unexpected error'
+      }
+      return
     }
   }
 }
