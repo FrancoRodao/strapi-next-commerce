@@ -25,11 +25,12 @@ module.exports = {
 
     if (!Number(cartItemId)) {
       ctx.response.status = 400
-      return ctx.send({
+      ctx.response.body = {
         statusCode: 400,
         error: 'Bad request',
         message: 'Error: Cart item id must be an number'
-      })
+      }
+      return
     }
 
     const query = await strapi.query('user', 'users-permissions')
@@ -95,11 +96,12 @@ module.exports = {
 
     if (errorMsg) {
       ctx.response.status = 400
-      return ctx.send({
+      ctx.response.body = {
         statusCode: 400,
         error: 'Bad request',
         message: errorMsg
-      })
+      }
+      return
     }
 
     itemsRepeated.forEach((index) => (newItems = newItems.slice(index, index)))
@@ -122,11 +124,12 @@ module.exports = {
     const { cartItemId } = ctx.params
     if (!cartItemId || !Number(cartItemId)) {
       ctx.response.status = 400
-      return ctx.send({
+      ctx.response.body = {
         statusCode: 400,
         error: 'Bad request',
         message: 'Error: Cart item id must be a number'
-      })
+      }
+      return
     }
 
     const query = await strapi.query('user', 'users-permissions')
@@ -152,11 +155,12 @@ module.exports = {
 
     if (errorMsg) {
       ctx.response.status = 400
-      return ctx.send({
+      ctx.response.body({
         statusCode: 400,
         error: 'Bad request',
         message: errorMsg
       })
+      return
     }
 
     const userUpdated = await query.update(
