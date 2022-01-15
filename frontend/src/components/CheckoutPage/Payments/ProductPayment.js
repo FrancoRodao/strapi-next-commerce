@@ -61,7 +61,6 @@ export function ProductPayment({ productId, selectedQuantity }) {
     actions.order.capture().then((data) => {
       createOrder({
         products: [{ productId: product.id, quantity: selectedQuantity }],
-        total: totalPrice,
         delivered: false,
         paymentInfo: {
           method: 'Paypal',
