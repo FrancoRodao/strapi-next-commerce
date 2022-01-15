@@ -111,6 +111,7 @@ export default function ProductInfo({
         productId: id,
         quantity: selectedQuantity
       })
+      toast.success('Producto agregado al carrito')
       return
     }
 
