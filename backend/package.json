@@ -10,6 +10,7 @@
     "strapi": "strapi"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "joi": "^17.5.0",
     "knex": "0.21.18",
     "pg": "^8.7.1",

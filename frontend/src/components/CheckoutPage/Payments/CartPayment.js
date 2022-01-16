@@ -1,84 +1,88 @@
+import { useQueryClient } from 'react-query'
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/router'
+import { QueryKeys } from '../../../constants/queryKeys.constant'
+import { createPaypalOrderObject } from '../../../helpers/createPaypalOrderObject'
 import { getTotalPriceCart } from '../../../helpers/getTotalPriceCart'
-import { useGetUserCart } from '../../../hooks/cartHook'
-import { useCreateOrder } from '../../../hooks/ordersHook'
-import Loading from '../../Loading'
+import { useCreatePaypalStrapiOrder } from '../../../hooks/ordersHook'
 import { PaypalPaymentOption } from './options/PaypalPaymentOption'
-
-const cartToPaypalItems = (cart) => {
-  if (!Array.isArray(cart)) {
-    return new Error('CART MUST BE AN ARRAY')
-  }
-
-  return cart.map((cartItem) => ({
-    name: cartItem.producto.titulo,
-    unit_amount: {
-      value: cartItem.producto.precio_oferta || cartItem.producto.precio,
-      currency_code: 'USD'
-    },
-    quantity: cartItem.cantidad
-  }))
-}
+import { useGetUserCart } from '../../../hooks/cartHook'
 
 export function CartPayment() {
-  const { data: cart, isLoading, isError } = useGetUserCart()
-  const { createOrder } = useCreateOrder()
+  const { data: cart, refetch: refetchCart } = useGetUserCart({
+    checkoutCartValidations: true
+  })
+  const router = useRouter()
+  const queryClient = useQueryClient()
 
-  // TODO: IMPROVE THE LOADING / ERROR SCREEN
-  if (isLoading || isError) {
-    return <Loading />
+  const { createPaypalStrapiOrder } = useCreatePaypalStrapiOrder()
+
+  const handleCreateOrder = async (_, actions) => {
+    // mapped to be processed by createPayPalOrderObject
+    const cartMapped = cart.map((item) => ({
+      product: item.producto,
+      quantity: item.cantidad
+    }))
+
+    const paypalOrder = actions.order.create(
+      createPaypalOrderObject(cartMapped, getTotalPriceCart(cart))
+    )
+
+    return paypalOrder
   }
 
-  const handleCreateOrder = (data, actions) =>
-    actions.order.create({
-      purchase_units: [
-        {
-          amount: {
-            currency_code: 'USD',
-            value: getTotalPriceCart(cart),
-            breakdown: {
-              item_total: {
-                value: getTotalPriceCart(cart),
-                currency_code: 'USD'
-              }
-            }
-          },
-          items: cartToPaypalItems(cart),
-          shipping: {
-            name: {
-              full_name: 'MOBILE KING'
-            },
-            address: {
-              address_line_1: 'RETIRO EN LOCAL',
-              admin_area_2: 'CALLE RANDOM ESQUINA RANDOM',
-              country_code: 'UY',
-              postal_code: '3000'
-            }
-          }
-        }
-      ],
-      application_context: {
-        shipping_preference: 'SET_PROVIDED_ADDRESS'
-      }
-    })
+  const handleOnApprove = async (_, actions) => {
+    try {
+      /*      
+      updatedCart bring the products populated, 
+      with this we can know if there is enough stock to cover the car
 
-  const handleOnApprove = (_, actions) =>
-    actions.order.capture().then((data) => {
-      const products = cart.map((cartItem) => ({
-        productId: cartItem.producto.id,
-        quantity: cartItem.cantidad
-      }))
+      example: if there are 8 units of a product in a user's cart 
+      and the stock of the same product is 8 units but another user 
+      buys 1 unit of that product, the stock is 7 units, 
+      but the user still has 8 units in their cart , 
+      then this validates that there is enough stock of the products 
+      that the user has in their cart
+    */
 
-      createOrder({
-        products,
-        delivered: false,
-        paymentInfo: {
-          method: 'Paypal',
-          email: data.payer.email_address,
-          name: data.payer.name.given_name,
-          surname: data.payer.name.surname
-        }
+      // refresh data
+      queryClient.invalidateQueries(QueryKeys.GET_USER_CART, {
+        exact: true
       })
-    })
+      const updatedCartQuery = await refetchCart({
+        throwOnError: true
+      })
+
+      console.log(updatedCartQuery.data)
+      console.log(cart)
+
+      const areCartsEquals =
+        updatedCartQuery.data.length === cart.length &&
+        updatedCartQuery.data.every(
+          (element, index) =>
+            JSON.stringify(element) === JSON.stringify(cart[index])
+        )
+
+      if (!areCartsEquals) {
+        toast.error('No hay suficiente stock disponible, inténtelo nuevamente.')
+        router.push('/cart')
+        return
+      }
+
+      actions.order.capture().then((orderData) => {
+        const orderId = orderData.id
+
+        // TODO: CLEAR CART
+
+        createPaypalStrapiOrder({
+          orderId
+        })
+      })
+    } catch (error) {
+      toast.error('Ocurrió un error inesperado')
+      router.push('/')
+    }
+  }
 
   return (
     <PaypalPaymentOption

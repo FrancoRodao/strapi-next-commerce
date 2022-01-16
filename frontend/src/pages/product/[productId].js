@@ -88,7 +88,7 @@ export default function Product({ productId }) {
                   price={data.precio}
                   offerPrice={data.precio_oferta}
                   quantity={data.cantidad}
-                  selled={data.vendidos}
+                  sold={data.vendidos}
                 />
               </ProductContainer>
             </>
@@ -104,7 +104,7 @@ export default function Product({ productId }) {
 export async function getServerSideProps({ params }) {
   const { productId } = params
   const queryClient = new QueryClient()
-  await queryClient.prefetchQuery(QueryKeys.GET_PRODUCT, () =>
+  await queryClient.prefetchQuery([QueryKeys.GET_PRODUCT, productId], () =>
     ProductsAPI.getProduct(productId)
   )
 

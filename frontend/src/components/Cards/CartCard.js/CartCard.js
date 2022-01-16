@@ -9,10 +9,22 @@ import {
   useDeleteCartItem,
   useRemoveOneToCartItem
 } from '../../../hooks/cartHook'
+import { ErrorMessage } from '../../ErrorMessage'
 
 const Container = styled.article`
   padding: 30px 0px;
   border-bottom: 1px solid ${({ theme }) => theme.gray};
+  background-color: ${({ invalidateProduct }) =>
+    invalidateProduct && 'rgba(0, 0, 0, 0.1)'};
+  position: relative;
+
+  .invalidProduct {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+  }
 
   .info {
     &-container {
@@ -132,7 +144,8 @@ export function CartCard({
   offerPrice,
   image,
   cartItemQuantity,
-  productQuantity
+  productQuantity,
+  productPublishedAt
 }) {
   const { addCartItem, isLoading: addCartItemLoading } = useAddCartItem(
     productId,
@@ -153,8 +166,17 @@ export function CartCard({
   const isLoading =
     addCartItemLoading || removeOneToCartItemLoading || deleteCartItemLoading
 
+  const unPublishedProduct = productPublishedAt === null || productQuantity <= 0
+
   return (
-    <Container>
+    <Container invalidateProduct={unPublishedProduct}>
+      {unPublishedProduct && (
+        <span className="invalidProduct">
+          <ErrorMessage>
+            Este producto no está disponible por el momento
+          </ErrorMessage>
+        </span>
+      )}
       <div className="info-container">
         <div className="image-container">
           <Image
@@ -171,7 +193,11 @@ export function CartCard({
             </a>
           </Link>
           <div className="btn-container">
-            <button onClick={deleteCartItem} type="button" className="btn">
+            <button
+              onClick={deleteCartItem}
+              type="button"
+              className="btn btn--delete"
+            >
               Eliminar
             </button>
           </div>
@@ -184,7 +210,9 @@ export function CartCard({
                 cartItemQuantity === 1 ? 'btn-disabled' : ''
               }`}
               type="button"
-              disabled={isLoading || cartItemQuantity === 1}
+              disabled={
+                unPublishedProduct || isLoading || cartItemQuantity === 1
+              }
             >
               -
             </button>
@@ -195,7 +223,11 @@ export function CartCard({
                 cartItemQuantity === productQuantity ? 'btn-disabled' : ''
               }`}
               type="button"
-              disabled={isLoading || cartItemQuantity === productQuantity}
+              disabled={
+                unPublishedProduct ||
+                isLoading ||
+                cartItemQuantity === productQuantity
+              }
             >
               +
             </button>

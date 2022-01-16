@@ -16,7 +16,7 @@ const Aside = styled.aside`
   height: fit-content;
 
   .product-info {
-    &-selled {
+    &-sold {
       display: block;
       font-size: 14px;
       color: rgba(0, 0, 0, 0.55);
@@ -87,7 +87,7 @@ export default function ProductInfo({
   price,
   offerPrice,
   quantity,
-  selled
+  sold
 }) {
   const { state } = useUserContext()
   const router = useRouter()
@@ -125,7 +125,7 @@ export default function ProductInfo({
   return (
     <Aside>
       <>
-        <span className="product-info-selled">{selled} Vendidos</span>
+        <span className="product-info-sold">{sold} Vendidos</span>
         <h1 className="product-info-title">{title}</h1>
         <ProductPrice price={price} offerPrice={offerPrice} />
         <span className="product-info-stock">Stock disponible</span>
@@ -165,5 +165,5 @@ ProductInfo.propTypes = {
   title: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   quantity: PropTypes.number.isRequired,
-  selled: PropTypes.number.isRequired
+  sold: PropTypes.number.isRequired
 }

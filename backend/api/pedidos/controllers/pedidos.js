@@ -5,95 +5,73 @@
  * to customize this controller
  */
 
+const { createPaypalStrapiOrder } = require('../helpers/createStrapiOrder')
+const { getPaypalOrderDetails } = require('../requests/paypalRequests')
+
 module.exports = {
-  async createOrder(ctx) {
+  async createPaypalStrapiOrder(ctx) {
     try {
       const userId = ctx.state.user.id
-      const { products, delivered, paymentInfo } = ctx.request.body
+      const { orderId } = ctx.query
 
-      /*extract products from body*/
-      const orderedProducts = products.map((product) => ({
-        __component: 'custom.productos',
-        producto: { id: product.productId },
-        cantidad: product.quantity
-      }))
-
-      /* UPDATE STOCK  */
-      const productsQuery = await strapi.query('producto')
-
-      const productsUpdatesPromises = []
-      let orderTotalPrice = 0
-
-      for (const item of orderedProducts) {
-        const dbProduct = await productsQuery.findOne({ id: item.producto.id })
-
-        orderTotalPrice +=
-          (dbProduct.precio_oferta || dbProduct.precio) * item.cantidad
-
-        if (item.cantidad > dbProduct.cantidad) {
-          ctx.response.status = 400
-          ctx.body = {
-            statusCode: 400,
-            msg: `We don't have enough stock of ${dbProduct.titulo}`
-          }
-          return
+      if (!orderId) {
+        ctx.response.status = 400
+        ctx.response.body = {
+          statusCode: 400,
+          msg: 'Invalid order id'
         }
-
-        if (!dbProduct.published_at) {
-          ctx.response.status = 400
-          ctx.body = {
-            statusCode: 400,
-            msg: `the product ${dbProduct.titulo} is not published`
-          }
-          return
-        }
-
-        const quantityUpdate = dbProduct.cantidad - item.cantidad
-        const unpublishProductBool = quantityUpdate === 0
-
-        productsUpdatesPromises.push(
-          productsQuery.update(
-            {
-              id: item.producto.id
-            },
-            {
-              vendidos: dbProduct.vendidos + item.cantidad,
-              cantidad: quantityUpdate,
-              // published_at: null --> unpublish the product
-              published_at: unpublishProductBool ? null : dbProduct.published_at
-            }
-          )
-        )
+        return
       }
 
-      await Promise.all(productsUpdatesPromises)
+      const { payer, purchase_units } = await getPaypalOrderDetails(orderId)
 
-      /* UPDATE STOCK  */
+      const orders = purchase_units[0].items
 
-      /*  CREATE ORDER  */
-      const orderQuery = await strapi.query('pedidos')
+      const capture = purchase_units[0].payments.captures[0]
+      const orderTotalPrice = capture.amount.value
+      const transactionId = capture.id
 
-      const order = await orderQuery.create({
-        pedidos: orderedProducts,
-        total: orderTotalPrice,
-        user: userId,
-        entregado: delivered || false,
-        info_de_pago: {
-          __component: 'pagos.info_de_pago',
-          metodo_de_pago: paymentInfo.method,
-          correo_de_pago: paymentInfo.email,
-          nombre_de_pago: paymentInfo.name,
-          apellido_de_pago: paymentInfo.surname
-        }
-      })
-      /*  CREATE ORDER  */
+      const strapiOrder = await createPaypalStrapiOrder(
+        userId,
+        orders,
+        orderTotalPrice,
+        {
+          name: payer.name.given_name,
+          surname: payer.name.surname,
+          email: payer.email_address
+        },
+        transactionId
+      )
 
       ctx.response.status = 201
-      ctx.body = {
+      ctx.response.body = {
         statusCode: 201,
-        order
+        msg: 'Successful payment'
       }
-    } catch (error) {
+    } catch (e) {
+      if (e.strapiOrderError) {
+        ctx.response.status = 500
+        ctx.response.body = {
+          statusCode: 500,
+          msg: e.strapiOrderError
+        }
+        return
+      }
+
+      // no optional chaining :(
+      if (
+        e.response &&
+        e.response.data &&
+        e.response.data.name === 'RESOURCE_NOT_FOUND'
+      ) {
+        ctx.response.status = 400
+        ctx.response.body = {
+          statusCode: 400,
+          msg: 'Invalid order id RESOURCE_NOT_FOUND'
+        }
+        return
+      }
+
       ctx.response.status = 500
       ctx.body = {
         statusCode: 500,

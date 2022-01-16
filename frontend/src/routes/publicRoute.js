@@ -1,6 +1,6 @@
 import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 
-const PublicRoute = (getServerSideProps) => async (context) => {
+const PublicRoute = (getServerSideProps) => (context) => {
   if (!getServerSideProps) {
     // eslint-disable-next-line no-param-reassign
     getServerSideProps = () => ({

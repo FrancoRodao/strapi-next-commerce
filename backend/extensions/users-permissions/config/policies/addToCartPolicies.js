@@ -18,8 +18,7 @@ module.exports = async (ctx, next) => {
     ctx.response.status = 400
     ctx.response.body = {
       statusCode: 400,
-      error: 'Bad request',
-      message: schema.error.message
+      msg: schema.error.message
     }
     return
   }
@@ -41,8 +40,7 @@ module.exports = async (ctx, next) => {
     ctx.response.status = 400
     ctx.response.body = {
       statusCode: 400,
-      error: 'Bad request',
-      message: "Error: Some product doesn't exists"
+      msg: "Error: Some product doesn't exists"
     }
     return
   }

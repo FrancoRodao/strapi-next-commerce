@@ -9,7 +9,9 @@
   "attributes": {
     "metodo_de_pago": {
       "type": "enumeration",
-      "enum": ["Paypal"],
+      "enum": [
+        "PAYPAL"
+      ],
       "required": true
     },
     "correo_de_pago": {
@@ -23,6 +25,10 @@
     "apellido_de_pago": {
       "type": "string",
       "required": false
+    },
+    "id_de_transaccion": {
+      "type": "text",
+      "required": true
     }
   }
 }

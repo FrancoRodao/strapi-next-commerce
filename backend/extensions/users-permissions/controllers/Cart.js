@@ -27,8 +27,7 @@ module.exports = {
       ctx.response.status = 400
       ctx.response.body = {
         statusCode: 400,
-        error: 'Bad request',
-        message: 'Error: Cart item id must be an number'
+        msg: 'Error: Cart item id must be an number'
       }
       return
     }
@@ -51,7 +50,7 @@ module.exports = {
       }
     )
 
-    return ctx.send(userUpdated)
+    return ctx.send(userUpdated.carrito)
   },
 
   async addToCart(ctx) {
@@ -98,8 +97,7 @@ module.exports = {
       ctx.response.status = 400
       ctx.response.body = {
         statusCode: 400,
-        error: 'Bad request',
-        message: errorMsg
+        msg: errorMsg
       }
       return
     }
@@ -126,8 +124,7 @@ module.exports = {
       ctx.response.status = 400
       ctx.response.body = {
         statusCode: 400,
-        error: 'Bad request',
-        message: 'Error: Cart item id must be a number'
+        msg: 'Error: Cart item id must be a number'
       }
       return
     }
@@ -155,11 +152,10 @@ module.exports = {
 
     if (errorMsg) {
       ctx.response.status = 400
-      ctx.response.body({
+      ctx.response.body = {
         statusCode: 400,
-        error: 'Bad request',
-        message: errorMsg
-      })
+        msg: errorMsg
+      }
       return
     }
 
@@ -173,5 +169,59 @@ module.exports = {
     )
 
     return ctx.send(userUpdated.carrito)
+  },
+
+  async setCartItemQuantity(ctx) {
+    try {
+      //TODO: POLICIES
+      const userId = ctx.state.user.id
+      const { cartItemId, newCartItemQuantity } = ctx.request.body
+
+      const query = await strapi.query('user', 'users-permissions')
+      const userInfo = await query.findOne({
+        id: userId
+      })
+
+      const fondedIndex = userInfo.carrito.findIndex(
+        (item) => item.id === cartItemId
+      )
+
+      if (fondedIndex === -1) {
+        ctx.response.status = 404
+        ctx.response.body = {
+          statusCode: 404,
+          msg: `The product with id ${cartItemId} was not found in the user's cart`
+        }
+        return
+      }
+
+      const oldProduct = userInfo.carrito[fondedIndex]
+      const cartCopy = [...userInfo.carrito]
+      cartCopy[fondedIndex] = {
+        ...oldProduct,
+        cantidad: newCartItemQuantity
+      }
+
+      const userUpdated = await query.update(
+        {
+          id: userId
+        },
+        {
+          carrito: cartCopy
+        }
+      )
+
+      ctx.response.status = 200
+      ctx.response.body = {
+        statusCode: 200,
+        cart: userUpdated.carrito
+      }
+    } catch (error) {
+      ctx.response.status = 500
+      ctx.response.body = {
+        statusCode: 500,
+        msg: 'Unexpected error'
+      }
+    }
   }
 }

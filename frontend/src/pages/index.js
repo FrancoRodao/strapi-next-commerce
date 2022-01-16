@@ -9,6 +9,7 @@ import {
   useGetOfferProducts
 } from '../hooks/productHook'
 import { QueryKeys } from '../constants/queryKeys.constant'
+import { AppearanceAPI } from '../api/appearance'
 
 const Container = styled.div`
   section {
@@ -79,6 +80,9 @@ export async function getServerSideProps() {
   )
   await queryClient.prefetchQuery(QueryKeys.GET_OFFER_PRODUCTS, () =>
     ProductsAPI.getOfferProducts()
+  )
+  await queryClient.prefetchQuery(QueryKeys.GET_MAIN_CARROUSEL_IMAGES, () =>
+    AppearanceAPI.getMainCarouselImages()
   )
 
   return {

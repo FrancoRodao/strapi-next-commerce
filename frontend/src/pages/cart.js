@@ -1,15 +1,15 @@
 import { dehydrate, QueryClient } from 'react-query'
 import styled from 'styled-components'
 import Link from 'next/link'
-import { CartAPI } from '../api/cart'
 import { CartCard } from '../components/Cards/CartCard.js/CartCard'
 import Loading from '../components/Loading'
 import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 import { ProtectedRoute } from '../routes/protectedRoute'
 import { getTotalPriceCart } from '../helpers/getTotalPriceCart'
-import { useGetUserCart } from '../hooks/cartHook'
+import { getUserCartQuery, useGetUserCart } from '../hooks/cartHook'
 import { QueryKeys } from '../constants/queryKeys.constant'
 import { Button } from '../components/Button'
+import { useCheckoutValidCartItems } from '../hooks/useCheckoutValidCartItems'
 
 const MainContainer = styled.div`
   background-color: #fff;
@@ -50,6 +50,8 @@ const MainContainer = styled.div`
 `
 
 function RenderCart({ cart }) {
+  const { checkoutValidCartItems } = useCheckoutValidCartItems(cart)
+
   return (
     <>
       {cart.length > 0 ? (
@@ -65,10 +67,13 @@ function RenderCart({ cart }) {
               image={producto.imagenes[0]}
               cartItemQuantity={cantidad}
               productQuantity={producto.cantidad}
+              productPublishedAt={producto.published_at}
             />
           ))}
 
-          <p className="total">Total: ${getTotalPriceCart(cart)}</p>
+          <p className="total">
+            Total: ${getTotalPriceCart(checkoutValidCartItems)}
+          </p>
           <Link href="checkout/cart">
             <a href="checkout/cart">
               <Button className="buy">Continuar compra</Button>
@@ -85,7 +90,12 @@ function RenderCart({ cart }) {
 }
 
 export default function Cart() {
-  const { data: cart, isLoading } = useGetUserCart()
+  const { data: cart, isLoading, isError } = useGetUserCart()
+
+  // TODO: IMPROVE IT
+  if (isError) {
+    return <h1>Fatal error :(</h1>
+  }
 
   return (
     <MainContainer>
@@ -97,7 +107,7 @@ export default function Cart() {
         </ul>
       </nav>
 
-      {isLoading ? <Loading /> : <RenderCart cart={cart} />}
+      {isLoading || !cart ? <Loading /> : <RenderCart cart={cart} />}
     </MainContainer>
   )
 }
@@ -107,7 +117,9 @@ export const getServerSideProps = ProtectedRoute(async (ctx) => {
   const { accessToken } = userIsAuthenticated(ctx)
 
   await queryClient.prefetchQuery(QueryKeys.GET_USER_CART, () =>
-    CartAPI.getCart(accessToken)
+    getUserCartQuery({
+      accessToken
+    })
   )
 
   return {

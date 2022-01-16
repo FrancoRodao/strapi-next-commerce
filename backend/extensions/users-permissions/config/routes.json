@@ -28,6 +28,19 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/users/me/cart/setCartItemQuantity",
+      "handler": "cart.setCartItemQuantity",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    },
+    {
       "method": "DELETE",
       "path": "/users/me/cart",
       "handler": "cart.clearCart",

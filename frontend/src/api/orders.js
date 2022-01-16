@@ -1,15 +1,10 @@
 import { instance } from './instance'
 
-const createOrder = ({ products, total, delivered, paymentInfo }) =>
+const createPaypalStrapiOrder = ({ orderId }) =>
   instance
-    .post('/orders', {
-      products,
-      total,
-      delivered,
-      paymentInfo
-    })
+    .post(`/orders/paypal/create?orderId=${orderId}`)
     .then((res) => res.data)
 
 export const OrdersAPI = {
-  createOrder
+  createPaypalStrapiOrder
 }

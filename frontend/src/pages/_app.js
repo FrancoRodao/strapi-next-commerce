@@ -9,6 +9,7 @@ import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
 import { useState } from 'react'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 import { Toaster } from 'react-hot-toast'
 import Layout from '../layout/Layout'
@@ -20,7 +21,7 @@ import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: process.env.NODE_ENV === 'production',
       retry: 3
     }
   }
@@ -41,6 +42,7 @@ function MyApp({ Component, pageProps, userContextInitialState }) {
           </UserContext>
         </ThemeProvider>
       </Hydrate>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

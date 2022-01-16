@@ -1,7 +1,7 @@
-/* eslint-disable no-unused-vars */
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { CartAPI } from '../api/cart'
 import { QueryKeys } from '../constants/queryKeys.constant'
+import { filterCart } from '../helpers/filterCart'
 
 // const areFunctions = (...args) => {
 //   const fs = [args]
@@ -11,8 +11,47 @@ import { QueryKeys } from '../constants/queryKeys.constant'
 //   })
 // }
 
-export function useGetUserCart() {
-  return useQuery(QueryKeys.GET_USER_CART, () => CartAPI.getCart())
+export async function getUserCartQuery(
+  options = {
+    checkoutCartValidations: false,
+    accessToken: null
+  }
+) {
+  const data = await CartAPI.getCart(options?.accessToken)
+
+  if (options?.checkoutCartValidations) {
+    return filterCart(
+      data,
+      {
+        unpublishedProducts: true,
+        productsOutOfStock: true,
+        checkAndUpdateCartItemsStock: true
+      },
+      options?.accessToken
+    )
+  }
+
+  return filterCart(
+    data,
+    {
+      unpublishedProducts: false,
+      productsOutOfStock: false,
+      checkAndUpdateCartItemsStock: true
+    },
+    options?.accessToken
+  )
+}
+
+export function useGetUserCart(
+  options = { checkoutCartValidations: false, accessToken: null }
+) {
+  return useQuery(
+    QueryKeys.GET_USER_CART,
+    async () => getUserCartQuery(options),
+    {
+      staleTime: 5 * 60000 // 5 minutes
+    }
+  )
 }
 
 export function useAddCartItem(productId, quantity = 1) {
@@ -21,7 +60,9 @@ export function useAddCartItem(productId, quantity = 1) {
   const { mutate, ...rest } = useMutation(
     () => CartAPI.addCartItem([{ productId, quantity }]),
     {
-      onSuccess: () => queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
+      onSuccess: (data) => {
+        queryClient.setQueryData(QueryKeys.GET_USER_CART, data)
+      }
     }
   )
 
@@ -37,7 +78,9 @@ export function useRemoveOneToCartItem(cartItemId) {
   const { mutate, ...rest } = useMutation(
     () => CartAPI.subtractOne(cartItemId),
     {
-      onSuccess: () => queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
+      onSuccess: (data) => {
+        queryClient.setQueryData(QueryKeys.GET_USER_CART, data)
+      }
     }
   )
 
@@ -58,8 +101,8 @@ export function useDeleteCartItem(
   const { mutate, ...rest } = useMutation(
     () => CartAPI.deleteCartItem(cartItemId),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries(QueryKeys.GET_USER_CART)
+      onSuccess: (data) => {
+        queryClient.setQueryData(QueryKeys.GET_USER_CART, data)
 
         if (options?.onSuccess) {
           options.onSuccess()

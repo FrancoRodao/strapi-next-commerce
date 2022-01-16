@@ -76,13 +76,16 @@ const OfferPrice = ({ price, offerPrice }) => (
 )
 
 export function Card({
+  cartItemId,
   productId,
   imageSrc,
   imageAlt,
   title,
-  quantity,
+  selectedQuantity,
   price,
-  offerPrice
+  offerPrice,
+  productQuantity,
+  productPublishedAt
 }) {
   return (
     <CardContainer>
@@ -98,9 +101,11 @@ export function Card({
           </div>
           <h3 className="product-card-title">{title}</h3>
           <div className="product-card-info">
-            <p className="product-card-info-item">Cantidad: {quantity} </p>
             <p className="product-card-info-item">
-              $ {(offerPrice || price) * quantity}
+              Cantidad: {selectedQuantity}
+            </p>
+            <p className="product-card-info-item">
+              $ {(offerPrice || price) * selectedQuantity}
             </p>
             <p className="product-card-info-item">
               {offerPrice ? (
@@ -120,5 +125,5 @@ Card.propTypes = {
   imageSrc: PropTypes.string.isRequired,
   imageAlt: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  quantity: PropTypes.number.isRequired
+  selectedQuantity: PropTypes.number.isRequired
 }

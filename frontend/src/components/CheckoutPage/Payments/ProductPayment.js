@@ -1,75 +1,80 @@
-import { useCreateOrder } from '../../../hooks/ordersHook'
+import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
+import { useQueryClient } from 'react-query'
+import { QueryKeys } from '../../../constants/queryKeys.constant'
+import { createPaypalOrderObject } from '../../../helpers/createPaypalOrderObject'
+import { useCreatePaypalStrapiOrder } from '../../../hooks/ordersHook'
 import { useGetProduct } from '../../../hooks/productHook'
 import Loading from '../../Loading'
 import { PaypalPaymentOption } from './options/PaypalPaymentOption'
+import { checkoutProductValidations } from '../../../helpers/checkoutValidations'
 
 export function ProductPayment({ productId, selectedQuantity }) {
-  const { data: product, isLoading, isError } = useGetProduct(productId)
-  const { createOrder } = useCreateOrder()
+  const {
+    data: product,
+    refetch: refetchProduct,
+    isLoading,
+    isError
+  } = useGetProduct(productId)
+  const queryClient = useQueryClient()
+  const { createPaypalStrapiOrder } = useCreatePaypalStrapiOrder()
+  const router = useRouter()
 
   // TODO: IMPROVE THE LOADING / ERROR SCREEN
   if (isLoading || isError) {
     return <Loading />
   }
 
-  const totalPrice =
-    (product.precio_oferta || product.precio) * selectedQuantity
+  const handleCreateOrder = async (_, actions) => {
+    const totalPrice =
+      (product.precio_oferta || product.precio) * selectedQuantity
 
-  const handleCreateOrder = (data, actions) =>
-    actions.order.create({
-      purchase_units: [
-        {
-          amount: {
-            currency_code: 'USD',
-            value: totalPrice,
-            breakdown: {
-              item_total: {
-                value: totalPrice,
-                currency_code: 'USD'
-              }
-            }
-          },
-          items: [
-            {
-              name: product.titulo,
-              unit_amount: {
-                value: product.precio_oferta || product.precio,
-                currency_code: 'USD'
-              },
-              quantity: selectedQuantity || 1
-            }
-          ],
-          shipping: {
-            name: {
-              full_name: 'MOBILE KING'
-            },
-            address: {
-              address_line_1: 'RETIRO EN LOCAL',
-              admin_area_2: 'CALLE RANDOM ESQUINA RANDOM',
-              country_code: 'UY',
-              postal_code: '3000'
-            }
-          }
-        }
-      ],
-      application_context: {
-        shipping_preference: 'SET_PROVIDED_ADDRESS'
+    const order = [
+      {
+        product,
+        quantity: selectedQuantity
       }
-    })
+    ]
 
-  const handleOnApprove = (_, actions) =>
-    actions.order.capture().then((data) => {
-      createOrder({
-        products: [{ productId: product.id, quantity: selectedQuantity }],
-        delivered: false,
-        paymentInfo: {
-          method: 'Paypal',
-          email: data.payer.email_address,
-          name: data.payer.name.given_name,
-          surname: data.payer.name.surname
-        }
+    const paypalOrder = actions.order.create(
+      createPaypalOrderObject(order, totalPrice)
+    )
+
+    return paypalOrder
+  }
+
+  const handleOnApprove = async (_, actions) => {
+    try {
+      // refresh data
+      await queryClient.invalidateQueries([QueryKeys.GET_PRODUCT, productId], {
+        exact: true
       })
-    })
+      const updatedProductQuery = await refetchProduct({
+        throwOnError: true
+      })
+
+      if (
+        !checkoutProductValidations(updatedProductQuery.data, selectedQuantity)
+      ) {
+        toast.error(
+          'El producto no está disponible o no hay suficiente stock, inténtelo mas tarde'
+        )
+        router.push('/')
+        return
+      }
+
+      actions.order.capture().then((orderData) => {
+        const orderId = orderData.id
+
+        createPaypalStrapiOrder({
+          orderId
+        })
+      })
+    } catch (error) {
+      toast.error('Ocurrió un error inesperado')
+      router.push('/')
+    }
+  }
 
   return (
     <PaypalPaymentOption

@@ -1,21 +1,43 @@
+import { useRouter } from 'next/router'
+import toast from 'react-hot-toast'
 import { useQuery } from 'react-query'
 import { ProductsAPI } from '../api/products'
 import { QueryKeys } from '../constants/queryKeys.constant'
 
 export function useGetProduct(productId) {
-  return useQuery([QueryKeys.GET_PRODUCT, productId], () =>
-    ProductsAPI.getProduct(productId)
+  const router = useRouter()
+
+  return useQuery(
+    [QueryKeys.GET_PRODUCT, productId],
+    () => ProductsAPI.getProduct(productId),
+    {
+      onError: (e) => {
+        if (e.response?.status === 404) {
+          toast.error('El producto no esta disponible por el momento')
+          router.push('/')
+        }
+      },
+      staleTime: 60000 * 5 // 5 minutes
+    }
   )
 }
 
 export function useGetBestSellersProducts() {
-  return useQuery(QueryKeys.GET_BEST_SELLERS_PRODUCTS, () =>
-    ProductsAPI.getBestSellers()
+  return useQuery(
+    QueryKeys.GET_BEST_SELLERS_PRODUCTS,
+    () => ProductsAPI.getBestSellers(),
+    {
+      staleTime: Infinity
+    }
   )
 }
 
 export function useGetOfferProducts() {
-  return useQuery(QueryKeys.GET_OFFER_PRODUCTS, () =>
-    ProductsAPI.getOfferProducts()
+  return useQuery(
+    QueryKeys.GET_OFFER_PRODUCTS,
+    () => ProductsAPI.getOfferProducts(),
+    {
+      staleTime: Infinity
+    }
   )
 }

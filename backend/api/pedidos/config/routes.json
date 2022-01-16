@@ -25,14 +25,6 @@
       }
     },
     {
-      "method": "POST",
-      "path": "/orders",
-      "handler": "pedidos.createOrder",
-      "config": {
-        "policies": ["createOrderPolicies"]
-      }
-    },
-    {
       "method": "PUT",
       "path": "/orders/:id",
       "handler": "pedidos.update",
@@ -44,6 +36,14 @@
       "method": "DELETE",
       "path": "/orders/:id",
       "handler": "pedidos.delete",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/orders/paypal/create",
+      "handler": "pedidos.createPaypalStrapiOrder",
       "config": {
         "policies": []
       }
