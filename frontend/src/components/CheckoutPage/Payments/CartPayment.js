@@ -6,12 +6,14 @@ import { createPaypalOrderObject } from '../../../helpers/createPaypalOrderObjec
 import { getTotalPriceCart } from '../../../helpers/getTotalPriceCart'
 import { useCreatePaypalStrapiOrder } from '../../../hooks/ordersHook'
 import { PaypalPaymentOption } from './options/PaypalPaymentOption'
-import { useGetUserCart } from '../../../hooks/cartHook'
+import { useClearCart, useGetUserCart } from '../../../hooks/cartHook'
 
 export function CartPayment() {
   const { data: cart, refetch: refetchCart } = useGetUserCart({
     checkoutCartValidations: true
   })
+  const { clearCart } = useClearCart()
+
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -53,9 +55,6 @@ export function CartPayment() {
         throwOnError: true
       })
 
-      console.log(updatedCartQuery.data)
-      console.log(cart)
-
       const areCartsEquals =
         updatedCartQuery.data.length === cart.length &&
         updatedCartQuery.data.every(
@@ -72,7 +71,7 @@ export function CartPayment() {
       actions.order.capture().then((orderData) => {
         const orderId = orderData.id
 
-        // TODO: CLEAR CART
+        clearCart()
 
         createPaypalStrapiOrder({
           orderId

@@ -116,3 +116,26 @@ export function useDeleteCartItem(
     ...rest
   }
 }
+
+export function useClearCart(
+  options = {
+    onSuccess: (response) => {}
+  }
+) {
+  const queryClient = useQueryClient()
+
+  const { mutate, ...rest } = useMutation(() => CartAPI.clearCart(), {
+    onSuccess: (data) => {
+      queryClient.setQueryData(QueryKeys.GET_USER_CART, [])
+
+      if (options?.onSuccess) {
+        options.onSuccess()
+      }
+    }
+  })
+
+  return {
+    clearCart: mutate,
+    ...rest
+  }
+}
