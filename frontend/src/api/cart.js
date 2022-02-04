@@ -58,6 +58,7 @@ function setCartItemQuantity(cartItemId, newCartItemQuantity, accessToken) {
  * @param {string} accessToken - the access token is useful for making requests from the server side
  */
 function clearCart(accessToken) {
+  // TODO: IMPROVE IT IN ./orders TOO
   let config
   if (accessToken) {
     config = {

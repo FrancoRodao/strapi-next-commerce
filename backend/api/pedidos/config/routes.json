@@ -18,10 +18,10 @@
     },
     {
       "method": "GET",
-      "path": "/orders/:id",
-      "handler": "pedidos.findOne",
+      "path": "/order/:orderId",
+      "handler": "pedidos.getUserOrder",
       "config": {
-        "policies": []
+        "policies": ["plugins::users-permissions.isAuthenticated"]
       }
     },
     {

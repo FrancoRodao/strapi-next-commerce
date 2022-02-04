@@ -78,5 +78,31 @@ module.exports = {
         msg: 'Unexpected error'
       }
     }
+  },
+
+  async getUserOrder(ctx) {
+    const userId = ctx.state.user.id
+    const { orderId } = ctx.params
+
+    const ordersQuery = await strapi.query('pedidos')
+    const order = await ordersQuery.findOne({
+      id: orderId,
+      user: userId
+    })
+
+    if (!order) {
+      ctx.response.status = 404
+      ctx.body = {
+        statusCode: 404,
+        msg: 'Order not found'
+      }
+      return
+    }
+
+    ctx.response.status = 200
+    ctx.body = {
+      statusCode: 200,
+      order
+    }
   }
 }
