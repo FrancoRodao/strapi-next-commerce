@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_custom_producto_pedidos",
+  "info": {
+    "name": "producto_pedido",
+    "icon": "truck-loading"
+  },
+  "options": {},
+  "attributes": {
+    "producto": {
+      "model": "producto"
+    },
+    "cantidad": {
+      "type": "integer"
+    },
+    "precio_de_compra": {
+      "type": "decimal"
+    }
+  }
+}

@@ -157,15 +157,15 @@ export default function Order({ orderId }) {
             </div>
 
             <div className="products">
-              {products.map((product) => (
+              {products.map((productData) => (
                 <>
-                  <p className="products__text">
+                  <p key={productData.id} className="products__text">
                     <span className="products__text--quantity">
-                      x{product.cantidad}
+                      x{productData.cantidad}
                     </span>
-                    {product.producto.titulo}
+                    {productData.producto.titulo}
                     <span className="content__text--right">
-                      $ {product.producto.precio}
+                      $ {productData.precio_de_compra}
                     </span>
                   </p>
                 </>

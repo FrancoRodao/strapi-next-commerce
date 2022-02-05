@@ -15,7 +15,7 @@
     "pedidos": {
       "type": "component",
       "repeatable": true,
-      "component": "custom.productos",
+      "component": "custom.producto-pedido",
       "required": true
     },
     "user": {

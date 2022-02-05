@@ -46,7 +46,8 @@ module.exports = {
       ctx.response.status = 201
       ctx.response.body = {
         statusCode: 201,
-        msg: 'Successful payment'
+        msg: 'Successful payment',
+        strapiOrderId: strapiOrder.id
       }
     } catch (e) {
       if (e.strapiOrderError) {

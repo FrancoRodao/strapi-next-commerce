@@ -10,15 +10,20 @@ import { PaypalPaymentOption } from './options/PaypalPaymentOption'
 import { checkoutProductValidations } from '../../../helpers/checkoutValidations'
 
 export function ProductPayment({ productId, selectedQuantity }) {
+  const queryClient = useQueryClient()
+  const router = useRouter()
+
   const {
     data: product,
     refetch: refetchProduct,
     isLoading,
     isError
   } = useGetProduct(productId)
-  const queryClient = useQueryClient()
-  const { createPaypalStrapiOrder } = useCreatePaypalStrapiOrder()
-  const router = useRouter()
+
+  const { createPaypalStrapiOrder } = useCreatePaypalStrapiOrder({
+    onSuccess: (response) =>
+      router.push(`/profile/orders/${response.strapiOrderId}`)
+  })
 
   // TODO: IMPROVE THE LOADING / ERROR SCREEN
   if (isLoading || isError) {

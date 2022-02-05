@@ -17,7 +17,12 @@ export function CartPayment() {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const { createPaypalStrapiOrder } = useCreatePaypalStrapiOrder()
+  const { createPaypalStrapiOrder } = useCreatePaypalStrapiOrder({
+    onSuccess: (response) => {
+      clearCart()
+      router.push(`/profile/orders/${response.strapiOrderId}`)
+    }
+  })
 
   const handleCreateOrder = async (_, actions) => {
     // mapped to be processed by createPayPalOrderObject
@@ -70,8 +75,6 @@ export function CartPayment() {
 
       actions.order.capture().then((orderData) => {
         const orderId = orderData.id
-
-        clearCart()
 
         createPaypalStrapiOrder({
           orderId

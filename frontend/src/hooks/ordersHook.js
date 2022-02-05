@@ -4,8 +4,18 @@ import { useMutation, useQuery } from 'react-query'
 import { OrdersAPI } from '../api/orders'
 import { QueryKeys } from '../constants/queryKeys.constant'
 
-export function useCreatePaypalStrapiOrder() {
-  const { mutate, ...rest } = useMutation(OrdersAPI.createPaypalStrapiOrder)
+export function useCreatePaypalStrapiOrder(
+  options = {
+    onSuccess: (response) => {}
+  }
+) {
+  const { mutate, ...rest } = useMutation(OrdersAPI.createPaypalStrapiOrder, {
+    onSuccess: (response) => {
+      if (options.onSuccess) {
+        options.onSuccess(response)
+      }
+    }
+  })
 
   return {
     createPaypalStrapiOrder: mutate,

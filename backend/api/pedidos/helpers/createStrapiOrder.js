@@ -9,10 +9,11 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       try {
         const strapiOrders = orders.map((product) => ({
-          __component: 'custom.productos',
+          __component: 'custom.producto_pedido',
           // look at the frontend/helpers/createPaypalOrderObject file to understand where the id comes from
           producto: { id: Number(product.description.split('ID: ')[1]) },
-          cantidad: product.quantity
+          cantidad: product.quantity,
+          precio_de_compra: product.unit_amount.value
         }))
 
         /* UPDATE STOCK  */
@@ -35,7 +36,8 @@ module.exports = {
             })
           }
 
-          const quantityUpdate = dbProduct.cantidad - order.cantidad
+          const quantityUpdate =
+            Number(dbProduct.cantidad) - Number(order.cantidad)
           const unpublishProductBool = quantityUpdate === 0
 
           productsUpdatesPromises.push(
@@ -44,7 +46,7 @@ module.exports = {
                 id: order.producto.id
               },
               {
-                vendidos: dbProduct.vendidos + order.cantidad,
+                vendidos: Number(dbProduct.vendidos) + Number(order.cantidad),
                 cantidad: quantityUpdate,
                 // published_at: null --> unpublish the product
                 published_at: unpublishProductBool
@@ -80,6 +82,7 @@ module.exports = {
 
         resolve(createdOrder)
       } catch (error) {
+        console.log(error, 'error')
         reject({
           strapiOrderError: 'unexpected error when creating the order in strapi'
         })
