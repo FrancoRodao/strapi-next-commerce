@@ -83,13 +83,20 @@ export default function Signup() {
           inputValue={form.password}
           inputType="password"
         />
-        <Button isLoading={isLoading} disabled={isLoading} type="submit">
+        <Button
+          style={{ marginBottom: '15px' }}
+          isLoading={isLoading}
+          disabled={isLoading}
+          type="submit"
+        >
           {isLoading ? <Loading /> : 'Registrarse'}
         </Button>
       </LoginForm>
       <Link href="/signin" passHref>
         <a href="/signin">
-          <Button outline>Iniciar sesion</Button>
+          <Button style={{ marginBottom: '15px' }} outline>
+            Iniciar sesion
+          </Button>
         </a>
       </Link>
     </Login>

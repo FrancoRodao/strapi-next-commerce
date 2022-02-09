@@ -18,7 +18,21 @@ const getUserOrder = (orderId, accessToken) => {
   return instance.get(`/order/${orderId}`, config).then((res) => res.data.order)
 }
 
+const getUserOrders = (accessToken) => {
+  let config
+  if (accessToken) {
+    config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+  }
+
+  return instance.get(`/orders/me`, config).then((res) => res.data.orders)
+}
+
 export const OrdersAPI = {
   createPaypalStrapiOrder,
-  getUserOrder
+  getUserOrder,
+  getUserOrders
 }

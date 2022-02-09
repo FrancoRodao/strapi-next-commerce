@@ -4,8 +4,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { calculatePercentage } from '../../helpers/calculatePercentage'
 
-const CardContainer = styled.div`
-  position: relative;
+export const ProductCardContainer = styled.div`
   margin-bottom: 15px;
   background-color: #fff;
   padding: 15px;
@@ -88,7 +87,7 @@ export function Card({
   productPublishedAt
 }) {
   return (
-    <CardContainer>
+    <ProductCardContainer>
       <Link href={`/product/${productId}`} passHref>
         <a className="product-card-container" href={`/product/${productId}`}>
           <div className="product-card-image">
@@ -117,7 +116,7 @@ export function Card({
           </div>
         </a>
       </Link>
-    </CardContainer>
+    </ProductCardContainer>
   )
 }
 

@@ -73,7 +73,12 @@ function SignIn() {
           inputValue={form.password}
           inputType="password"
         />
-        <Button isLoading={isLoading} disabled={isLoading} type="submit">
+        <Button
+          style={{ marginBottom: '15px' }}
+          isLoading={isLoading}
+          disabled={isLoading}
+          type="submit"
+        >
           {isLoading ? <Loading /> : 'Ingresar'}
         </Button>
       </LoginForm>

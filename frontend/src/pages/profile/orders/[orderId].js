@@ -21,6 +21,7 @@ const Card = styled.div`
   height: 100%;
   width: 50%;
   position: relative;
+  overflow: hidden;
 
   .text-left {
     text-align: left;
@@ -28,8 +29,10 @@ const Card = styled.div`
 
   .delivered {
     position: absolute;
-    top: 5px;
-    left: 0;
+    top: 28px;
+    left: -47px;
+    transform: rotate(-45deg);
+    text-align: center;
     padding: 15px;
     width: 40%;
     color: ${({ theme }) => theme.lightGrey};
@@ -122,7 +125,7 @@ const Card = styled.div`
 export default function Order({ orderId }) {
   const { data: order, isLoading } = useGetUserOrder(orderId)
 
-  const products = order?.pedidos
+  const products = order?.productos
   const total = order?.total
   const name = order?.info_de_pago?.nombre_de_pago
   const surname = order?.info_de_pago?.apellido_de_pago

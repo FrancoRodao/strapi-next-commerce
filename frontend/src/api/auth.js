@@ -19,18 +19,21 @@ function signUp({ email, username, password }) {
     .then((res) => res.data)
 }
 
-function checkToken(token) {
-  return instance
-    .get('/users/me', {
+function getMe(accessToken) {
+  // TODO: IMPROVE IT
+  let config
+  if (accessToken) {
+    config = {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${accessToken}`
       }
-    })
-    .then((res) => res.data)
+    }
+  }
+  return instance.get('/users/me', config).then((res) => res.data)
 }
 
 export const AuthAPI = {
   signIn,
   signUp,
-  checkToken
+  getMe
 }

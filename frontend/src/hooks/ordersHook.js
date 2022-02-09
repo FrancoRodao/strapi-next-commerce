@@ -41,3 +41,10 @@ export function useGetUserOrder(orderId) {
     }
   )
 }
+
+export function useGetUserOrders() {
+  return useQuery(QueryKeys.GET_USER_ORDERS, () => OrdersAPI.getUserOrders(), {
+    retry: 2,
+    staleTime: 6000 * 5 // 5 minutes
+  })
+}

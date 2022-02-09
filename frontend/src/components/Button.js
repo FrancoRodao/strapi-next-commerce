@@ -11,7 +11,6 @@ const ButtonStyle = styled.button`
   color: ${({ theme, outline }) => (outline ? theme.blue : '#fff')};
   font-weight: 600;
   cursor: pointer;
-  margin: 10px 0;
   transition: background-color 0.3s;
 
   &:hover {

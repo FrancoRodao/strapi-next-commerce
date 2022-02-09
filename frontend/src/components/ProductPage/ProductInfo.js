@@ -79,6 +79,10 @@ const Aside = styled.aside`
       }
     }
   }
+
+  .button {
+    margin: 10px 0;
+  }
 `
 
 export default function ProductInfo({
@@ -101,7 +105,7 @@ export default function ProductInfo({
       return
     }
 
-    toast.error('Debe iniciar sesion antes de comprar')
+    toast.error('Debe iniciar sesión antes de comprar')
     router.push('/signin')
   }
 
@@ -115,7 +119,7 @@ export default function ProductInfo({
       return
     }
 
-    toast.error('Debe iniciar sesion antes de agregar productos al carrito')
+    toast.error('Debe iniciar sesión antes de agregar productos al carrito')
     router.push('/signin')
   }
 
@@ -145,13 +149,13 @@ export default function ProductInfo({
             ({quantity} disponibles)
           </span>
         </div>
-        <Button onClick={buyProduct} type="button">
+        <Button className="button" onClick={buyProduct} type="button">
           Comprar ahora
         </Button>
         <Button
           onClick={addProductToCart}
           type="button"
-          className="product-info-addtocart"
+          className="product-info-addtocart button"
         >
           Agregar al carrito
         </Button>

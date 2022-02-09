@@ -6,10 +6,14 @@ import { createPaypalOrderObject } from '../../../helpers/createPaypalOrderObjec
 import { getTotalPriceCart } from '../../../helpers/getTotalPriceCart'
 import { useCreatePaypalStrapiOrder } from '../../../hooks/ordersHook'
 import { PaypalPaymentOption } from './options/PaypalPaymentOption'
-import { useClearCart, useGetUserCart } from '../../../hooks/cartHook'
+import {
+  getUserCartQuery,
+  useClearCart,
+  useGetUserCart
+} from '../../../hooks/cartHook'
 
 export function CartPayment() {
-  const { data: cart, refetch: refetchCart } = useGetUserCart({
+  const { data: cart } = useGetUserCart({
     checkoutCartValidations: true
   })
   const { clearCart } = useClearCart()
@@ -18,9 +22,9 @@ export function CartPayment() {
   const queryClient = useQueryClient()
 
   const { createPaypalStrapiOrder } = useCreatePaypalStrapiOrder({
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
+      await router.push(`/profile/orders/${response.strapiOrderId}`)
       clearCart()
-      router.push(`/profile/orders/${response.strapiOrderId}`)
     }
   })
 
@@ -53,16 +57,20 @@ export function CartPayment() {
     */
 
       // refresh data
-      queryClient.invalidateQueries(QueryKeys.GET_USER_CART, {
+      await queryClient.invalidateQueries(QueryKeys.GET_USER_CART, {
         exact: true
       })
-      const updatedCartQuery = await refetchCart({
-        throwOnError: true
-      })
+      const updatedCart = await queryClient.fetchQuery(
+        QueryKeys.GET_USER_CART,
+        () =>
+          getUserCartQuery({
+            checkoutCartValidations: true
+          })
+      )
 
       const areCartsEquals =
-        updatedCartQuery.data.length === cart.length &&
-        updatedCartQuery.data.every(
+        updatedCart.length === cart.length &&
+        updatedCart.every(
           (element, index) =>
             JSON.stringify(element) === JSON.stringify(cart[index])
         )

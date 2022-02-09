@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useRouter } from 'next/router'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { AuthAPI } from '../api/auth'
+import { QueryKeys } from '../constants/queryKeys.constant'
 import { types } from '../context/User/types'
 import { useUserContext } from '../context/User/UserContext'
 
@@ -94,4 +95,10 @@ export function useSignUp(
     signUp: mutate,
     ...rest
   }
+}
+
+export function useGetMe() {
+  return useQuery(QueryKeys.GET_ME, () => AuthAPI.getMe(), {
+    staleTime: 6000 * 5 // 5 minutes
+  })
 }
