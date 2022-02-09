@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import { Button } from '../Button'
 import { ProductCardContainer } from '../CheckoutPage/Card'
+import { useChangingPage } from '../../hooks/useChangingPage'
 
 const OrderContainer = styled.div`
   display: flex;
@@ -37,6 +38,8 @@ const OrderContainer = styled.div`
 `
 
 export function OrderCard({ products, orderId }) {
+  const { changingPage, setChangingPage } = useChangingPage()
+
   return (
     <ProductCardContainer>
       <OrderContainer>
@@ -52,8 +55,11 @@ export function OrderCard({ products, orderId }) {
         </div>
         <div className="order">
           <Link href={`/profile/orders/${orderId}`}>
-            <a href={`/profile/orders/${orderId}`}>
-              <Button>Ver pedido</Button>
+            <a
+              onClick={() => setChangingPage(true)}
+              href={`/profile/orders/${orderId}`}
+            >
+              <Button isLoading={changingPage}>Ver pedido</Button>
             </a>
           </Link>
         </div>

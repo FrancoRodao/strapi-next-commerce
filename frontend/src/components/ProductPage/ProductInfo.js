@@ -8,6 +8,7 @@ import { useUserContext } from '../../context/User/UserContext'
 import { ProductPrice } from '../ProductPrice'
 import { useAddCartItem } from '../../hooks/cartHook'
 import { Button } from '../Button'
+import { useChangingPage } from '../../hooks/useChangingPage'
 
 const Aside = styled.aside`
   border: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
@@ -99,7 +100,10 @@ export default function ProductInfo({
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const { addCartItem } = useAddCartItem(id, selectedQuantity)
 
+  const { changingPage, setChangingPage } = useChangingPage()
+
   const buyProduct = () => {
+    setChangingPage(true)
     if (state.isAuthenticated) {
       router.push(`/checkout/${id}?quantity=${selectedQuantity}`)
       return
@@ -149,7 +153,12 @@ export default function ProductInfo({
             ({quantity} disponibles)
           </span>
         </div>
-        <Button className="button" onClick={buyProduct} type="button">
+        <Button
+          isLoading={changingPage}
+          className="button"
+          onClick={buyProduct}
+          type="button"
+        >
           Comprar ahora
         </Button>
         <Button

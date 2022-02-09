@@ -1,11 +1,11 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import Loading from './Loading'
 
 const ButtonStyle = styled.button`
   width: 100%;
-  max-height: 53px;
   border-color: transparent;
-  padding: 15px;
+  padding: ${({ isLoading }) => (!isLoading ? '15px' : '0px')};
   border-radius: 5px;
   background-color: ${({ theme, outline }) => (outline ? '#fff' : theme.blue)};
   color: ${({ theme, outline }) => (outline ? theme.blue : '#fff')};
@@ -45,7 +45,7 @@ export function Button({
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...rest}
     >
-      {children}
+      {isLoading ? <Loading fontSize={13} /> : children}
     </ButtonStyle>
   )
 }

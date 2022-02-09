@@ -180,9 +180,9 @@ export default function Checkout() {
         </div>
         {errorUI && <ErrorMessage>{errorUI}</ErrorMessage>}
 
-        <a onClick={continueToPay} href="continue">
-          <Button className="continue-button">Continuar</Button>
-        </a>
+        <Button onClick={continueToPay} className="continue-button">
+          Continuar
+        </Button>
       </div>
     </CheckoutContainer>
   )

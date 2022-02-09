@@ -79,7 +79,7 @@ function SignIn() {
           disabled={isLoading}
           type="submit"
         >
-          {isLoading ? <Loading /> : 'Ingresar'}
+          Ingresar
         </Button>
       </LoginForm>
       <Link href="/signup">

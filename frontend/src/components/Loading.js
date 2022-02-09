@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const Container = styled.span`
   height: 100%;
@@ -8,6 +8,12 @@ const Container = styled.span`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  ${({ fontSize }) =>
+    fontSize &&
+    css`
+      font-size: ${fontSize}px;
+    `}
 
   svg {
     width: 3.75em;
@@ -46,9 +52,9 @@ const Container = styled.span`
   }
 `
 
-export default function Loading({ children }) {
+export default function Loading({ children, fontSize = null }) {
   return (
-    <Container>
+    <Container fontSize={fontSize}>
       <svg viewBox="25 25 50 50">
         <circle cx="50" cy="50" r="20" />
       </svg>

@@ -89,7 +89,7 @@ export default function Signup() {
           disabled={isLoading}
           type="submit"
         >
-          {isLoading ? <Loading /> : 'Registrarse'}
+          Registrarse
         </Button>
       </LoginForm>
       <Link href="/signin" passHref>
