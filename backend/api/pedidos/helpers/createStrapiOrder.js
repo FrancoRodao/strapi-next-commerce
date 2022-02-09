@@ -65,7 +65,7 @@ module.exports = {
         const orderQuery = await strapi.query('pedidos')
 
         const createdOrder = await orderQuery.create({
-          pedidos: strapiOrders,
+          productos: strapiOrders,
           total: orderTotalPrice,
           user: userId,
           entregado: false,

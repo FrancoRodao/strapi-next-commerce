@@ -17,14 +17,6 @@
       }
     },
     {
-      "method": "GET",
-      "path": "/order/:orderId",
-      "handler": "pedidos.getUserOrder",
-      "config": {
-        "policies": ["plugins::users-permissions.isAuthenticated"]
-      }
-    },
-    {
       "method": "PUT",
       "path": "/orders/:id",
       "handler": "pedidos.update",
@@ -38,6 +30,22 @@
       "handler": "pedidos.delete",
       "config": {
         "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/order/:orderId",
+      "handler": "pedidos.getUserOrder",
+      "config": {
+        "policies": ["plugins::users-permissions.isAuthenticated"]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/orders/me",
+      "handler": "pedidos.getUserOrders",
+      "config": {
+        "policies": ["plugins::users-permissions.isAuthenticated"]
       }
     },
     {

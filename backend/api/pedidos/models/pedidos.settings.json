@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "pedidos": {
+    "productos": {
       "type": "component",
       "repeatable": true,
       "component": "custom.producto-pedido",

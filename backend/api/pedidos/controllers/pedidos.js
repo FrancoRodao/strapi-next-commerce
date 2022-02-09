@@ -105,5 +105,20 @@ module.exports = {
       statusCode: 200,
       order
     }
+  },
+
+  async getUserOrders(ctx) {
+    const userId = ctx.state.user.id
+
+    const ordersQuery = await strapi.query('pedidos')
+    const ordersInfo = await ordersQuery.find({
+      user: userId
+    })
+
+    ctx.response.status = 200
+    ctx.body = {
+      statusCode: 200,
+      orders: ordersInfo
+    }
   }
 }
