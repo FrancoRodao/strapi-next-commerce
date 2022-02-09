@@ -5,6 +5,7 @@ const Container = styled.span`
   min-height: inherit;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
@@ -45,12 +46,13 @@ const Container = styled.span`
   }
 `
 
-export default function Loading() {
+export default function Loading({ children }) {
   return (
     <Container>
       <svg viewBox="25 25 50 50">
         <circle cx="50" cy="50" r="20" />
       </svg>
+      {children}
     </Container>
   )
 }

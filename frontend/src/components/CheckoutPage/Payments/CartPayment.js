@@ -11,12 +11,15 @@ import {
   useClearCart,
   useGetUserCart
 } from '../../../hooks/cartHook'
+import { useCheckoutContext } from '../../../context/Checkout/CheckoutContext'
+import { types } from '../../../context/Checkout/types'
 
 export function CartPayment() {
   const { data: cart } = useGetUserCart({
     checkoutCartValidations: true
   })
   const { clearCart } = useClearCart()
+  const { dispatch } = useCheckoutContext()
 
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -24,6 +27,13 @@ export function CartPayment() {
   const { createPaypalStrapiOrder } = useCreatePaypalStrapiOrder({
     onSuccess: async (response) => {
       await router.push(`/profile/orders/${response.strapiOrderId}`)
+      dispatch({
+        type: types.loading,
+        loading: {
+          state: false,
+          message: null
+        }
+      })
       clearCart()
     }
   })
@@ -44,6 +54,14 @@ export function CartPayment() {
 
   const handleOnApprove = async (_, actions) => {
     try {
+      dispatch({
+        type: types.loading,
+        loading: {
+          state: true,
+          message: 'Procesando pago...'
+        }
+      })
+
       /*      
       updatedCart bring the products populated, 
       with this we can know if there is enough stock to cover the car

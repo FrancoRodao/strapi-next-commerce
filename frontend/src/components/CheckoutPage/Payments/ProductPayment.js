@@ -8,8 +8,11 @@ import { useGetProduct } from '../../../hooks/productHook'
 import Loading from '../../Loading'
 import { PaypalPaymentOption } from './options/PaypalPaymentOption'
 import { checkoutProductValidations } from '../../../helpers/checkoutValidations'
+import { types } from '../../../context/Checkout/types'
+import { useCheckoutContext } from '../../../context/Checkout/CheckoutContext'
 
 export function ProductPayment({ productId, selectedQuantity }) {
+  const { dispatch } = useCheckoutContext()
   const queryClient = useQueryClient()
   const router = useRouter()
 
@@ -21,8 +24,16 @@ export function ProductPayment({ productId, selectedQuantity }) {
   } = useGetProduct(productId)
 
   const { createPaypalStrapiOrder } = useCreatePaypalStrapiOrder({
-    onSuccess: (response) =>
-      router.push(`/profile/orders/${response.strapiOrderId}`)
+    onSuccess: async (response) => {
+      await router.push(`/profile/orders/${response.strapiOrderId}`)
+      dispatch({
+        type: types.loading,
+        loading: {
+          state: false,
+          message: null
+        }
+      })
+    }
   })
 
   // TODO: IMPROVE THE LOADING / ERROR SCREEN
@@ -50,6 +61,14 @@ export function ProductPayment({ productId, selectedQuantity }) {
 
   const handleOnApprove = async (_, actions) => {
     try {
+      dispatch({
+        type: types.loading,
+        loading: {
+          state: true,
+          message: 'Procesando pago...'
+        }
+      })
+
       // refresh data
       await queryClient.invalidateQueries([QueryKeys.GET_PRODUCT, productId], {
         exact: true

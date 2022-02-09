@@ -11,18 +11,51 @@ import { userIsAuthenticated } from '../../helpers/userIsAuthenticated'
 import { ProtectedRoute } from '../../routes/protectedRoute'
 import { getUserCartQuery, useGetUserCart } from '../../hooks/cartHook'
 import { CheckoutCartInfo } from '../../components/CheckoutPage/CheckoutInfo'
+import {
+  CheckoutContextProvider,
+  useCheckoutContext
+} from '../../context/Checkout/CheckoutContext'
+import { CheckoutLoading } from '../../components/CheckoutPage/CheckoutLoading'
+import { CheckoutContentContainer } from '../../components/CheckoutPage/CheckoutContentContainer'
+
+const loadingContainerStyles = {
+  display: 'block',
+  width: '100%',
+  minHeight: 'inherit',
+  margin: 'auto'
+}
+
+const loadingMessageStyles = {
+  marginTop: '15px',
+  marginLeft: '10px'
+}
+
+function Page() {
+  const {
+    state: { paymentStep, loading: checkoutLoading }
+  } = useCheckoutContext()
+
+  const { data: cart, isLoading: userCartLoading } = useGetUserCart()
+
+  const loading = userCartLoading || checkoutLoading.state
+
+  return (
+    <>
+      <CheckoutLoading isLoading={loading} message={checkoutLoading.message} />
+
+      <CheckoutContentContainer isLoading={loading}>
+        <>
+          {paymentStep ? <CartPayment /> : <Checkout />}
+          {cart && <CheckoutCartInfo cart={cart} />}
+        </>
+      </CheckoutContentContainer>
+    </>
+  )
+}
 
 export default function CheckoutCartPage() {
-  const [paymentStep, setPaymentStep] = useState(false)
-
   const { data: cart, isError } = useGetUserCart()
-
   const router = useRouter()
-
-  // TODO: IMPROVE IT
-  if (isError) {
-    return <h1>Fatal error :(</h1>
-  }
 
   // THE CART MUST HAVE AT LEAST ONE PRODUCT
   useEffect(() => {
@@ -32,17 +65,17 @@ export default function CheckoutCartPage() {
     }
   }, [cart])
 
-  const goToPaymentStep = () => setPaymentStep(true)
+  // TODO: IMPROVE IT
+  if (isError) {
+    return <h1>Fatal error :(</h1>
+  }
 
   return (
-    <CheckoutPageContainer>
-      {paymentStep ? (
-        <CartPayment />
-      ) : (
-        <Checkout goToPaymentStep={goToPaymentStep} />
-      )}
-      {cart ? <CheckoutCartInfo cart={cart} /> : <Loading />}
-    </CheckoutPageContainer>
+    <CheckoutContextProvider>
+      <CheckoutPageContainer>
+        <Page />
+      </CheckoutPageContainer>
+    </CheckoutContextProvider>
   )
 }
 

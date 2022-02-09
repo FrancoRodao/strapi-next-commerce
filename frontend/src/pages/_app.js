@@ -23,6 +23,9 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: process.env.NODE_ENV === 'production',
       retry: 3
+    },
+    mutations: {
+      retry: 3
     }
   }
 })

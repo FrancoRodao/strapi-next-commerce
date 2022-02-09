@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useCheckoutContext } from '../../context/Checkout/CheckoutContext'
+import { types } from '../../context/Checkout/types'
 import { Button } from '../Button'
 import { ErrorMessage } from '../ErrorMessage'
 
@@ -125,11 +127,13 @@ const CheckoutContainer = styled.div`
       margin-left: auto;
       font-weight: 500;
       font-size: 15px;
+      margin-top: 15px;
     }
   }
 `
 
-export default function Checkout({ goToPaymentStep }) {
+export default function Checkout() {
+  const { dispatch } = useCheckoutContext()
   const [checkedDirection, setCheckedDirection] = useState(false)
   const [errorUI, setErrorUI] = useState(null)
 
@@ -148,7 +152,7 @@ export default function Checkout({ goToPaymentStep }) {
       return
     }
 
-    goToPaymentStep(true)
+    dispatch({ type: types.goToPaymentStep })
   }
 
   return (
