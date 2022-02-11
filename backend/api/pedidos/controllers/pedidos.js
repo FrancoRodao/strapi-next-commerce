@@ -112,7 +112,8 @@ module.exports = {
 
     const ordersQuery = await strapi.query('pedidos')
     const ordersInfo = await ordersQuery.find({
-      user: userId
+      user: userId,
+      _sort: 'created_at:DESC'
     })
 
     ctx.response.status = 200
