@@ -1,3 +1,4 @@
+import { axiosConfigWithToken } from '../helpers/axiosConfigWithToken'
 import { instance } from './instance'
 
 const createPaypalStrapiOrder = ({ orderId }) =>
@@ -6,27 +7,13 @@ const createPaypalStrapiOrder = ({ orderId }) =>
     .then((res) => res.data)
 
 const getUserOrder = (orderId, accessToken) => {
-  let config
-  if (accessToken) {
-    config = {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
-  }
+  const config = axiosConfigWithToken(accessToken)
 
   return instance.get(`/order/${orderId}`, config).then((res) => res.data.order)
 }
 
 const getUserOrders = (accessToken) => {
-  let config
-  if (accessToken) {
-    config = {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
-  }
+  const config = axiosConfigWithToken(accessToken)
 
   return instance.get(`/orders/me`, config).then((res) => res.data.orders)
 }

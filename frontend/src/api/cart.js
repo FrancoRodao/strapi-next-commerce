@@ -1,17 +1,12 @@
+import { axiosConfigWithToken } from '../helpers/axiosConfigWithToken'
 import { instance } from './instance'
 
 /**
  * @param {string} accessToken - the access token is useful for making requests from the server side
  */
 function getCart(accessToken) {
-  let config
-  if (accessToken) {
-    config = {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
-  }
+  const config = axiosConfigWithToken(accessToken)
+
   return instance.get('/users/me/cart', config).then((res) => res.data)
 }
 
@@ -33,14 +28,7 @@ function deleteCartItem(cartItemId) {
  * @param {string} accessToken - the access token is useful for making requests from the server side
  */
 function setCartItemQuantity(cartItemId, newCartItemQuantity, accessToken) {
-  let config
-  if (accessToken) {
-    config = {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
-  }
+  const config = axiosConfigWithToken(accessToken)
 
   return instance
     .post(
@@ -58,15 +46,7 @@ function setCartItemQuantity(cartItemId, newCartItemQuantity, accessToken) {
  * @param {string} accessToken - the access token is useful for making requests from the server side
  */
 function clearCart(accessToken) {
-  // TODO: IMPROVE IT IN ./orders TOO
-  let config
-  if (accessToken) {
-    config = {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
-  }
+  const config = axiosConfigWithToken(accessToken)
 
   return instance.delete(`/users/me/cart`, config).then((res) => res.data)
 }

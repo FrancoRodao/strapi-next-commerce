@@ -1,3 +1,4 @@
+import { axiosConfigWithToken } from '../helpers/axiosConfigWithToken'
 import { instance } from './instance'
 
 function signIn({ username, password }) {
@@ -20,15 +21,8 @@ function signUp({ email, username, password }) {
 }
 
 function getMe(accessToken) {
-  // TODO: IMPROVE IT
-  let config
-  if (accessToken) {
-    config = {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
-  }
+  const config = axiosConfigWithToken(accessToken)
+
   return instance.get('/users/me', config).then((res) => res.data)
 }
 
