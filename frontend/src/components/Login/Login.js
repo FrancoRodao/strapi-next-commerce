@@ -4,9 +4,9 @@ import { ErrorMessage } from '../ErrorMessage'
 
 const LoginContainer = styled.div`
   display: flex;
-  margin: auto;
+  align-items: center;
+  justify-content: center;
   min-height: inherit;
-  max-height: 50%;
 
   .title {
     font-size: 20px;

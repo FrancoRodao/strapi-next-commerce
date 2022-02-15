@@ -5,7 +5,7 @@
       "path": "/users/me/cart",
       "handler": "cart.getCart",
       "config": {
-        "policies": [],
+        "policies": ["plugins::users-permissions.isAuthenticated"],
         "prefix": "",
         "description": "description",
         "tag": {
@@ -19,7 +19,23 @@
       "path": "/users/me/cart",
       "handler": "cart.addToCart",
       "config": {
-        "policies": ["plugins::users-permissions.addToCartPolicies"],
+        "policies": [
+          "plugins::users-permissions.addToCartPolicies",
+          "plugins::users-permissions.isAuthenticated"
+        ],
+        "prefix": "",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/users/me/profile/image",
+      "handler": "profile.updateProfileImage",
+      "config": {
+        "policies": ["plugins::users-permissions.isAuthenticated"],
         "prefix": "",
         "tag": {
           "plugin": "users-permissions",
@@ -32,7 +48,7 @@
       "path": "/users/me/cart/setCartItemQuantity",
       "handler": "cart.setCartItemQuantity",
       "config": {
-        "policies": [],
+        "policies": ["plugins::users-permissions.isAuthenticated"],
         "prefix": "",
         "tag": {
           "plugin": "users-permissions",
@@ -45,7 +61,7 @@
       "path": "/users/me/cart",
       "handler": "cart.clearCart",
       "config": {
-        "policies": [],
+        "policies": ["plugins::users-permissions.isAuthenticated"],
         "prefix": "",
         "tag": {
           "plugin": "users-permissions",
@@ -58,7 +74,7 @@
       "path": "/users/me/cart/subtractOne/:cartItemId",
       "handler": "cart.subtractOne",
       "config": {
-        "policies": [],
+        "policies": ["plugins::users-permissions.isAuthenticated"],
         "prefix": "",
         "tag": {
           "plugin": "users-permissions",
@@ -71,7 +87,7 @@
       "path": "/users/me/cart/:cartItemId",
       "handler": "cart.removeItem",
       "config": {
-        "policies": [],
+        "policies": ["plugins::users-permissions.isAuthenticated"],
         "prefix": "",
         "tag": {
           "plugin": "users-permissions",

@@ -1,5 +1,6 @@
 'use strict'
 
+const cloudinary = require('cloudinary').v2
 const fs = require('fs')
 const path = require('path')
 
@@ -117,4 +118,11 @@ module.exports = async () => {
       console.log(e)
     }
   }
+
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET,
+    secure: true
+  })
 }

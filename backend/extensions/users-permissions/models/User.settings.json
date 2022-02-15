@@ -68,6 +68,10 @@
     "pedidos": {
       "via": "user",
       "collection": "pedidos"
+    },
+    "profileImageUrl": {
+      "type": "string",
+      "default": "https://res.cloudinary.com/dmj47inei/image/upload/v1644867054/defaultProfileImage.svg"
     }
   }
 }

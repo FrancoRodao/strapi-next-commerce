@@ -1,14 +1,16 @@
 import { useRouter } from 'next/router'
-import { dehydrate, QueryClient } from 'react-query'
+import { dehydrate, QueryClient, useQueryClient } from 'react-query'
 import styled from 'styled-components'
 import Image from 'next/image'
+import toast from 'react-hot-toast'
+import { useRef } from 'react'
 import { AuthAPI } from '../../api/auth'
 import { OrdersAPI } from '../../api/orders'
 import { Button } from '../../components/Button'
 import { OrderCard } from '../../components/Profile/OrderCard'
 import { QueryKeys } from '../../constants/queryKeys.constant'
 import { userIsAuthenticated } from '../../helpers/userIsAuthenticated'
-import { useGetMe } from '../../hooks/authHook'
+import { useGetMe, useUpdateProfileImage } from '../../hooks/authHook'
 import { useGetUserOrders } from '../../hooks/ordersHook'
 import { ProtectedRoute } from '../../routes/protectedRoute'
 
@@ -131,23 +133,61 @@ const Container = styled.div`
 `
 
 export default function Profile() {
+  const inputFileRef = useRef()
+  const queryClient = useQueryClient()
+
   const { data: me, isError: isError1 } = useGetMe()
   const { data: ordersData, isError: isError2 } = useGetUserOrders()
+  const { updateProfileImage, isError: isError3 } = useUpdateProfileImage({
+    onSuccess: (response) => {
+      queryClient.setQueryData(QueryKeys.GET_ME, (old) => ({
+        ...old,
+        profileImageUrl: response.profileImageUrl
+      }))
+      toast.success('Imagen actualizada!')
+    }
+  })
 
   // TODO: IMPROVE IT
-  if (isError1 || isError2) {
+  if (isError1 || isError2 || isError3) {
     return <div>Fatal error :(</div>
   }
 
   const handleUpdateUserImage = () => {
-    alert('not implemented')
+    const input = inputFileRef.current
+    input.click()
+  }
+
+  const handleInputFileChange = (e) => {
+    const file = e.target.files[0]
+    if (!file.type.includes('image/')) {
+      toast.error('La foto de perfil debe ser una imagen')
+      return
+    }
+
+    // 5 mb
+    if (file.size > 5000000) {
+      toast.error('La imagen no puede pesar mas de 5 mb')
+      return
+    }
+
+    updateProfileImage({
+      file
+    })
   }
 
   return (
     <Container>
       <div className="profile">
         <div className="profile__image">
-          <Image layout="fill" objectFit="cover" src="/dogejpg.jpg" />
+          <Image layout="fill" objectFit="cover" src={me.profileImageUrl} />
+          <input
+            ref={inputFileRef}
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={handleInputFileChange}
+          />
           <button
             type="button"
             onClick={handleUpdateUserImage}

@@ -58,7 +58,6 @@ export function useSignUp(
     onError: (error) => {}
   }
 ) {
-  const Router = useRouter()
   const { dispatch } = useUserContext()
 
   const { mutate, ...rest } = useMutation(AuthAPI.signUp, {
@@ -81,8 +80,6 @@ export function useSignUp(
       if (options?.onSuccess) {
         options?.onSuccess(response)
       }
-
-      Router.push('/')
     },
     onError: (error) => {
       if (options?.onError) {
@@ -93,6 +90,23 @@ export function useSignUp(
 
   return {
     signUp: mutate,
+    ...rest
+  }
+}
+
+export function useUpdateProfileImage(
+  options = { onSuccess: (response) => {} }
+) {
+  const { mutate, ...rest } = useMutation(AuthAPI.updateProfileImage, {
+    onSuccess: (response) => {
+      if (options?.onSuccess) {
+        options?.onSuccess(response)
+      }
+    }
+  })
+
+  return {
+    updateProfileImage: mutate,
     ...rest
   }
 }

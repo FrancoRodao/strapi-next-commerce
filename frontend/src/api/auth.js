@@ -20,6 +20,16 @@ function signUp({ email, username, password }) {
     .then((res) => res.data)
 }
 
+function updateProfileImage({ file }) {
+  const formData = new FormData()
+  formData.append('files.image', file)
+  formData.append('data', JSON.stringify({ name: 'userProfileImage' }))
+
+  return instance
+    .put('/users/me/profile/image', formData)
+    .then((res) => res.data)
+}
+
 function getMe(accessToken) {
   const config = axiosConfigWithToken(accessToken)
 
@@ -29,5 +39,6 @@ function getMe(accessToken) {
 export const AuthAPI = {
   signIn,
   signUp,
+  updateProfileImage,
   getMe
 }
