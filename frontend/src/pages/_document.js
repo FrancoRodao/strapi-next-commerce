@@ -34,14 +34,7 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="es">
-        <Head>
-          {/* BOX ICONS */}
-          <link
-            href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css"
-            rel="stylesheet"
-          />
-          {/* BOX ICONS */}
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />

@@ -1,6 +1,7 @@
 import { dehydrate, QueryClient } from 'react-query'
 import styled from 'styled-components'
 import { OrdersAPI } from '../../../api/orders'
+import { CheckIcon } from '../../../components/Icons/Check'
 import { QueryKeys } from '../../../constants/queryKeys.constant'
 import { userIsAuthenticated } from '../../../helpers/userIsAuthenticated'
 import { useGetUserOrder } from '../../../hooks/ordersHook'
@@ -146,7 +147,7 @@ export default function Order({ orderId }) {
             </span>
             <div className="content">
               <div className="content__icon">
-                <i className="content__icon--check bx bx-check" />
+                <CheckIcon />
               </div>
               <h1 className="content__title">Éxito</h1>
               <p className="content__text">

@@ -10,6 +10,7 @@ import {
   useRemoveOneToCartItem
 } from '../../../hooks/cartHook'
 import { ErrorMessage } from '../../ErrorMessage'
+import { InfoIcon } from '../../Icons/Info'
 
 const Container = styled.article`
   padding: 30px 0px;
@@ -159,7 +160,7 @@ export function CartCard({
     useDeleteCartItem(cartItemId, {
       onSuccess: () =>
         toast('Producto eliminado', {
-          icon: <i style={{ color: '#17a2b8' }} className="bx bx-info-circle" />
+          icon: <InfoIcon />
         })
     })
 

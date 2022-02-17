@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { dehydrate, QueryClient } from 'react-query'
 import styled from 'styled-components'
 import { ProductsAPI } from '../../api/products'
+import { ArrowIcon } from '../../components/Icons/Arrow'
 import Loading from '../../components/Loading'
 import ProductDescription from '../../components/ProductPage/ProductDescription'
 import ProductFeatures from '../../components/ProductPage/ProductFeatures'
@@ -21,11 +22,6 @@ const MainContainer = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-  }
-
-  .bx-left-arrow-alt {
-    font-size: 23px;
-    cursor: pointer;
   }
 `
 
@@ -62,11 +58,17 @@ export default function Product({ productId }) {
         <>
           <div className="breads">
             <Link href="/" passHref>
-              <a href="/" tabIndex={0} className="back">
-                <i className="bx bx-left-arrow-alt" />
+              <a href="/">
+                <ArrowIcon
+                  style={{
+                    cursor: 'pointer',
+                    transform: 'rotate(-90deg)',
+                    marginTop: '4px'
+                  }}
+                />
               </a>
             </Link>
-            breadcumvs
+            breadcrumbs
           </div>
 
           {data && image ? (

@@ -1,9 +1,8 @@
-import { useRouter } from 'next/router'
 import { dehydrate, QueryClient, useQueryClient } from 'react-query'
 import styled from 'styled-components'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { AuthAPI } from '../../api/auth'
 import { OrdersAPI } from '../../api/orders'
 import { Button } from '../../components/Button'
@@ -13,16 +12,16 @@ import { userIsAuthenticated } from '../../helpers/userIsAuthenticated'
 import { useGetMe, useUpdateProfileImage } from '../../hooks/authHook'
 import { useGetUserOrders } from '../../hooks/ordersHook'
 import { ProtectedRoute } from '../../routes/protectedRoute'
+import { Modal } from '../../components/Modal'
+import { useModal } from '../../hooks/useModal'
+import { ChangeEmail } from '../../components/Profile/ModalContents/ChangeEmail'
+import { UploadIcon } from '../../components/Icons/Upload'
 
 const Container = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
-
-  .bx-upload {
-    font-size: 36px;
-  }
 
   .profile {
     display: flex;
@@ -133,6 +132,12 @@ const Container = styled.div`
 `
 
 export default function Profile() {
+  const { isOpen, toggleModal } = useModal()
+  const [modalInfo, setModalInfo] = useState({
+    title: '',
+    content: null
+  })
+
   const inputFileRef = useRef()
   const queryClient = useQueryClient()
 
@@ -176,8 +181,41 @@ export default function Profile() {
     })
   }
 
+  const handleChangeEmail = () => {
+    setModalInfo({
+      title: 'Cambiar email',
+      content: <ChangeEmail />
+    })
+
+    toggleModal()
+  }
+
+  const handleChangeUsername = () => {
+    setModalInfo({
+      title: 'Cambiar usuario',
+      content: <div>cambiar user bro</div>
+    })
+
+    toggleModal()
+  }
+
+  const handleChangePassword = () => {
+    setModalInfo({
+      title: 'Cambiar contraseña',
+      content: <div>cambiar contra bro</div>
+    })
+
+    toggleModal()
+  }
+
   return (
     <Container>
+      <Modal
+        title={modalInfo.title}
+        content={modalInfo.content}
+        isOpen={isOpen}
+        close={toggleModal}
+      />
       <div className="profile">
         <div className="profile__image">
           <Image layout="fill" objectFit="cover" src={me.profileImageUrl} />
@@ -193,7 +231,7 @@ export default function Profile() {
             onClick={handleUpdateUserImage}
             className="profile__image--upload"
           >
-            <i className="bx bx-upload" />
+            <UploadIcon />
           </button>
         </div>
         <div className="profile__info">
@@ -204,7 +242,12 @@ export default function Profile() {
             Email
             <span className="profile__item--right">{me?.email}</span>
             <span className="profile__item--change">
-              <Button outline className="profile__item--button" type="button">
+              <Button
+                onClick={handleChangeEmail}
+                outline
+                className="profile__item--button"
+                type="button"
+              >
                 Cambiar
               </Button>
             </span>
@@ -213,7 +256,12 @@ export default function Profile() {
             Usuario
             <span className="profile__item--right">{me?.username}</span>
             <span className="profile__item--change">
-              <Button outline className="profile__item--button" type="button">
+              <Button
+                onClick={handleChangeUsername}
+                outline
+                className="profile__item--button"
+                type="button"
+              >
                 Cambiar
               </Button>
             </span>
@@ -222,7 +270,12 @@ export default function Profile() {
             Contraseña
             <span className="profile__item--right">*********</span>
             <span className="profile__item--change">
-              <Button outline className="profile__item--button" type="button">
+              <Button
+                onClick={handleChangePassword}
+                outline
+                className="profile__item--button"
+                type="button"
+              >
                 Cambiar
               </Button>
             </span>

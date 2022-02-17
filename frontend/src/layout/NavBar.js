@@ -3,6 +3,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
+import { CartIcon } from '../components/Icons/Cart'
+import { ChevronIcon } from '../components/Icons/Chevron'
+import { SearchIcon } from '../components/Icons/Search'
+import { UserIcon } from '../components/Icons/User'
 import { types } from '../context/User/types'
 import { useUserContext } from '../context/User/UserContext'
 
@@ -10,16 +14,6 @@ const Header = styled.header`
   width: 100%;
   height: 4.5rem;
   background-color: ${({ theme }) => `${theme.navbarBgColor}`};
-
-  /*ICONS*/
-  .bx-cart {
-    margin-top: 3px;
-  }
-
-  .bx-search {
-    font-size: 21px !important;
-    margin-top: 2px;
-  }
 `
 
 const Nav = styled.nav`
@@ -145,6 +139,30 @@ const Menu = styled.div`
     margin-left: 8px;
     cursor: pointer;
 
+    &--chevron {
+      position: relative;
+      margin-top: 3px;
+
+      &::before {
+        content: '';
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        top: 90%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        pointer-events: none;
+        border-bottom: 14px solid #fff;
+        border-left: 14px solid transparent;
+        border-right: 14px solid transparent;
+        transition: visibility 0.2s, opacity 0.2s;
+      }
+    }
+
+    &--icon {
+      transition: transform 0.2s;
+    }
+
     &--login {
       font-size: 16px;
     }
@@ -181,8 +199,7 @@ const Menu = styled.div`
     opacity: 0;
     top: 45px;
     left: -60%;
-    width: 200%;
-    /* min-width: 200px; */
+    width: 270px;
     background-color: #fff;
     z-index: 9999;
     transition: visibility 0.2s, opacity 0.2s;
@@ -195,48 +212,12 @@ const Menu = styled.div`
     height: 45px;
     cursor: pointer;
 
-    &::before {
-      content: '';
-      visibility: hidden;
-      opacity: 0;
-      position: absolute;
-      top: 80%;
-      right: -10px;
-      bottom: 100%;
-      pointer-events: none;
-      border-bottom: 14px solid #fff;
-      border-left: 14px solid transparent;
-      border-right: 14px solid transparent;
-      transition: visibility 0.2s, opacity 0.2s;
+    &:hover .menu__item--icon {
+      transform: rotate(180deg);
     }
 
-    &:after {
-      content: '';
-      border-style: solid;
-      border-width: 2px 2px 0 0;
-      height: 6px;
-      width: 6px;
-      margin-left: 5px;
-      margin-top: 5px;
-      color: rgba(0, 0, 0, 0.3);
-      transform: rotate(-45deg);
-      position: relative;
-      transition: transform 0.3s, margin 0.3s;
-    }
-
-    &:hover {
-      &::before {
-        visibility: visible;
-        opacity: 1;
-      }
-
-      &:after {
-        margin-top: 0;
-        transform: rotate(135deg);
-      }
-    }
-
-    &:hover .menu__profileinfo {
+    &:hover .menu__profileinfo,
+    &:hover .menu__item--chevron::before {
       visibility: visible;
       opacity: 1;
     }
@@ -288,7 +269,7 @@ export default function NavBar() {
           />
           <div className="icon_container">
             <Button type="submit">
-              <i className="bx bx-search" />
+              <SearchIcon style={{ marginTop: '3px' }} />
             </Button>
           </div>
         </SearchForm>
@@ -296,8 +277,11 @@ export default function NavBar() {
         <Menu>
           {isAuthenticated ? (
             <div className="menu__profile">
-              <i className="menu__item bx bx-user" />
+              <UserIcon />
               <p className="menu__item">{userData?.username}</p>
+              <div className="menu__item--chevron">
+                <ChevronIcon className="menu__item--icon" />
+              </div>
               <div className="menu__profileinfo">
                 <Link href="/profile" passHref>
                   <a className="menu__item--profileinfo" href="profile">
@@ -321,11 +305,14 @@ export default function NavBar() {
             </Link>
           )}
 
-          <Button className="">
+          <Button>
             {isAuthenticated ? (
               <Link href="/cart" passHref>
                 <a href="cart">
-                  <i className="menu__item menu__item--cart bx bx-cart" />
+                  <CartIcon
+                    className="menu__item"
+                    style={{ marginTop: '3px' }}
+                  />
                 </a>
               </Link>
             ) : (

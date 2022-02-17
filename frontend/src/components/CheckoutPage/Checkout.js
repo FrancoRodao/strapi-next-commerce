@@ -13,15 +13,6 @@ const CheckoutContainer = styled.div`
   width: 50%;
   overflow-y: auto;
 
-  .bx-map {
-    color: ${({ theme }) => theme.blue};
-    font-size: 26px;
-    background-color: #fff;
-    border-radius: 100%;
-    padding: 10px;
-    margin-right: 25px;
-  }
-
   .checkout {
     &-container {
       position: sticky;

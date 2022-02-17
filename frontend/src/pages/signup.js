@@ -11,6 +11,7 @@ import Login from '../components/Login/Login'
 import LoginForm from '../components/Login/LoginForm'
 import LoginField from '../components/Login/LoginField'
 import { Button } from '../components/Button'
+import { UploadIcon } from '../components/Icons/Upload'
 
 const baseStyle = {
   position: 'relative',
@@ -47,10 +48,6 @@ const DropContentContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  .bx-upload {
-    font-size: 36px;
-  }
 
   .button {
     width: fit-content;
@@ -146,7 +143,7 @@ function ImageStep() {
             <input {...getInputProps()} />
             <DropContentContainer>
               <button type="button" className="button">
-                <i className="bx bx-upload" />
+                <UploadIcon />
               </button>
               Sube tu foto!
             </DropContentContainer>
