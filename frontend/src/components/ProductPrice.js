@@ -29,10 +29,10 @@ const Container = styled.span`
 export function ProductPrice({ price = 0, offerPrice = null }) {
   return (
     <Container>
-      {offerPrice ? <h3 className="offerPrice price">U$S {price}</h3> : null}
+      {offerPrice ? <h3 className="offerPrice price">USD {price}</h3> : null}
 
       <h2 className={`price ${offerPrice ? 'real-price' : null}`}>
-        U$S {offerPrice || price}{' '}
+        USD {offerPrice || price}{' '}
         {offerPrice ? (
           <span className="offer-percentage">
             {calculatePercentage(price, offerPrice)}% OFF

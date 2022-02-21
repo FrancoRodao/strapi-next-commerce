@@ -1,10 +1,7 @@
-import styled from 'styled-components'
 import toast from 'react-hot-toast'
 import { useState } from 'react'
-import { useGetMe } from '../../../hooks/authHook'
-import { useChangeUserEmail } from '../../../hooks/profileHook'
+import { useChangeUserUsername } from '../../../hooks/profileHook'
 import { useForm } from '../../../hooks/useForm'
-import { Button } from '../../Button'
 import { Input } from '../../Input'
 import { useModalContext } from '../../../context/Modal/ModalContext'
 import { types } from '../../../context/Modal/types'
@@ -15,20 +12,21 @@ import {
   ModalContentParagraph,
   ModalContentTitle
 } from './ModalContentStyle'
+import { useGetMe } from '../../../hooks/authHook'
 
-export function ChangeEmail() {
+export function ChangeUsername() {
   const { formValues, handleInputChange } = useForm({
-    email: '',
-    confirmEmail: ''
+    username: '',
+    confirmUsername: ''
   })
 
-  const { data: me } = useGetMe()
   const { dispatch } = useModalContext()
+  const { data: me } = useGetMe()
 
   const [errorUI, setErrorUI] = useState(null)
-  const { changeUserEmail, isLoading } = useChangeUserEmail({
+  const { changeUserUsername, isLoading } = useChangeUserUsername({
     onSuccess: () => {
-      toast.success('Email cambiado correctamente!')
+      toast.success('Nombre de usuario cambiado correctamente!')
       dispatch({ type: types.TOGGLE_MODAL })
     },
     onError: (error) => {
@@ -45,35 +43,33 @@ export function ChangeEmail() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    if (formValues.email === formValues.confirmEmail) {
-      changeUserEmail({ email: formValues.email })
+    if (formValues.username === formValues.confirmUsername) {
+      changeUserUsername({ username: formValues.username })
       setErrorUI(null)
       return
     }
 
-    setErrorUI('Los emails deben ser iguales')
+    setErrorUI('Los usuarios deben ser iguales')
   }
 
   return (
     <ModalContentContainer onSubmit={handleSubmit}>
       {errorUI && <ErrorMessage>{errorUI}</ErrorMessage>}
-      <ModalContentTitle>Email actual</ModalContentTitle>
-      <ModalContentParagraph>{me?.email}</ModalContentParagraph>
+      <ModalContentTitle>Usuario actual</ModalContentTitle>
+      <ModalContentParagraph>{me?.username}</ModalContentParagraph>
 
-      <ModalContentTitle>Nuevo email</ModalContentTitle>
-      <Input type="email" onChange={handleInputChange} name="email" />
+      <ModalContentTitle>Nuevo usuario</ModalContentTitle>
+      <Input name="username" onChange={handleInputChange} />
 
-      <ModalContentTitle>Confirmar email</ModalContentTitle>
+      <ModalContentTitle>Confirmar usuario</ModalContentTitle>
       <Input
-        type="email"
         style={{ marginBottom: '35px' }}
         onChange={handleInputChange}
-        name="confirmEmail"
+        name="confirmUsername"
       />
 
       <ModalContentButtonBottom isLoading={isLoading} type="submit">
-        Cambiar email
+        Cambiar usuario
       </ModalContentButtonBottom>
     </ModalContentContainer>
   )

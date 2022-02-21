@@ -21,6 +21,8 @@ import {
   useModalContext
 } from '../../context/Modal/ModalContext'
 import { types } from '../../context/Modal/types'
+import { ChangePassword } from '../../components/Profile/ModalContents/ChangePassword'
+import { ChangeUsername } from '../../components/Profile/ModalContents/ChangeUsername'
 
 const Container = styled.div`
   width: 100%;
@@ -198,7 +200,7 @@ function Profile() {
   const handleChangeUsername = () => {
     setModalInfo({
       title: 'Cambiar usuario',
-      content: <div>cambiar user bro</div>
+      content: <ChangeUsername />
     })
 
     dispatch({ type: types.TOGGLE_MODAL })
@@ -207,7 +209,7 @@ function Profile() {
   const handleChangePassword = () => {
     setModalInfo({
       title: 'Cambiar contraseña',
-      content: <div>cambiar contra bro</div>
+      content: <ChangePassword />
     })
 
     dispatch({ type: types.TOGGLE_MODAL })
@@ -229,7 +231,9 @@ function Profile() {
       />
       <div className="profile">
         <div className="profile__image">
-          <Image layout="fill" objectFit="cover" src={me.profileImageUrl} />
+          {me?.profileImageUrl && (
+            <Image layout="fill" objectFit="cover" src={me?.profileImageUrl} />
+          )}
           <input
             ref={inputFileRef}
             type="file"

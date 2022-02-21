@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-vars */
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery } from 'react-query'
 import { AuthAPI } from '../api/auth'
 import { QueryKeys } from '../constants/queryKeys.constant'
-import { types } from '../context/User/types'
-import { useUserContext } from '../context/User/UserContext'
 
 export function useSignIn(
   options = {
@@ -12,8 +11,7 @@ export function useSignIn(
     onError: (error) => {}
   }
 ) {
-  const Router = useRouter()
-  const { dispatch } = useUserContext()
+  const router = useRouter()
 
   const { mutate, ...rest } = useMutation(AuthAPI.signIn, {
     onSuccess: (response) => {
@@ -27,17 +25,18 @@ export function useSignIn(
       delete userData.provider
       delete userData.pedidos
 
-      dispatch({
-        type: types.signIn,
-        jwt: data.jwt,
-        data: userData
+      Cookies.set('accessToken', data.jwt, {
+        sameSite: 'strict'
+      })
+      Cookies.set('user', JSON.stringify(userData), {
+        sameSite: 'strict'
       })
 
       if (options?.onSuccess) {
         options?.onSuccess(response)
       }
 
-      Router.back()
+      router.back()
     },
     onError: (error) => {
       if (options?.onError) {
@@ -58,8 +57,6 @@ export function useSignUp(
     onError: (error) => {}
   }
 ) {
-  const { dispatch } = useUserContext()
-
   const { mutate, ...rest } = useMutation(AuthAPI.signUp, {
     onSuccess: (response) => {
       const { user, jwt } = response
@@ -70,12 +67,6 @@ export function useSignUp(
       delete userData.carrito
       delete userData.role
       delete userData.provider
-
-      dispatch({
-        type: types.signIn,
-        jwt,
-        data: userData
-      })
 
       if (options?.onSuccess) {
         options?.onSuccess(response)
@@ -91,6 +82,13 @@ export function useSignUp(
   return {
     signUp: mutate,
     ...rest
+  }
+}
+
+export function useLogout() {
+  return function logout() {
+    Cookies.remove('user')
+    Cookies.remove('accessToken')
   }
 }
 

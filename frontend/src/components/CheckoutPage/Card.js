@@ -67,7 +67,7 @@ const Price = styled.span`
 
 const OfferPrice = ({ price, offerPrice }) => (
   <Price>
-    $ {offerPrice} c/u
+    USD {offerPrice} c/u
     <span className="offerPrice">
       {calculatePercentage(price, offerPrice)} % OFF
     </span>
@@ -104,13 +104,13 @@ export function Card({
               Cantidad: {selectedQuantity}
             </p>
             <p className="product-card-info-item">
-              $ {(offerPrice || price) * selectedQuantity}
+              USD {(offerPrice || price) * selectedQuantity}
             </p>
             <p className="product-card-info-item">
               {offerPrice ? (
                 <OfferPrice price={price} offerPrice={offerPrice} />
               ) : (
-                `$ ${price} c/u`
+                `USD ${price} c/u`
               )}
             </p>
           </div>

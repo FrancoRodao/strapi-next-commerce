@@ -61,7 +61,7 @@ export function CheckoutProductInfo({ product, selectedQuantity }) {
         </div>
         <div className="total">
           <p className="total-content">Total</p>
-          <p className="total-content">$ {totalPrice}</p>
+          <p className="total-content">USD {totalPrice}</p>
         </div>
       </div>
     </Container>

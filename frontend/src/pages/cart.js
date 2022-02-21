@@ -72,7 +72,7 @@ function RenderCart({ cart }) {
           ))}
 
           <p className="total">
-            Total: ${getTotalPriceCart(checkoutValidCartItems)}
+            Total: USD {getTotalPriceCart(checkoutValidCartItems)}
           </p>
           <Link href="checkout/cart">
             <a href="checkout/cart">

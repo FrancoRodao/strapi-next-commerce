@@ -97,6 +97,9 @@ const Card = styled.div`
       right: 0;
       color: ${({ theme }) => theme.blue};
       font-weight: 600;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 
@@ -113,6 +116,11 @@ const Card = styled.div`
     &__text {
       margin: 15px 0;
       position: relative;
+
+      &--container {
+        width: 85%;
+        word-break: break-word;
+      }
 
       &--quantity {
         color: ${({ theme }) => theme.blue};
@@ -161,26 +169,26 @@ export default function Order({ orderId }) {
             </div>
 
             <div className="products">
-              {products.map((productData) => (
-                <>
-                  <p key={productData.id} className="products__text">
+              {products?.map((productData) => (
+                <p key={productData.id} className="products__text">
+                  <div className="products__text--container">
                     <span className="products__text--quantity">
                       x{productData.cantidad}
                     </span>
                     {productData.producto.titulo}
-                    <span className="content__text--right">
-                      $ {productData.precio_de_compra}
-                    </span>
-                  </p>
-                </>
+                  </div>
+                  <span className="content__text--right">
+                    USD {productData.precio_de_compra}
+                  </span>
+                </p>
               ))}
               <hr className="products__hr" />
               <p className="products__text">
-                Total <span className="content__text--right">$ {total}</span>
+                Total <span className="content__text--right">USD {total}</span>
               </p>
 
               <div className="products__text">
-                <p className="products__text--payment">
+                <p className="products__text">
                   Identificador de compra
                   <span className="content__text--right">{orderId}</span>
                 </p>

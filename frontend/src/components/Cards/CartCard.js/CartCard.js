@@ -83,7 +83,7 @@ const Container = styled.article`
     border-radius: 5px;
 
     &-container {
-      width: 12%;
+      width: 15%;
       display: flex;
       flex-direction: column;
     }
@@ -127,9 +127,8 @@ const Container = styled.article`
   .price-container {
     font-weight: 500;
     font-size: 15px;
-    width: 15%;
+    width: auto;
     margin-left: auto;
-    margin-bottom: 15px;
   }
 
   .btn-disabled {
@@ -241,9 +240,7 @@ export function CartCard({
           <p className="quantity-stock">{productQuantity} Disponible</p>
         </div>
         <h2 className="price-container">
-          <div>
-            <ProductPrice price={price} offerPrice={offerPrice} />
-          </div>
+          <ProductPrice price={price} offerPrice={offerPrice} />
         </h2>
       </div>
     </Container>

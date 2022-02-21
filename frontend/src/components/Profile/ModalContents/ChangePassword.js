@@ -1,10 +1,7 @@
-import styled from 'styled-components'
 import toast from 'react-hot-toast'
 import { useState } from 'react'
-import { useGetMe } from '../../../hooks/authHook'
-import { useChangeUserEmail } from '../../../hooks/profileHook'
+import { useChangeUserPassword } from '../../../hooks/profileHook'
 import { useForm } from '../../../hooks/useForm'
-import { Button } from '../../Button'
 import { Input } from '../../Input'
 import { useModalContext } from '../../../context/Modal/ModalContext'
 import { types } from '../../../context/Modal/types'
@@ -16,19 +13,18 @@ import {
   ModalContentTitle
 } from './ModalContentStyle'
 
-export function ChangeEmail() {
+export function ChangePassword() {
   const { formValues, handleInputChange } = useForm({
-    email: '',
-    confirmEmail: ''
+    password: '',
+    confirmPassword: ''
   })
 
-  const { data: me } = useGetMe()
   const { dispatch } = useModalContext()
 
   const [errorUI, setErrorUI] = useState(null)
-  const { changeUserEmail, isLoading } = useChangeUserEmail({
+  const { changeUserPassword, isLoading } = useChangeUserPassword({
     onSuccess: () => {
-      toast.success('Email cambiado correctamente!')
+      toast.success('Contraseña cambiada correctamente!')
       dispatch({ type: types.TOGGLE_MODAL })
     },
     onError: (error) => {
@@ -46,34 +42,34 @@ export function ChangeEmail() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if (formValues.email === formValues.confirmEmail) {
-      changeUserEmail({ email: formValues.email })
+    if (formValues.password === formValues.confirmPassword) {
+      changeUserPassword({ password: formValues.password })
       setErrorUI(null)
       return
     }
 
-    setErrorUI('Los emails deben ser iguales')
+    setErrorUI('Las contraseñas deben ser iguales')
   }
 
   return (
     <ModalContentContainer onSubmit={handleSubmit}>
       {errorUI && <ErrorMessage>{errorUI}</ErrorMessage>}
-      <ModalContentTitle>Email actual</ModalContentTitle>
-      <ModalContentParagraph>{me?.email}</ModalContentParagraph>
+      <ModalContentTitle>Contraseñá actual</ModalContentTitle>
+      <ModalContentParagraph>********</ModalContentParagraph>
 
-      <ModalContentTitle>Nuevo email</ModalContentTitle>
-      <Input type="email" onChange={handleInputChange} name="email" />
+      <ModalContentTitle>Nueva contraseña</ModalContentTitle>
+      <Input type="password" onChange={handleInputChange} name="password" />
 
-      <ModalContentTitle>Confirmar email</ModalContentTitle>
+      <ModalContentTitle>Confirmar contraseña</ModalContentTitle>
       <Input
-        type="email"
+        type="password"
         style={{ marginBottom: '35px' }}
         onChange={handleInputChange}
-        name="confirmEmail"
+        name="confirmPassword"
       />
 
       <ModalContentButtonBottom isLoading={isLoading} type="submit">
-        Cambiar email
+        Cambiar contraseña
       </ModalContentButtonBottom>
     </ModalContentContainer>
   )

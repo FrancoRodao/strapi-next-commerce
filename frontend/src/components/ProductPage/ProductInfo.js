@@ -4,11 +4,11 @@ import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import { numberToArray } from '../../helpers/numberToArray'
-import { useUserContext } from '../../context/User/UserContext'
 import { ProductPrice } from '../ProductPrice'
 import { useAddCartItem } from '../../hooks/cartHook'
 import { Button } from '../Button'
 import { useChangingPage } from '../../hooks/useChangingPage'
+import { userIsAuthenticated } from '../../helpers/userIsAuthenticated'
 
 const Aside = styled.aside`
   border: ${({ theme }) => `1px solid ${theme.borderGreylight}`};
@@ -94,7 +94,8 @@ export default function ProductInfo({
   quantity,
   sold
 }) {
-  const { state } = useUserContext()
+  // TODO: IMPROVE THIS (CLIENT SIDE AUTH)
+  const { isAuthenticated } = userIsAuthenticated()
   const router = useRouter()
 
   const [selectedQuantity, setSelectedQuantity] = useState(1)
@@ -104,7 +105,7 @@ export default function ProductInfo({
 
   const buyProduct = () => {
     setChangingPage(true)
-    if (state.isAuthenticated) {
+    if (isAuthenticated) {
       router.push(`/checkout/${id}?quantity=${selectedQuantity}`)
       return
     }
@@ -114,7 +115,7 @@ export default function ProductInfo({
   }
 
   const addProductToCart = async () => {
-    if (state.isAuthenticated) {
+    if (isAuthenticated) {
       addCartItem({
         productId: id,
         quantity: selectedQuantity

@@ -50,7 +50,7 @@ export function useChangeUserEmail(
 }
 
 export function useChangeUserUsername(
-  options = { onSuccess: (response) => {} }
+  options = { onSuccess: (response) => {}, onError: (error) => {} }
 ) {
   const queryClient = useQueryClient()
 
@@ -64,6 +64,11 @@ export function useChangeUserUsername(
       if (options?.onSuccess) {
         options?.onSuccess(response)
       }
+    },
+    onError: (error) => {
+      if (options?.onError) {
+        options?.onError(error)
+      }
     }
   })
 
@@ -74,15 +79,17 @@ export function useChangeUserUsername(
 }
 
 export function useChangeUserPassword(
-  options = { onSuccess: (response) => {} }
+  options = { onSuccess: (response) => {}, onError: (error) => {} }
 ) {
-  const queryClient = useQueryClient()
-
   const { mutate, ...rest } = useMutation(ProfileAPI.changeUserPassword, {
     onSuccess: (response) => {
-      queryClient.setQueryData(QueryKeys.GET_ME, response.me)
       if (options?.onSuccess) {
         options?.onSuccess(response)
+      }
+    },
+    onError: (error) => {
+      if (options?.onError) {
+        options?.onError(error)
       }
     }
   })

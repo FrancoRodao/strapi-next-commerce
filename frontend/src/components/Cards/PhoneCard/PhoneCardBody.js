@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 import styled from 'styled-components'
-import { calculatePercentage } from '../../../helpers/calculatePercentage'
 import { ProductPrice } from '../../ProductPrice'
 
 const Container = styled.div`

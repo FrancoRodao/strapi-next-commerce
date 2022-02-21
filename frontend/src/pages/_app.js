@@ -14,9 +14,6 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { Toaster } from 'react-hot-toast'
 import Layout from '../layout/Layout'
 import { styledComponentsTheme } from '../styles/styledComponentsTheme'
-import { UserContext, userReducer } from '../context/User/UserContext'
-import { types } from '../context/User/types'
-import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,20 +27,18 @@ const queryClient = new QueryClient({
   }
 })
 
-function MyApp({ Component, pageProps, userContextInitialState }) {
+function MyApp({ Component, pageProps }) {
   const [queryClientState] = useState(() => queryClient)
 
   return (
     <QueryClientProvider client={queryClientState}>
       <Hydrate state={pageProps.dehydratedState}>
         <ThemeProvider theme={styledComponentsTheme}>
-          <UserContext initialState={userContextInitialState}>
-            <div id="app-modal" />
-            <Toaster position="top-right" />
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </UserContext>
+          <div id="app-modal" />
+          <Toaster position="top-right" />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </ThemeProvider>
       </Hydrate>
       <ReactQueryDevtools initialIsOpen={false} />
@@ -62,23 +57,8 @@ function MyApp({ Component, pageProps, userContextInitialState }) {
 */
 MyApp.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext)
-  const { isAuthenticated, user } = userIsAuthenticated(appContext)
-
-  if (isAuthenticated) {
-    return {
-      userContextInitialState: userReducer(
-        {},
-        {
-          type: types.init,
-          data: JSON.parse(user)
-        }
-      ),
-      ...appProps
-    }
-  }
 
   return {
-    userContextInitialState: userReducer({}, { type: types.logout }),
     ...appProps
   }
 }
@@ -88,7 +68,5 @@ export default MyApp
 MyApp.propTypes = {
   Component: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  pageProps: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  userContextInitialState: PropTypes.object.isRequired
+  pageProps: PropTypes.object.isRequired
 }

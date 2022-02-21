@@ -7,8 +7,7 @@ import { CartIcon } from '../components/Icons/Cart'
 import { ChevronIcon } from '../components/Icons/Chevron'
 import { SearchIcon } from '../components/Icons/Search'
 import { UserIcon } from '../components/Icons/User'
-import { types } from '../context/User/types'
-import { useUserContext } from '../context/User/UserContext'
+import { useGetMe, useLogout } from '../hooks/authHook'
 
 const Header = styled.header`
   width: 100%;
@@ -225,19 +224,17 @@ const Menu = styled.div`
 `
 
 export default function NavBar() {
-  const { state, dispatch } = useUserContext()
+  const { data: me } = useGetMe()
+  const { logout } = useLogout()
   const router = useRouter()
-  const { isAuthenticated, data: userData } = state
 
   const handleSubmit = (e) => {
     e.preventDefault()
     alert('not implemented')
   }
 
-  const logout = () => {
-    dispatch({
-      type: types.logout
-    })
+  const handleLogout = () => {
+    logout()
     router.push('/')
   }
 
@@ -275,10 +272,10 @@ export default function NavBar() {
         </SearchForm>
 
         <Menu>
-          {isAuthenticated ? (
+          {me ? (
             <div className="menu__profile">
               <UserIcon />
-              <p className="menu__item">{userData?.username}</p>
+              <p className="menu__item">{me.username}</p>
               <div className="menu__item--chevron">
                 <ChevronIcon className="menu__item--icon" />
               </div>
@@ -290,7 +287,7 @@ export default function NavBar() {
                 </Link>
                 <button
                   type="button"
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="menu__item--profileinfo menu__item--button"
                 >
                   Salir
@@ -300,13 +297,13 @@ export default function NavBar() {
           ) : (
             <Link href="/signin" passHref>
               <a href="/signin">
-                <p className="menu__item menu__item--login">Iniciar sesion</p>
+                <p className="menu__item menu__item--login">Iniciar sesión</p>
               </a>
             </Link>
           )}
 
           <Button>
-            {isAuthenticated ? (
+            {me ? (
               <Link href="/cart" passHref>
                 <a href="cart">
                   <CartIcon
@@ -318,7 +315,7 @@ export default function NavBar() {
             ) : (
               <Link href="/signup" passHref>
                 <a href="signup">
-                  <p className="menu__item menu__item--login">Registarse</p>
+                  <p className="menu__item menu__item--login">Registrase</p>
                 </a>
               </Link>
             )}

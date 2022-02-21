@@ -103,7 +103,7 @@ module.exports = {
         ctx.status = 400
         ctx.body = {
           statusCode: 400,
-          msg: 'The username is not valid'
+          msg: 'El nombre de usuario no es valido'
         }
         return
       }
@@ -122,7 +122,7 @@ module.exports = {
         ctx.status = 400
         ctx.body = {
           statusCode: 400,
-          msg: 'El usuario ya esta en uso'
+          msg: 'El nombre de usuario ya esta en uso'
         }
         return
       }
@@ -149,9 +149,13 @@ module.exports = {
         return
       }
 
+      const hashedPassword = await strapi.plugins[
+        'users-permissions'
+      ].services.user.hashPassword({ password: newPassword })
+
       await strapi
         .query('user', 'users-permissions')
-        .update({ id: user.id }, { password: newPassword })
+        .update({ id: user.id }, { password: hashedPassword })
 
       ctx.status = 200
       ctx.body = {
