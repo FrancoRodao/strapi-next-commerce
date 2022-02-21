@@ -45,7 +45,7 @@ export function OrderCard({ products, orderId }) {
       <OrderContainer>
         <div className="products">
           {products.map((productInfo) => (
-            <p className="products__title">
+            <p key={productInfo.id} className="products__title">
               <span className="products__quantity">
                 x{productInfo.cantidad}
               </span>

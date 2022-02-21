@@ -1,21 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Input } from '../Input'
 
 const FormTitle = styled.p`
   margin-bottom: 5px;
-`
-
-const FormInput = styled.input`
-  padding: 10px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
-  border-radius: 5px;
-  margin-bottom: 15px;
-  outline: none;
-  border-color: transparent;
-
-  &:focus {
-    box-shadow: 0 0 0 0.125em #3483fa;
-  }
 `
 
 export default function LoginField({
@@ -29,12 +17,11 @@ export default function LoginField({
   return (
     <>
       <FormTitle>{fieldTitle}</FormTitle>
-      <FormInput
+      <Input
         name={inputName}
         value={inputValue}
         type={inputType || 'text'}
         onChange={inputOnChangeValue}
-        className="form__input"
         // eslint-disable-next-line jsx-a11y/no-autofocus
         required
         // eslint-disable-next-line react/jsx-props-no-spreading

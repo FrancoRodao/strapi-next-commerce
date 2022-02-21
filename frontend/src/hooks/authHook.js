@@ -94,23 +94,6 @@ export function useSignUp(
   }
 }
 
-export function useUpdateProfileImage(
-  options = { onSuccess: (response) => {} }
-) {
-  const { mutate, ...rest } = useMutation(AuthAPI.updateProfileImage, {
-    onSuccess: (response) => {
-      if (options?.onSuccess) {
-        options?.onSuccess(response)
-      }
-    }
-  })
-
-  return {
-    updateProfileImage: mutate,
-    ...rest
-  }
-}
-
 export function useGetMe() {
   return useQuery(QueryKeys.GET_ME, () => AuthAPI.getMe(), {
     staleTime: 6000 * 5 // 5 minutes

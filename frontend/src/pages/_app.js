@@ -38,6 +38,7 @@ function MyApp({ Component, pageProps, userContextInitialState }) {
       <Hydrate state={pageProps.dehydratedState}>
         <ThemeProvider theme={styledComponentsTheme}>
           <UserContext initialState={userContextInitialState}>
+            <div id="app-modal" />
             <Toaster position="top-right" />
             <Layout>
               <Component {...pageProps} />

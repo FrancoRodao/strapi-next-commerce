@@ -44,6 +44,45 @@
       }
     },
     {
+      "method": "PUT",
+      "path": "/users/me/profile/email",
+      "handler": "profile.changeUserEmail",
+      "config": {
+        "policies": ["plugins::users-permissions.isAuthenticated"],
+        "prefix": "",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/users/me/profile/username",
+      "handler": "profile.changeUserUsername",
+      "config": {
+        "policies": ["plugins::users-permissions.isAuthenticated"],
+        "prefix": "",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/users/me/profile/password",
+      "handler": "profile.changeUserPassword",
+      "config": {
+        "policies": ["plugins::users-permissions.isAuthenticated"],
+        "prefix": "",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User"
+        }
+      }
+    },
+    {
       "method": "POST",
       "path": "/users/me/cart/setCartItemQuantity",
       "handler": "cart.setCartItemQuantity",

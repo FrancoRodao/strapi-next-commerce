@@ -6,12 +6,13 @@ import Image from 'next/image'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import { PublicRoute } from '../routes/publicRoute'
-import { useSignUp, useUpdateProfileImage } from '../hooks/authHook'
+import { useSignUp } from '../hooks/authHook'
 import Login from '../components/Login/Login'
 import LoginForm from '../components/Login/LoginForm'
 import LoginField from '../components/Login/LoginField'
 import { Button } from '../components/Button'
 import { UploadIcon } from '../components/Icons/Upload'
+import { useUpdateProfileImage } from '../hooks/profileHook'
 
 const baseStyle = {
   position: 'relative',

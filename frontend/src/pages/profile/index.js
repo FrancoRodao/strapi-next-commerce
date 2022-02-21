@@ -9,13 +9,18 @@ import { Button } from '../../components/Button'
 import { OrderCard } from '../../components/Profile/OrderCard'
 import { QueryKeys } from '../../constants/queryKeys.constant'
 import { userIsAuthenticated } from '../../helpers/userIsAuthenticated'
-import { useGetMe, useUpdateProfileImage } from '../../hooks/authHook'
+import { useGetMe } from '../../hooks/authHook'
 import { useGetUserOrders } from '../../hooks/ordersHook'
 import { ProtectedRoute } from '../../routes/protectedRoute'
 import { Modal } from '../../components/Modal'
-import { useModal } from '../../hooks/useModal'
 import { ChangeEmail } from '../../components/Profile/ModalContents/ChangeEmail'
 import { UploadIcon } from '../../components/Icons/Upload'
+import { useUpdateProfileImage } from '../../hooks/profileHook'
+import {
+  ModalContextProvider,
+  useModalContext
+} from '../../context/Modal/ModalContext'
+import { types } from '../../context/Modal/types'
 
 const Container = styled.div`
   width: 100%;
@@ -131,8 +136,8 @@ const Container = styled.div`
   }
 `
 
-export default function Profile() {
-  const { isOpen, toggleModal } = useModal()
+function Profile() {
+  const { dispatch } = useModalContext()
   const [modalInfo, setModalInfo] = useState({
     title: '',
     content: null
@@ -187,7 +192,7 @@ export default function Profile() {
       content: <ChangeEmail />
     })
 
-    toggleModal()
+    dispatch({ type: types.TOGGLE_MODAL })
   }
 
   const handleChangeUsername = () => {
@@ -196,7 +201,7 @@ export default function Profile() {
       content: <div>cambiar user bro</div>
     })
 
-    toggleModal()
+    dispatch({ type: types.TOGGLE_MODAL })
   }
 
   const handleChangePassword = () => {
@@ -205,16 +210,22 @@ export default function Profile() {
       content: <div>cambiar contra bro</div>
     })
 
-    toggleModal()
+    dispatch({ type: types.TOGGLE_MODAL })
+  }
+
+  const handleAfterClose = () => {
+    setModalInfo({
+      title: '',
+      content: null
+    })
   }
 
   return (
     <Container>
       <Modal
+        afterClose={handleAfterClose}
         title={modalInfo.title}
         content={modalInfo.content}
-        isOpen={isOpen}
-        close={toggleModal}
       />
       <div className="profile">
         <div className="profile__image">
@@ -299,6 +310,14 @@ export default function Profile() {
         </div>
       </div>
     </Container>
+  )
+}
+
+export default function PageWithContext() {
+  return (
+    <ModalContextProvider>
+      <Profile />
+    </ModalContextProvider>
   )
 }
 

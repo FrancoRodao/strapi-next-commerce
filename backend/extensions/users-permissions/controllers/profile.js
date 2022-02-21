@@ -51,5 +51,118 @@ module.exports = {
         msg: 'Unexpected error'
       }
     }
+  },
+
+  async changeUserEmail(ctx) {
+    try {
+      const user = ctx.state.user
+      const newEmail = ctx.request.body.email
+
+      if (!newEmail) {
+        ctx.status = 400
+        ctx.body = {
+          statusCode: 400,
+          msg: 'El email no es valido'
+        }
+        return
+      }
+
+      await strapi
+        .query('user', 'users-permissions')
+        .update({ id: user.id }, { email: newEmail })
+
+      ctx.status = 200
+      ctx.body = {
+        statusCode: 200,
+        newEmail
+      }
+    } catch (error) {
+      if (error.message === 'Duplicate entry') {
+        ctx.status = 400
+        ctx.body = {
+          statusCode: 400,
+          msg: 'El email ya esta en uso'
+        }
+        return
+      }
+
+      ctx.status = 500
+      ctx.body = {
+        statusCode: 500,
+        msg: 'Unexpected error'
+      }
+    }
+  },
+
+  async changeUserUsername(ctx) {
+    try {
+      const user = ctx.state.user
+      const newUsername = ctx.request.body.username
+
+      if (!newUsername) {
+        ctx.status = 400
+        ctx.body = {
+          statusCode: 400,
+          msg: 'The username is not valid'
+        }
+        return
+      }
+
+      await strapi
+        .query('user', 'users-permissions')
+        .update({ id: user.id }, { username: newUsername })
+
+      ctx.status = 200
+      ctx.body = {
+        statusCode: 200,
+        newUsername
+      }
+    } catch (error) {
+      if (error.message === 'Duplicate entry') {
+        ctx.status = 400
+        ctx.body = {
+          statusCode: 400,
+          msg: 'El usuario ya esta en uso'
+        }
+        return
+      }
+
+      ctx.status = 500
+      ctx.body = {
+        statusCode: 500,
+        msg: 'Unexpected error'
+      }
+    }
+  },
+
+  async changeUserPassword(ctx) {
+    try {
+      const user = ctx.state.user
+      const newPassword = ctx.request.body.password
+
+      if (!newPassword) {
+        ctx.status = 400
+        ctx.body = {
+          statusCode: 400,
+          msg: 'The password is not valid'
+        }
+        return
+      }
+
+      await strapi
+        .query('user', 'users-permissions')
+        .update({ id: user.id }, { password: newPassword })
+
+      ctx.status = 200
+      ctx.body = {
+        statusCode: 200
+      }
+    } catch (error) {
+      ctx.status = 500
+      ctx.body = {
+        statusCode: 500,
+        msg: 'Unexpected error'
+      }
+    }
   }
 }
