@@ -8,8 +8,10 @@ import { ChevronIcon } from '../components/Icons/Chevron'
 import { SearchIcon } from '../components/Icons/Search'
 import { UserIcon } from '../components/Icons/User'
 import { useGetMe, useLogout } from '../hooks/authHook'
+import { useForm } from '../hooks/useForm'
 
 const Header = styled.header`
+  position: relative;
   width: 100%;
   height: 4.5rem;
   background-color: ${({ theme }) => `${theme.navbarBgColor}`};
@@ -27,7 +29,7 @@ const Nav = styled.nav`
     display: flex;
     align-items: center;
 
-    &-img-container {
+    &__anchor {
       /*because next/img has position: absolute*/
       position: relative;
       height: 100%;
@@ -38,6 +40,16 @@ const Nav = styled.nav`
       &:hover {
         animation: shake 5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
       }
+    }
+
+    &__image {
+      cursor: pointer;
+    }
+
+    &__title {
+      font-size: 18px;
+      font-weight: 700;
+      font-style: italic;
     }
   }
 
@@ -72,14 +84,70 @@ const Nav = styled.nav`
     }
   }
 
-  .img {
-    cursor: pointer;
+  .hamburger {
+    display: none;
+    opacity: 0.7;
+
+    &__bar {
+      display: block;
+      width: 25px;
+      height: 2px;
+      margin: 5px auto;
+      -webkit-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+      background-color: #101010;
+    }
   }
 
-  .title {
-    font-size: 18px;
-    font-weight: 700;
-    font-style: italic;
+  .menu__item {
+    margin-left: 20px;
+    max-width: 150px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  @media (max-width: 900px) {
+    .logo__title {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hamburger {
+      display: block;
+
+      &.active .hamburger__bar:nth-child(2) {
+        opacity: 0;
+      }
+      &.active .hamburger__bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+      &.hamburger.active .hamburger__bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+    }
+
+    .menu-active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      background-color: #fff;
+    }
+
+    .menu-active > .menu__item--login {
+      display: block;
+      margin-top: 10px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    padding: 0;
   }
 `
 
@@ -96,22 +164,28 @@ const Button = styled.button`
     margin-right: 10px;
     cursor: pointer;
   }
+
+  @media (max-width: 500px) {
+    margin-right: 15px;
+  }
 `
 
 const SearchForm = styled.form`
   position: relative;
   display: flex;
   height: 60%;
+  margin: 0 30px;
+  flex-grow: 2;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
   border: 0 rgba(0, 0, 0, 0.2);
 
-  .input {
+  .search__input {
+    width: 100%;
     padding: 10px;
-    width: 19rem;
     border: transparent;
   }
 
-  .icon_container {
+  .search__iconContainer {
     position: relative;
     display: flex;
     align-items: center;
@@ -127,11 +201,19 @@ const SearchForm = styled.form`
       height: 25px;
     }
   }
+
+  @media (max-width: 500px) {
+    margin: 0;
+    margin-right: 15px;
+  }
 `
 
 const Menu = styled.div`
   display: flex;
   align-items: center;
+  position: relative;
+  height: 45px;
+  cursor: pointer;
 
   .menu__item {
     font-size: 18px;
@@ -147,13 +229,17 @@ const Menu = styled.div`
         visibility: hidden;
         opacity: 0;
         position: absolute;
-        top: 90%;
-        left: 50%;
+        top: 110%;
+        left: 30%;
         transform: translate(-50%, 0);
         pointer-events: none;
-        border-bottom: 14px solid #fff;
-        border-left: 14px solid transparent;
-        border-right: 14px solid transparent;
+        width: 10px;
+        height: 10px;
+        transform: rotate(45deg);
+        background-color: #fff;
+        z-index: 2;
+        border-top: solid 1px #e5d850;
+        border-left: solid 1px #e5d850;
         transition: visibility 0.2s, opacity 0.2s;
       }
     }
@@ -163,6 +249,9 @@ const Menu = styled.div`
     }
 
     &--login {
+      display: inline-block;
+      margin-left: 8px;
+      cursor: pointer;
       font-size: 16px;
     }
 
@@ -170,9 +259,9 @@ const Menu = styled.div`
       margin-left: 20px;
     }
 
-    &--profileinfo {
-      padding-top: 12px;
-      padding-bottom: 12px;
+    &--profile {
+      padding: 12px 0;
+      margin-top: 8px;
       width: 100%;
       height: 100%;
       text-align: center;
@@ -189,7 +278,7 @@ const Menu = styled.div`
     }
   }
 
-  .menu__profileinfo {
+  .menu__profile {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -197,28 +286,48 @@ const Menu = styled.div`
     visibility: hidden;
     opacity: 0;
     top: 45px;
-    left: -60%;
+    right: -20px;
     width: 270px;
     background-color: #fff;
-    z-index: 9999;
+    border: solid 1px #e5d850;
+    z-index: 1;
     transition: visibility 0.2s, opacity 0.2s;
   }
 
-  .menu__profile {
-    display: flex;
-    align-items: center;
-    position: relative;
-    height: 45px;
-    cursor: pointer;
+  &:hover .menu__item--icon {
+    transform: rotate(180deg);
+  }
 
-    &:hover .menu__item--icon {
-      transform: rotate(180deg);
+  &:hover .menu__profile,
+  &:hover .menu__item--chevron::before {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+    height: 150px;
+
+    .menu__container {
+      position: relative;
+      height: 100%;
     }
 
-    &:hover .menu__profileinfo,
-    &:hover .menu__item--chevron::before {
+    .menu__profile {
       visibility: visible;
       opacity: 1;
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: none;
+    }
+
+    .menu__profile--icon,
+    .menu__item,
+    .menu__item--chevron {
+      display: none;
     }
   }
 `
@@ -228,14 +337,24 @@ export default function NavBar() {
   const { logout } = useLogout()
   const router = useRouter()
 
+  const { formValues, handleInputChange, resetForm, setFormValues } = useForm({
+    search: ''
+  })
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    alert('not implemented')
+    router.push(`/search?q=${formValues.search}`)
   }
 
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    e.preventDefault()
     logout()
     router.push('/')
+  }
+
+  const handleToggleHamburger = (e) => {
+    e.currentTarget.classList.toggle('active')
+    e.currentTarget.previousSibling.classList.toggle('menu-active')
   }
 
   return (
@@ -243,9 +362,9 @@ export default function NavBar() {
       <Nav>
         <div className="logo">
           <Link href="/" passHref>
-            <a href="/" className="logo-img-container">
+            <a href="/" className="logo__anchor">
               <Image
-                className="img"
+                className="logo__image"
                 alt="logo"
                 src="/MobileKing.png"
                 layout="fill"
@@ -255,16 +374,18 @@ export default function NavBar() {
             </a>
           </Link>
 
-          <h1 className="title">Líder en celulares</h1>
+          <h1 className="logo__title">Líder en celulares</h1>
         </div>
 
         <SearchForm onSubmit={handleSubmit}>
           <input
             placeholder="Buscar productos..."
-            className="input"
-            type="text"
+            className="search__input"
+            type="search"
+            name="search"
+            onChange={handleInputChange}
           />
-          <div className="icon_container">
+          <div className="search__iconContainer">
             <Button type="submit">
               <SearchIcon style={{ marginTop: '3px' }} />
             </Button>
@@ -273,54 +394,63 @@ export default function NavBar() {
 
         <Menu>
           {me ? (
-            <div className="menu__profile">
+            <>
               <UserIcon />
               <p className="menu__item">{me.username}</p>
               <div className="menu__item--chevron">
                 <ChevronIcon className="menu__item--icon" />
               </div>
-              <div className="menu__profileinfo">
+              <div className="menu__profile">
                 <Link href="/profile" passHref>
-                  <a className="menu__item--profileinfo" href="profile">
+                  <a className="menu__item--profile" href="profile">
                     Perfil
                   </a>
                 </Link>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="menu__item--profileinfo menu__item--button"
+                  className="menu__item--profile menu__item--button"
                 >
                   Salir
                 </button>
               </div>
-            </div>
+            </>
           ) : (
-            <Link href="/signin" passHref>
-              <a href="/signin">
-                <p className="menu__item menu__item--login">Iniciar sesión</p>
+            <>
+              <Link href="/signin" passHref>
+                <a className="menu__item--login" href="/signin">
+                  <p className="">Iniciar sesión</p>
+                </a>
+              </Link>
+              <Link href="/signup" passHref>
+                <a className="menu__item--login" href="signup">
+                  <p className="">Registrase</p>
+                </a>
+              </Link>
+            </>
+          )}
+        </Menu>
+
+        <div
+          className="hamburger"
+          onClick={handleToggleHamburger}
+          role="menu"
+          tabIndex={0}
+        >
+          <span className="hamburger__bar" />
+          <span className="hamburger__bar" />
+          <span className="hamburger__bar" />
+        </div>
+
+        {me && (
+          <Button>
+            <Link href="/cart" passHref>
+              <a href="cart">
+                <CartIcon className="menu__item" style={{ marginTop: '2px' }} />
               </a>
             </Link>
-          )}
-
-          <Button>
-            {me ? (
-              <Link href="/cart" passHref>
-                <a href="cart">
-                  <CartIcon
-                    className="menu__item"
-                    style={{ marginTop: '3px' }}
-                  />
-                </a>
-              </Link>
-            ) : (
-              <Link href="/signup" passHref>
-                <a href="signup">
-                  <p className="menu__item menu__item--login">Registrase</p>
-                </a>
-              </Link>
-            )}
           </Button>
-        </Menu>
+        )}
       </Nav>
     </Header>
   )

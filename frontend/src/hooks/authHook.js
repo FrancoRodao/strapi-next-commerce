@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { AuthAPI } from '../api/auth'
 import { QueryKeys } from '../constants/queryKeys.constant'
 
@@ -12,6 +12,7 @@ export function useSignIn(
   }
 ) {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const { mutate, ...rest } = useMutation(AuthAPI.signIn, {
     onSuccess: (response) => {
@@ -31,6 +32,8 @@ export function useSignIn(
       Cookies.set('user', JSON.stringify(userData), {
         sameSite: 'strict'
       })
+
+      queryClient.setQueryData(QueryKeys.GET_ME, data.user)
 
       if (options?.onSuccess) {
         options?.onSuccess(response)
@@ -86,9 +89,14 @@ export function useSignUp(
 }
 
 export function useLogout() {
-  return function logout() {
-    Cookies.remove('user')
-    Cookies.remove('accessToken')
+  const queryClient = useQueryClient()
+
+  return {
+    logout() {
+      Cookies.remove('user')
+      Cookies.remove('accessToken')
+      queryClient.setQueryData(QueryKeys.GET_ME, null)
+    }
   }
 }
 
