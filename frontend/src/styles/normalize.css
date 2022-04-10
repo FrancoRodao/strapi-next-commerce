@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+#__next {
+  background-color: #ebebeb;
+}
+
 html {
   font-family: 'Proxima Nova', sans-serif;
 }

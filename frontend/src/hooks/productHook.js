@@ -4,6 +4,16 @@ import { useQuery } from 'react-query'
 import { ProductsAPI } from '../api/products'
 import { QueryKeys } from '../constants/queryKeys.constant'
 
+export function useGetSearchProducts(searchTerm, page, filters, sort) {
+  return useQuery(
+    [QueryKeys.GET_PRODUCTS, searchTerm, page, filters, sort],
+    () => ProductsAPI.getSearchProducts(searchTerm, filters, sort),
+    {
+      staleTime: 60000 * 5 // 5 minutes
+    }
+  )
+}
+
 export function useGetProduct(productId) {
   const router = useRouter()
 

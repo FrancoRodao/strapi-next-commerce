@@ -1,8 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "categories",
+  "collectionName": "marcas",
   "info": {
-    "name": "category",
+    "name": "marcas",
     "description": ""
   },
   "options": {
@@ -10,6 +10,7 @@
     "timestamps": true,
     "draftAndPublish": false
   },
+  "pluginOptions": {},
   "attributes": {
     "name": {
       "type": "string"
@@ -19,7 +20,7 @@
       "targetField": "name"
     },
     "productos": {
-      "via": "categories",
+      "via": "marcas",
       "collection": "producto"
     }
   }

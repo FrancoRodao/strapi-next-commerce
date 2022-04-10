@@ -5,6 +5,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-around;
   padding: 5px;
+  margin-top: 30px;
 `
 
 export default function Footer() {

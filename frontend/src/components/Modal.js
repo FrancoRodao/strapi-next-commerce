@@ -66,10 +66,10 @@ const ModalContentContainer = styled.div`
 `
 
 export function Modal({ title, content, afterClose }) {
-  const { state, dispatch } = useModalContext()
+  const { state, toggleModal } = useModalContext()
 
   const close = () => {
-    dispatch({ type: types.TOGGLE_MODAL })
+    toggleModal()
 
     if (afterClose) {
       setTimeout(() => {
@@ -80,7 +80,7 @@ export function Modal({ title, content, afterClose }) {
 
   return (
     <Portal selectorId="app-modal">
-      <ModalContainer onClick={close} isOpen={state.opened}>
+      <ModalContainer onClick={toggleModal} isOpen={state.opened}>
         <ModalContentContainer onClick={(e) => e.stopPropagation()}>
           <div className="header">
             <h1>{title}</h1>

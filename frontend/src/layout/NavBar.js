@@ -120,10 +120,10 @@ const Nav = styled.nav`
         opacity: 0;
       }
       &.active .hamburger__bar:nth-child(1) {
-        transform: translateY(8px) rotate(45deg);
+        transform: translate(0, 8px) rotate(45deg);
       }
       &.hamburger.active .hamburger__bar:nth-child(3) {
-        transform: translateY(-8px) rotate(-45deg);
+        transform: translate(0, -6px) rotate(-45deg);
       }
     }
 
@@ -337,13 +337,15 @@ export default function NavBar() {
   const { logout } = useLogout()
   const router = useRouter()
 
-  const { formValues, handleInputChange, resetForm, setFormValues } = useForm({
-    search: ''
+  const { formValues, handleInputChange } = useForm({
+    search: router.query.q || ''
   })
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    router.push(`/search?q=${formValues.search}`)
+    if (formValues.search.length > 0) {
+      router.push(`/search?q=${formValues.search}`)
+    }
   }
 
   const handleLogout = (e) => {
@@ -361,7 +363,7 @@ export default function NavBar() {
     <Header>
       <Nav>
         <div className="logo">
-          <Link href="/" passHref>
+          <Link href="/">
             <a href="/" className="logo__anchor">
               <Image
                 className="logo__image"
@@ -379,10 +381,12 @@ export default function NavBar() {
 
         <SearchForm onSubmit={handleSubmit}>
           <input
+            autoComplete="off"
             placeholder="Buscar productos..."
             className="search__input"
             type="search"
             name="search"
+            value={formValues.search}
             onChange={handleInputChange}
           />
           <div className="search__iconContainer">

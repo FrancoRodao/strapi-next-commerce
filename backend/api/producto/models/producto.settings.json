@@ -19,10 +19,6 @@
       "type": "integer",
       "required": true
     },
-    "descripcion": {
-      "type": "text",
-      "required": true
-    },
     "imagenes": {
       "collection": "file",
       "via": "related",
@@ -34,12 +30,12 @@
       "required": true,
       "pluginOptions": {}
     },
-    "caracteristicas": {
+    "caracteristicas_adicionales": {
       "type": "component",
       "repeatable": true,
-      "component": "custom.custom-field"
+      "component": "celulares-caracteristicas.custom-field"
     },
-    "categories": {
+    "marcas": {
       "collection": "category",
       "via": "productos",
       "dominant": true
@@ -60,6 +56,15 @@
       "default": 1,
       "required": true,
       "min": 1
+    },
+    "descripcion": {
+      "type": "richtext"
+    },
+    "caracteristicas": {
+      "type": "component",
+      "repeatable": false,
+      "component": "celulares-caracteristicas.caracteristicas",
+      "required": true
     }
   }
 }

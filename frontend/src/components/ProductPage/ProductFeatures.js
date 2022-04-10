@@ -40,18 +40,36 @@ const Section = styled.section`
   }
 `
 
-export default function ProductFeatures({ features }) {
+export default function ProductFeatures({ features, optionalFeatures }) {
+  // TODO: DOCUMENTATION
+
   return (
     <Section>
       <h1 className="product-features-title">Características del producto</h1>
       <table className="product-features-table">
         <tbody>
-          {features.map(({ descripcion, titulo, id }) => (
-            <tr key={id} className="product-features-tr">
-              <th className="product-features-item text-left">{descripcion}</th>
-              <td className="product-features-item">{titulo}</td>
-            </tr>
-          ))}
+          {Object.entries(features).map(([key, value]) => {
+            if (key === 'id') {
+              return
+            }
+
+            return (
+              <tr key={key} className="product-features-tr">
+                <th className="product-features-item text-left">
+                  {key.replace('_', ' ')}
+                </th>
+                <td className="product-features-item">{value}</td>
+              </tr>
+            )
+          })}
+
+          {optionalFeatures &&
+            optionalFeatures.map(({ descripcion, titulo, id }) => (
+              <tr key={id} className="product-features-tr">
+                <th className="product-features-item text-left">{titulo}</th>
+                <td className="product-features-item">{descripcion}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </Section>

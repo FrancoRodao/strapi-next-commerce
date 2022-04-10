@@ -139,17 +139,14 @@ const Container = styled.div`
 `
 
 function Profile() {
-  const { dispatch } = useModalContext()
-  const [modalInfo, setModalInfo] = useState({
-    title: '',
-    content: null
-  })
+  const { toggleModal, modalInfo, setModalInfo } = useModalContext()
 
   const inputFileRef = useRef()
   const queryClient = useQueryClient()
 
   const { data: me, isError: isError1 } = useGetMe()
   const { data: ordersData, isError: isError2 } = useGetUserOrders()
+
   const { updateProfileImage, isError: isError3 } = useUpdateProfileImage({
     onSuccess: (response) => {
       queryClient.setQueryData(QueryKeys.GET_ME, (old) => ({
@@ -194,7 +191,7 @@ function Profile() {
       content: <ChangeEmail />
     })
 
-    dispatch({ type: types.TOGGLE_MODAL })
+    toggleModal()
   }
 
   const handleChangeUsername = () => {
@@ -203,7 +200,7 @@ function Profile() {
       content: <ChangeUsername />
     })
 
-    dispatch({ type: types.TOGGLE_MODAL })
+    toggleModal()
   }
 
   const handleChangePassword = () => {
@@ -212,10 +209,10 @@ function Profile() {
       content: <ChangePassword />
     })
 
-    dispatch({ type: types.TOGGLE_MODAL })
+    toggleModal()
   }
 
-  const handleAfterClose = () => {
+  const handleResetModal = () => {
     setModalInfo({
       title: '',
       content: null
@@ -225,7 +222,7 @@ function Profile() {
   return (
     <Container>
       <Modal
-        afterClose={handleAfterClose}
+        afterClose={handleResetModal}
         title={modalInfo.title}
         content={modalInfo.content}
       />

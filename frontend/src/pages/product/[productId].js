@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { dehydrate, QueryClient } from 'react-query'
 import styled from 'styled-components'
@@ -22,6 +22,11 @@ const MainContainer = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+
+    &__btn {
+      border: none;
+      background-color: transparent;
+    }
   }
 `
 
@@ -40,6 +45,7 @@ const ProductContainer = styled.div`
 `
 
 export default function Product({ productId }) {
+  const router = useRouter()
   const { data, isLoading } = useGetProduct(productId)
 
   const [image, setImage] = useState(null)
@@ -52,22 +58,25 @@ export default function Product({ productId }) {
     return <div>404 - Este producto no existe :(</div>
   }
 
+  const handleBack = (e) => {
+    e.preventDefault()
+    router.back()
+  }
+
   return (
     <>
       <MainContainer>
         <>
           <div className="breads">
-            <Link href="/" passHref>
-              <a href="/">
-                <ArrowIcon
-                  style={{
-                    cursor: 'pointer',
-                    transform: 'rotate(-90deg)',
-                    marginTop: '4px'
-                  }}
-                />
-              </a>
-            </Link>
+            <button className="breads__btn" type="button" onClick={handleBack}>
+              <ArrowIcon
+                style={{
+                  cursor: 'pointer',
+                  transform: 'rotate(-90deg)',
+                  marginTop: '4px'
+                }}
+              />
+            </button>
             breadcrumbs
           </div>
 
@@ -78,9 +87,12 @@ export default function Product({ productId }) {
 
                 <article className="product">
                   <ProductImage image={image} />
-                  {data.caracteristicas.length > 0 && (
-                    <ProductFeatures features={data.caracteristicas} />
-                  )}
+
+                  <ProductFeatures
+                    features={data.caracteristicas}
+                    optionalFeatures={data.caracteristicas_adicionales}
+                  />
+
                   <ProductDescription description={data.descripcion} />
                 </article>
 

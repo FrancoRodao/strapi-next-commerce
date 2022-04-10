@@ -7,8 +7,11 @@ const ButtonStyle = styled.button`
   border-color: transparent;
   padding: ${({ isLoading }) => (!isLoading ? '15px' : '0px')};
   border-radius: 5px;
-  background-color: ${({ theme, outline }) => (outline ? '#fff' : theme.blue)};
-  color: ${({ theme, outline }) => (outline ? theme.blue : '#fff')};
+  background-color: ${({ theme, outline }) =>
+    outline ? 'transparent' : theme.blue};
+  //TODO: IMPROVE IT
+  color: ${({ theme, outline, disabled }) =>
+    disabled ? theme.gray : outline ? theme.blue : '#fff'};
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s;

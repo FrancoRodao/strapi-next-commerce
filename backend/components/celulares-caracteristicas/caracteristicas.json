@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_celulares_caracteristicas_caracteristicas",
+  "info": {
+    "name": "obligatoria",
+    "icon": "arrow-alt-circle-down",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Memoria_interna": {
+      "type": "string",
+      "required": true
+    },
+    "Memoria_ram": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
