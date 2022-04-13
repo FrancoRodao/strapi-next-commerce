@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { dehydrate, QueryClient } from 'react-query'
+import { useEffect } from 'react'
 import FeaturedSlider from '../components/HomePage/Sliders/FeaturedSlider/FeaturedSlider'
 import BrandLogoSlider from '../components/HomePage/Sliders/BrandLogoSlider'
 import { PhoneCards } from '../components/Cards/PhoneCard/PhoneCards'
@@ -10,6 +11,12 @@ import {
 } from '../hooks/productHook'
 import { QueryKeys } from '../constants/queryKeys.constant'
 import { AppearanceAPI } from '../api/appearance'
+import {
+  ModalContextProvider,
+  useModalContext
+} from '../context/Modal/ModalContext'
+import { Modal } from '../components/Modal'
+import { SandboxModalContent } from '../components/HomePage/SandboxModalContent'
 
 const Container = styled.div`
   section {
@@ -38,37 +45,59 @@ const Container = styled.div`
 const PhoneCardsContainer = styled.div`
   width: 100%;
   display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
   gap: 12px;
 `
 
-export default function Home() {
+function Home() {
   const bestSellers = useGetBestSellersProducts()
   const offerProducts = useGetOfferProducts()
+  const { toggleModal, modalInfo, setModalInfo } = useModalContext()
+
+  useEffect(() => {
+    setModalInfo({
+      title: 'Sandbox',
+      content: <SandboxModalContent />
+    })
+    toggleModal()
+  }, [])
 
   return (
-    <Container>
-      <section className="first-section">
-        <FeaturedSlider />
-      </section>
-      <section className="container">
-        <h1 className="section-title">Lo mas vendido</h1>
-        <PhoneCardsContainer>
-          <PhoneCards queryData={bestSellers} placeHolderCards={5} />
-        </PhoneCardsContainer>
-      </section>
+    <>
+      <Modal title={modalInfo.title} content={modalInfo.content} />
+      <Container>
+        <section className="first-section">
+          <FeaturedSlider />
+        </section>
+        <section className="container">
+          <h1 className="section-title">Lo mas vendido</h1>
+          <PhoneCardsContainer>
+            <PhoneCards queryData={bestSellers} placeHolderCards={5} />
+          </PhoneCardsContainer>
+        </section>
 
-      <section className="container">
-        <h1 className="section-title">Trabajamos con las mejores marcas</h1>
-        <BrandLogoSlider />
-      </section>
+        <section className="container">
+          <h1 className="section-title">Trabajamos con las mejores marcas</h1>
+          <BrandLogoSlider />
+        </section>
 
-      <section className="container offers">
-        <h1 className="section-title">Ofertas</h1>
-        <PhoneCardsContainer>
-          <PhoneCards queryData={offerProducts} placeHolderCards={5} />
-        </PhoneCardsContainer>
-      </section>
-    </Container>
+        <section className="container">
+          <h1 className="section-title">Ofertas</h1>
+          <PhoneCardsContainer>
+            <PhoneCards queryData={offerProducts} placeHolderCards={5} />
+          </PhoneCardsContainer>
+        </section>
+      </Container>
+    </>
+  )
+}
+
+export default function PageWithModalContext() {
+  return (
+    <ModalContextProvider>
+      <Home />
+    </ModalContextProvider>
   )
 }
 

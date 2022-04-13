@@ -35,22 +35,24 @@ function PhoneCard({ id, title, price, image, offerPrice }) {
   const data = id && title && price && image
 
   return (
-    <Link href={`/product/${id}`} passHref>
-      <a style={{ width: '100%' }} href={`/product/${id}`}>
-        <PhoneCardContainer>
-          {data ? (
-            <PhoneCardBody
-              title={title}
-              price={price}
-              image={image}
-              offerPrice={offerPrice}
-            />
-          ) : (
-            <Loading />
-          )}
-        </PhoneCardContainer>
-      </a>
-    </Link>
+    <div style={{ width: '230px' }}>
+      <Link href={`/product/${id}`} passHref>
+        <a href={`/product/${id}`}>
+          <PhoneCardContainer>
+            {data ? (
+              <PhoneCardBody
+                title={title}
+                price={price}
+                image={image}
+                offerPrice={offerPrice}
+              />
+            ) : (
+              <Loading />
+            )}
+          </PhoneCardContainer>
+        </a>
+      </Link>
+    </div>
   )
 }
 

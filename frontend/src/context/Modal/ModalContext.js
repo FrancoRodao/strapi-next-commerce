@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useReducer, useState } from 'react'
+import { createContext, useContext, useMemo, useReducer } from 'react'
 import { isProduction } from '../../helpers/isProduction'
 import { types } from './types'
 
@@ -57,12 +57,7 @@ export function ModalContextProvider({ children }) {
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
 }
 
-export const useModalContext = (
-  modalInfoInitialState = {
-    title: '',
-    content: null
-  }
-) => {
+export const useModalContext = () => {
   const context = useContext(ModalContext)
 
   if (context === undefined) {
