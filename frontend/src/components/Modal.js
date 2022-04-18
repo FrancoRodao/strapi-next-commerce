@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import styled, { css } from 'styled-components'
 import { useModalContext } from '../context/Modal/ModalContext'
 import { types } from '../context/Modal/types'
@@ -66,25 +67,34 @@ const ModalContentContainer = styled.div`
 `
 
 export function Modal({ title, content, afterClose }) {
+  const [closing, setClosing] = useState(false)
   const { state, toggleModal } = useModalContext()
 
-  const close = () => {
-    toggleModal()
+  const closeModal = () => {
+    if (!closing) {
+      setClosing(true)
+      toggleModal()
 
-    if (afterClose) {
-      setTimeout(() => {
-        afterClose()
-      }, MODAL_TRANSITION_TIME_MS)
+      if (afterClose) {
+        setTimeout(() => {
+          afterClose()
+          setClosing(false)
+        }, MODAL_TRANSITION_TIME_MS)
+      }
     }
   }
 
   return (
     <Portal selectorId="app-modal">
-      <ModalContainer onClick={toggleModal} isOpen={state.opened}>
+      <ModalContainer onClick={closeModal} isOpen={state.opened}>
         <ModalContentContainer onClick={(e) => e.stopPropagation()}>
           <div className="header">
             <h1>{title}</h1>
-            <button onClick={close} className="header__close" type="button">
+            <button
+              onClick={closeModal}
+              className="header__close"
+              type="button"
+            >
               <CloseIcon />
             </button>
           </div>

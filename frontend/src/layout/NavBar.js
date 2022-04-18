@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { CartIcon } from '../components/Icons/Cart'
 import { ChevronIcon } from '../components/Icons/Chevron'
@@ -9,6 +10,8 @@ import { SearchIcon } from '../components/Icons/Search'
 import { UserIcon } from '../components/Icons/User'
 import { useGetMe, useLogout } from '../hooks/authHook'
 import { useForm } from '../hooks/useForm'
+
+const MAX_WIDTH_HAMBURGER_MENU = 768
 
 const Header = styled.header`
   position: relative;
@@ -112,7 +115,7 @@ const Nav = styled.nav`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MAX_WIDTH_HAMBURGER_MENU}px) {
     .hamburger {
       display: block;
 
@@ -336,6 +339,7 @@ export default function NavBar() {
   const { data: me } = useGetMe()
   const { logout } = useLogout()
   const router = useRouter()
+  const hamburgerMenuRef = useRef()
 
   const { formValues, handleInputChange } = useForm({
     search: router.query.q || ''
@@ -355,9 +359,22 @@ export default function NavBar() {
   }
 
   const handleToggleHamburger = (e) => {
-    e.currentTarget.classList.toggle('active')
-    e.currentTarget.previousSibling.classList.toggle('menu-active')
+    console.log(hamburgerMenuRef)
+    hamburgerMenuRef.current.classList.toggle('active')
+    hamburgerMenuRef.current.previousSibling.classList.toggle('menu-active')
   }
+
+  // close the menu after clicking on some menu item
+  useEffect(() => {
+    if (
+      typeof window !== 'undefined' &&
+      window.innerWidth <= MAX_WIDTH_HAMBURGER_MENU
+    ) {
+      document.querySelectorAll('.menu__item--hamburger').forEach((item) => {
+        item.addEventListener('click', handleToggleHamburger)
+      })
+    }
+  }, [])
 
   return (
     <Header>
@@ -406,14 +423,17 @@ export default function NavBar() {
               </div>
               <div className="menu__profile">
                 <Link href="/profile" passHref>
-                  <a className="menu__item--profile" href="profile">
+                  <a
+                    className="menu__item--hamburger menu__item--profile"
+                    href="profile"
+                  >
                     Perfil
                   </a>
                 </Link>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="menu__item--profile menu__item--button"
+                  className="menu__item--hamburger menu__item--profile menu__item--button"
                 >
                   Salir
                 </button>
@@ -422,12 +442,18 @@ export default function NavBar() {
           ) : (
             <>
               <Link href="/signin" passHref>
-                <a className="menu__item--login" href="/signin">
+                <a
+                  className="menu__item--hamburger menu__item--login"
+                  href="/signin"
+                >
                   <p className="">Iniciar sesión</p>
                 </a>
               </Link>
               <Link href="/signup" passHref>
-                <a className="menu__item--login" href="signup">
+                <a
+                  className="menu__item--hamburger menu__item--login"
+                  href="signup"
+                >
                   <p className="">Registrase</p>
                 </a>
               </Link>
@@ -437,9 +463,10 @@ export default function NavBar() {
 
         <div
           className="hamburger"
+          ref={hamburgerMenuRef}
           onClick={handleToggleHamburger}
-          role="menu"
-          tabIndex={0}
+          role="button"
+          tabIndex="0"
         >
           <span className="hamburger__bar" />
           <span className="hamburger__bar" />
@@ -450,7 +477,10 @@ export default function NavBar() {
           <Button>
             <Link href="/cart" passHref>
               <a href="cart">
-                <CartIcon className="menu__item" style={{ marginTop: '2px' }} />
+                <CartIcon
+                  className="menu__item--hamburger menu__item"
+                  style={{ marginTop: '2px' }}
+                />
               </a>
             </Link>
           </Button>
