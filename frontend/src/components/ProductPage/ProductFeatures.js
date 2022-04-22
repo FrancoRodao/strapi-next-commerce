@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import Loading from '../Loading'
 
 const Section = styled.section`
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  width: 100%;
 
   .text-left {
     text-align: left;
@@ -29,6 +29,10 @@ const Section = styled.section`
     &-item {
       padding: 15px 24px 15px 16px;
       width: 50%;
+    }
+
+    &-value {
+      text-align: center;
     }
 
     &-tr:nth-child(odd) {
@@ -58,7 +62,9 @@ export default function ProductFeatures({ features, optionalFeatures }) {
                 <th className="product-features-item text-left">
                   {key.replace('_', ' ')}
                 </th>
-                <td className="product-features-item">{value}</td>
+                <td className="product-features-item product-features-value">
+                  {value}
+                </td>
               </tr>
             )
           })}

@@ -3,6 +3,7 @@ import { marked } from 'marked'
 import Loading from '../Loading'
 
 const Section = styled.section`
+  width: 100%;
   .product-description {
     &-body {
       word-wrap: break-all;

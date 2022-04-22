@@ -28,19 +28,20 @@ const MainContainer = styled.div`
       background-color: transparent;
     }
   }
+
+  @media (max-width: 375px) {
+    padding: 15px 0px;
+  }
 `
 
 const ProductContainer = styled.div`
+  position: relative;
   background-color: #fff;
-  display: grid;
-  grid-template-columns: 0.2fr 1.7fr 1.1fr;
-  grid-template-rows: 1fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
   padding: 20px;
 
   .product {
-    margin-right: 35px;
+    display: flex;
+    flex-wrap: wrap;
   }
 `
 
@@ -88,6 +89,15 @@ export default function Product({ productId }) {
                 <article className="product">
                   <ProductImage image={image} />
 
+                  <ProductInfo
+                    id={data.id}
+                    title={data.titulo}
+                    price={data.precio}
+                    offerPrice={data.precio_oferta}
+                    quantity={data.cantidad}
+                    sold={data.vendidos}
+                  />
+
                   <ProductFeatures
                     features={data.caracteristicas}
                     optionalFeatures={data.caracteristicas_adicionales}
@@ -95,15 +105,6 @@ export default function Product({ productId }) {
 
                   <ProductDescription description={data.descripcion} />
                 </article>
-
-                <ProductInfo
-                  id={data.id}
-                  title={data.titulo}
-                  price={data.precio}
-                  offerPrice={data.precio_oferta}
-                  quantity={data.cantidad}
-                  sold={data.vendidos}
-                />
               </ProductContainer>
             </>
           ) : (

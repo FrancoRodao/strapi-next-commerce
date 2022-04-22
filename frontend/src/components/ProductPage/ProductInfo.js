@@ -15,6 +15,7 @@ const Aside = styled.aside`
   border-radius: 5px;
   padding: 15px;
   height: fit-content;
+  margin-bottom: 15px;
 
   .product-info {
     &-sold {
@@ -83,6 +84,10 @@ const Aside = styled.aside`
 
   .button {
     margin: 10px 0;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `
 

@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
-  grid-area: 1 / 1 / 2 / 2;
+  position: absolute;
 
   .gallery {
     list-style: none;
