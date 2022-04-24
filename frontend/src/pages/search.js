@@ -87,16 +87,11 @@ const FilterSpan = styled.span`
 `
 
 const ItemsContainer = styled.div`
+  width: 100%;
   display: flex;
-
-  .items__item {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin-left: 10px;
-    gap: 10px;
-  }
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
 `
 
 const PaginationContainer = styled.div`
@@ -182,12 +177,14 @@ function Page({ searchTerm, page, filters, sort }) {
 
     return paginatedData?.length > 0 ? (
       <>
-        <div className="items__item">
-          <PhoneCards queryData={{ data: productsInEvenIndex }} />
-        </div>
-        <div className="items__item">
-          <PhoneCards queryData={{ data: productsInOddIndex }} />
-        </div>
+        <PhoneCards
+          queryData={{ data: productsInEvenIndex }}
+          placeHoldersCards={1}
+        />
+        <PhoneCards
+          queryData={{ data: productsInOddIndex }}
+          placeHoldersCards={1}
+        />
       </>
     ) : (
       <NoResultsContainer>

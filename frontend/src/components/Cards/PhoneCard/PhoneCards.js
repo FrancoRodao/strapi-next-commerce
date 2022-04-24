@@ -35,7 +35,7 @@ function PhoneCard({ id, title, price, image, offerPrice }) {
   const data = id && title && price && image
 
   return (
-    <div style={{ width: '230px' }}>
+    <div style={{ width: '250px', flexGrow: '1' }}>
       <Link href={`/product/${id}`} passHref>
         <a href={`/product/${id}`}>
           <PhoneCardContainer>

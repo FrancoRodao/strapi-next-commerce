@@ -2,22 +2,29 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { CartIcon } from '../components/Icons/Cart'
 import { ChevronIcon } from '../components/Icons/Chevron'
 import { SearchIcon } from '../components/Icons/Search'
 import { UserIcon } from '../components/Icons/User'
+import { isClientSide } from '../helpers/isClientSide'
 import { useGetMe, useLogout } from '../hooks/authHook'
 import { useForm } from '../hooks/useForm'
 
-const MAX_WIDTH_HAMBURGER_MENU = 768
+const MAX_PX_WIDTH_HAMBURGER_MENU = 768
 
 const Header = styled.header`
   position: relative;
   width: 100%;
   height: 4.5rem;
   background-color: ${({ theme }) => `${theme.navbarBgColor}`};
+
+  .btn {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
 `
 
 const Nav = styled.nav`
@@ -115,7 +122,7 @@ const Nav = styled.nav`
     }
   }
 
-  @media (max-width: ${MAX_WIDTH_HAMBURGER_MENU}px) {
+  @media (max-width: ${MAX_PX_WIDTH_HAMBURGER_MENU}px) {
     .hamburger {
       display: block;
 
@@ -146,11 +153,13 @@ const Nav = styled.nav`
     .menu-active > .menu__item--login {
       display: block;
       margin-top: 10px;
+      margin-left: 0;
     }
   }
 
   @media (max-width: 500px) {
     padding: 0;
+    margin-right: 5px;
   }
 `
 
@@ -273,12 +282,6 @@ const Menu = styled.div`
         background-color: ${({ theme }) => theme.lightGrey};
       }
     }
-
-    &--button {
-      border: none;
-      background-color: transparent;
-      cursor: pointer;
-    }
   }
 
   .menu__profile {
@@ -339,7 +342,9 @@ export default function NavBar() {
   const { data: me } = useGetMe()
   const { logout } = useLogout()
   const router = useRouter()
+
   const hamburgerMenuRef = useRef()
+  const [isHamburgerMenuOn, setIsHamburgerMenuOn] = useState(false)
 
   const { formValues, handleInputChange } = useForm({
     search: router.query.q || ''
@@ -358,22 +363,29 @@ export default function NavBar() {
     router.push('/')
   }
 
-  const handleToggleHamburger = (e) => {
-    console.log(hamburgerMenuRef)
+  const handleToggleHamburger = () => {
     hamburgerMenuRef.current.classList.toggle('active')
     hamburgerMenuRef.current.previousSibling.classList.toggle('menu-active')
   }
 
   // close the menu after clicking on some menu item
   useEffect(() => {
-    if (
-      typeof window !== 'undefined' &&
-      window.innerWidth <= MAX_WIDTH_HAMBURGER_MENU
-    ) {
-      document.querySelectorAll('.menu__item--hamburger').forEach((item) => {
-        item.addEventListener('click', handleToggleHamburger)
-      })
+    const resizeListener = () => {
+      if (window.innerWidth <= MAX_PX_WIDTH_HAMBURGER_MENU) {
+        setIsHamburgerMenuOn(true)
+        return
+      }
+      setIsHamburgerMenuOn(false)
     }
+
+    if (isClientSide()) {
+      resizeListener()
+
+      window.addEventListener('resize', resizeListener)
+    }
+
+    return () =>
+      isClientSide() && window.removeEventListener('resize', resizeListener)
   }, [])
 
   return (
@@ -405,6 +417,7 @@ export default function NavBar() {
             name="search"
             value={formValues.search}
             onChange={handleInputChange}
+            required
           />
           <div className="search__iconContainer">
             <Button type="submit">
@@ -424,7 +437,8 @@ export default function NavBar() {
               <div className="menu__profile">
                 <Link href="/profile" passHref>
                   <a
-                    className="menu__item--hamburger menu__item--profile"
+                    onClick={isHamburgerMenuOn && handleToggleHamburger}
+                    className="menu__item--profile"
                     href="profile"
                   >
                     Perfil
@@ -432,8 +446,11 @@ export default function NavBar() {
                 </Link>
                 <button
                   type="button"
-                  onClick={handleLogout}
-                  className="menu__item--hamburger menu__item--profile menu__item--button"
+                  onClick={(e) => {
+                    if (isHamburgerMenuOn) handleToggleHamburger()
+                    handleLogout(e)
+                  }}
+                  className="menu__item--profile btn"
                 >
                   Salir
                 </button>
@@ -443,44 +460,42 @@ export default function NavBar() {
             <>
               <Link href="/signin" passHref>
                 <a
-                  className="menu__item--hamburger menu__item--login"
+                  className="menu__item--login"
                   href="/signin"
+                  onClick={isHamburgerMenuOn && handleToggleHamburger}
                 >
-                  <p className="">Iniciar sesión</p>
+                  Iniciar sesión
                 </a>
               </Link>
               <Link href="/signup" passHref>
                 <a
-                  className="menu__item--hamburger menu__item--login"
+                  className="menu__item--login"
                   href="signup"
+                  onClick={isHamburgerMenuOn && handleToggleHamburger}
                 >
-                  <p className="">Registrase</p>
+                  Registrase
                 </a>
               </Link>
             </>
           )}
         </Menu>
 
-        <div
-          className="hamburger"
+        <button
+          className="hamburger btn"
           ref={hamburgerMenuRef}
           onClick={handleToggleHamburger}
-          role="button"
-          tabIndex="0"
+          type="button"
         >
           <span className="hamburger__bar" />
           <span className="hamburger__bar" />
           <span className="hamburger__bar" />
-        </div>
+        </button>
 
         {me && (
           <Button>
             <Link href="/cart" passHref>
               <a href="cart">
-                <CartIcon
-                  className="menu__item--hamburger menu__item"
-                  style={{ marginTop: '2px' }}
-                />
+                <CartIcon className="menu__item" style={{ marginTop: '2px' }} />
               </a>
             </Link>
           </Button>

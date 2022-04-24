@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import { isClientSide } from './isClientSide'
 
 /**
  *
@@ -10,10 +11,10 @@ function userIsAuthenticated(serverSideContext = null) {
   let userValue
 
   /* Client side case */
-  if (!serverSideContext && typeof window !== 'undefined') {
+  if (!serverSideContext && isClientSide()) {
     accessTokenValue = Cookies.get('accessToken')
     userValue = Cookies.get('user')
-  } else if (!serverSideContext && typeof window === 'undefined') {
+  } else if (!serverSideContext && !isClientSide()) {
     /* still on the server side */
     return {
       accessToken: null,
