@@ -2,7 +2,7 @@ import { dehydrate, QueryClient, useQueryClient } from 'react-query'
 import styled from 'styled-components'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { AuthAPI } from '../../api/auth'
 import { OrdersAPI } from '../../api/orders'
 import { Button } from '../../components/Button'
@@ -20,7 +20,6 @@ import {
   ModalContextProvider,
   useModalContext
 } from '../../context/Modal/ModalContext'
-import { types } from '../../context/Modal/types'
 import { ChangePassword } from '../../components/Profile/ModalContents/ChangePassword'
 import { ChangeUsername } from '../../components/Profile/ModalContents/ChangeUsername'
 
@@ -41,7 +40,8 @@ const Container = styled.div`
 
     &__image {
       position: relative;
-      width: 40%;
+      width: 300px;
+      max-width: 100%;
       height: 300px;
       border-radius: 50%;
       border: 3px solid #ebebeb;
@@ -135,6 +135,22 @@ const Container = styled.div`
   .history__none {
     text-align: center;
     font-size: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .profile {
+      flex-direction: column;
+      align-items: center;
+
+      &__info {
+        width: 100%;
+      }
+    }
+  }
+  @media (max-width: 425px) {
+    .profile {
+      width: 100%;
+    }
   }
 `
 

@@ -10,12 +10,9 @@ const OrderContainer = styled.div`
   align-items: center;
   padding: 10px;
 
-  .products {
-    width: 80%;
-  }
-
   .order {
-    width: 20%;
+    margin-left: auto;
+    min-width: 115px;
   }
 
   .products {
