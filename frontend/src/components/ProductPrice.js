@@ -42,3 +42,20 @@ export function ProductPrice({ price = 0, offerPrice = null }) {
     </Container>
   )
 }
+
+export function ProductPriceVertical({ price = 0, offerPrice = null }) {
+  return (
+    <Container>
+      {offerPrice ? <h3 className="offerPrice price">USD {price}</h3> : null}
+      {offerPrice ? (
+          <span className="offer-percentage">
+            {calculatePercentage(price, offerPrice)}% OFF
+          </span>
+      ) : null}
+      <h2 className={`price ${offerPrice ? 'real-price' : null}`}>
+        USD {offerPrice || price}{' '}
+
+      </h2>
+    </Container>
+  )
+}

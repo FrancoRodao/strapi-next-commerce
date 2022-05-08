@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import Loading from '../../Loading'
-import { ProductPrice } from '../../ProductPrice'
+import { ProductPrice, ProductPriceVertical } from '../../ProductPrice'
 import {
   useAddCartItem,
   useDeleteCartItem,
@@ -28,24 +28,24 @@ const Container = styled.article`
   }
 
   .info {
+    text-align: center;
+    width: 200px;
+    max-width: 30%;
+
     &-container {
       display: flex;
       align-items: center;
       width: 100%;
+      justify-content: space-between;
     }
 
     &-body {
       display: flex;
-      width: 45%;
       flex-direction: column;
-      margin-right: 35px;
     }
   }
 
   .image-container {
-    margin-right: 15px;
-    width: 5%;
-    text-align: center;
   }
 
   .title {
@@ -77,13 +77,13 @@ const Container = styled.article`
     width: 100%;
     position: relative;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     border: 1px solid ${({ theme }) => theme.borderGreylight};
     border-radius: 5px;
 
     &-container {
-      width: 15%;
+      width: 100px;
       display: flex;
       flex-direction: column;
     }
@@ -127,12 +127,14 @@ const Container = styled.article`
   .price-container {
     font-weight: 500;
     font-size: 15px;
-    width: auto;
-    margin-left: auto;
   }
 
   .btn-disabled {
     color: ${({ theme }) => theme.borderGreylight};
+  }
+
+  @media (max-width: 425px) {
+    padding: 30px 10px;
   }
 `
 
@@ -178,28 +180,30 @@ export function CartCard({
         </span>
       )}
       <div className="info-container">
-        <div className="image-container">
-          <Image
-            src={image.url}
-            alt={image.alternativeText}
-            width={30}
-            height={50}
-          />
-        </div>
-        <div className="info-body">
-          <Link href={`/product/${productId}`}>
-            <a href={`/product/${productId}`}>
-              <h1 className="title">{title}</h1>
-            </a>
-          </Link>
-          <div className="btn-container">
-            <button
-              onClick={deleteCartItem}
-              type="button"
-              className="btn btn--delete"
-            >
-              Eliminar
-            </button>
+        <div className="info">
+          <div className="image-container">
+            <Image
+              src={image.url}
+              alt={image.alternativeText}
+              width={30}
+              height={50}
+            />
+          </div>
+          <div className="info-body">
+            <Link href={`/product/${productId}`}>
+              <a href={`/product/${productId}`}>
+                <h1 className="title">{title}</h1>
+              </a>
+            </Link>
+            <div className="btn-container">
+              <button
+                onClick={deleteCartItem}
+                type="button"
+                className="btn btn--delete"
+              >
+                Eliminar
+              </button>
+            </div>
           </div>
         </div>
         <div className="quantity-container">
@@ -239,9 +243,9 @@ export function CartCard({
           </div>
           <p className="quantity-stock">{productQuantity} Disponible</p>
         </div>
-        <h2 className="price-container">
-          <ProductPrice price={price} offerPrice={offerPrice} />
-        </h2>
+        <div className="price-container">
+          <ProductPriceVertical price={price} offerPrice={offerPrice} />
+        </div>
       </div>
     </Container>
   )

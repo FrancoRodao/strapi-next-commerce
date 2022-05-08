@@ -23,6 +23,11 @@ const MainContainer = styled.div`
       border-bottom: 2px solid black;
       padding: 20px 50px;
     }
+
+    &__title {
+      font-weight: 500;
+      color: #333;
+    }
   }
 
   .total {
@@ -33,7 +38,7 @@ const MainContainer = styled.div`
     text-align: right;
   }
 
-  .buy {
+  .buy-btn {
     display: block;
     margin-left: auto;
     width: fit-content;
@@ -46,6 +51,18 @@ const MainContainer = styled.div`
     padding: 50px 0px;
     font-size: 25px;
     color: ${({ theme }) => theme.gray};
+  }
+
+  @media (max-width: 425px) {
+    padding: 30px 0;
+
+    .total {
+      padding-right: 5px;
+    }
+
+    .buy-btn {
+      margin-right: 5px;
+    }
   }
 `
 
@@ -76,7 +93,7 @@ function RenderCart({ cart }) {
           </p>
           <Link href="checkout/cart">
             <a href="checkout/cart">
-              <Button className="buy">Continuar compra</Button>
+              <Button className="buy-btn">Continuar compra</Button>
             </a>
           </Link>
         </>
@@ -102,7 +119,7 @@ export default function Cart() {
       <nav className="nav">
         <ul>
           <li>
-            <h3>Carrito ({cart && cart.length})</h3>
+            <h3 className="nav__title">Carrito ({cart && cart.length})</h3>
           </li>
         </ul>
       </nav>
