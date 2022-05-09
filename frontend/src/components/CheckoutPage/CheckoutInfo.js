@@ -21,7 +21,6 @@ const Container = styled.div`
     &-cards {
       overflow-y: visible;
       width: 100%;
-      padding: 0px 5px;
     }
   }
 
@@ -36,6 +35,20 @@ const Container = styled.div`
     &-content {
       font-size: 21px;
       font-weight: 500;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-height: auto;
+
+    .product-info {
+      position: static;
+      padding: 0;
+    }
+
+    .total {
+      padding: 30px 10px;
     }
   }
 `

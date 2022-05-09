@@ -29,6 +29,7 @@ export const ProductCardContainer = styled.div`
     }
 
     &-title {
+      margin-right: 10px;
       width: 50%;
       color: black;
       font-weight: 300;
@@ -43,8 +44,8 @@ export const ProductCardContainer = styled.div`
     }
 
     &-info {
-      margin-right: auto;
-      margin-left: 10px;
+      margin-right: 10px;
+      margin-left: auto;
       flex-shrink: 0;
 
       &-item {
@@ -68,9 +69,9 @@ const Price = styled.span`
 const OfferPrice = ({ price, offerPrice }) => (
   <Price>
     USD {offerPrice} c/u
-    <span className="offerPrice">
+    {/* <span className="offerPrice">
       {calculatePercentage(price, offerPrice)} % OFF
-    </span>
+    </span> */}
   </Price>
 )
 

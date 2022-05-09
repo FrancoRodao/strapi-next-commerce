@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { dehydrate, QueryClient } from 'react-query'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 import Checkout from '../../components/CheckoutPage/Checkout'
 import { CheckoutPageContainer } from '../../components/CheckoutPage/CheckoutPage.style'
 import { CartPayment } from '../../components/CheckoutPage/Payments/CartPayment'
-import Loading from '../../components/Loading'
 import { QueryKeys } from '../../constants/queryKeys.constant'
 import { userIsAuthenticated } from '../../helpers/userIsAuthenticated'
 import { ProtectedRoute } from '../../routes/protectedRoute'
@@ -17,18 +16,6 @@ import {
 } from '../../context/Checkout/CheckoutContext'
 import { CheckoutLoading } from '../../components/CheckoutPage/CheckoutLoading'
 import { CheckoutContentContainer } from '../../components/CheckoutPage/CheckoutContentContainer'
-
-const loadingContainerStyles = {
-  display: 'block',
-  width: '100%',
-  minHeight: 'inherit',
-  margin: 'auto'
-}
-
-const loadingMessageStyles = {
-  marginTop: '15px',
-  marginLeft: '10px'
-}
 
 function Page() {
   const {

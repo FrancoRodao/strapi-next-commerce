@@ -111,14 +111,25 @@ const CheckoutContainer = styled.div`
         }
       }
     }
+  }
+
+  .continue-button {
+    display: block;
+    width: 30%;
+    margin-left: auto;
+    font-weight: 500;
+    font-size: 15px;
+    margin-top: 15px;
+  }
+
+  @media (max-width: 768px) {
+    position: static;
+    width: 100%;
+    height: auto;
+    overflow-y: unset;
 
     .continue-button {
-      display: block;
-      width: 30%;
-      margin-left: auto;
-      font-weight: 500;
-      font-size: 15px;
-      margin-top: 15px;
+      width: 100%;
     }
   }
 `

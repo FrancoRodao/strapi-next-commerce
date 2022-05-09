@@ -7,6 +7,18 @@ export const PaymentContainer = styled.div`
   padding: 56px 20px;
   width: 50%;
   overflow-y: auto;
+
+  @media (max-width: 768px) {
+    position: static;
+    width: 100%;
+    height: auto;
+    overflow-y: unset;
+    padding: 30px 20px;
+  }
+
+  @media (max-width: 425px) {
+    padding: 30px 5px;
+  }
 `
 
 export const PaymentTitle = styled.h1`
