@@ -20,7 +20,7 @@ const Card = styled.div`
   box-shadow: 0 2px 3px #c8d0d8;
   margin: 15px auto;
   height: 100%;
-  width: 50%;
+  width: 500px;
   position: relative;
   overflow: hidden;
 
@@ -35,7 +35,7 @@ const Card = styled.div`
     transform: rotate(-45deg);
     text-align: center;
     padding: 15px;
-    width: 40%;
+    width: 200px;
     color: ${({ theme }) => theme.lightGrey};
     font-size: 18px;
     box-shadow: 0 2px 3px #c8d0d8;
@@ -92,14 +92,11 @@ const Card = styled.div`
     }
 
     &--right {
-      position: absolute;
-      top: 1px;
-      right: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: ${({ theme }) => theme.blue};
       font-weight: 600;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
     }
   }
 
@@ -114,19 +111,23 @@ const Card = styled.div`
     }
 
     &__text {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
       margin: 15px 0;
       position: relative;
-
-      &--container {
-        width: 85%;
-        word-break: break-word;
-      }
 
       &--quantity {
         color: ${({ theme }) => theme.blue};
         font-weight: 600;
         margin-right: 5px;
       }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .content {
+      padding: 30px;
     }
   }
 `
@@ -171,7 +172,7 @@ export default function Order({ orderId }) {
             <div className="products">
               {products?.map((productData) => (
                 <p key={productData.id} className="products__text">
-                  <div className="products__text--container">
+                  <div>
                     <span className="products__text--quantity">
                       x{productData.cantidad}
                     </span>
@@ -187,7 +188,7 @@ export default function Order({ orderId }) {
                 Total <span className="content__text--right">USD {total}</span>
               </p>
 
-              <div className="products__text">
+              <div>
                 <p className="products__text">
                   Identificador de compra
                   <span className="content__text--right">{orderId}</span>
@@ -201,8 +202,8 @@ export default function Order({ orderId }) {
                   <span className="content__text--right">{surname}</span>
                 </p>
                 <p className="products__text">
-                  Correo
-                  <span className="content__text--right">{email}</span>
+                  Correo <span className="content__text--right">{email}</span>
+                  {/* <span className="content__text--right">{email}</span> */}
                 </p>
                 <p className="products__text">
                   Método de pago
