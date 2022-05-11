@@ -7,6 +7,10 @@ const DataContainer = styled.div`
 
 const Paragraph = styled.p`
   margin-top: 10px;
+  span {
+    color: ${({ theme }) => theme.blue};
+    font-weight: 600;
+  }
 `
 
 export function SandboxModalContent() {
@@ -17,10 +21,18 @@ export function SandboxModalContent() {
         tarjeta a traves de paypal puedes utilizar los siguientes datos:
       </p>
       <DataContainer>
-        <Paragraph>Card Type: Visa Card</Paragraph>{' '}
-        <Paragraph>Number: 4032035431134923</Paragraph>
-        <Paragraph>Expiration Date: 01/2023</Paragraph>
-        <Paragraph>CVV: 596</Paragraph>
+        <Paragraph>
+          Card Type: <span>Visa Card</span>
+        </Paragraph>
+        <Paragraph>
+          Number: <span>4032035431134923</span>
+        </Paragraph>
+        <Paragraph>
+          Expiration Date: <span>01/2023</span>
+        </Paragraph>
+        <Paragraph>
+          CVV: <span>596</span>
+        </Paragraph>
       </DataContainer>
     </div>
   )

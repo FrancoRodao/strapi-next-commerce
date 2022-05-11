@@ -58,6 +58,7 @@ const Aside = styled.aside`
       &-select {
         outline-color: transparent;
         border: none;
+        background-color: transparent;
 
         &:focus {
           border: none;

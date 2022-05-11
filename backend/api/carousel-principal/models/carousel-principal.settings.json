@@ -1,8 +1,9 @@
 {
-  "kind": "singleType",
-  "collectionName": "main-carrousel-images",
+  "kind": "collectionType",
+  "collectionName": "carousel_principals",
   "info": {
-    "name": "Imagenes carousel principal"
+    "name": "Carousel principal",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -11,8 +12,8 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "imagenes": {
-      "collection": "file",
+    "imagen": {
+      "model": "file",
       "via": "related",
       "allowedTypes": [
         "images"
@@ -20,6 +21,10 @@
       "plugin": "upload",
       "required": true,
       "pluginOptions": {}
+    },
+    "URL": {
+      "type": "string",
+      "required": true
     }
   }
 }

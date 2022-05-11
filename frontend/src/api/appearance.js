@@ -1,7 +1,7 @@
 import { instance } from './instance'
 
 function getMainCarouselImages() {
-  return instance('/imagenes-carousel-principal').then((res) => res.data)
+  return instance('/carousel-principals').then((res) => res.data)
 }
 
 export const AppearanceAPI = {

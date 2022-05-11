@@ -20,11 +20,17 @@ export default function FeaturedSlider() {
       autoplay={false}
       autoplaySpeed={2000}
       pauseOnDotsHover
-      adaptiveHeight
     >
-      {data?.imagenes ? (
-        data.imagenes.map(({ id, url, caption }) => (
-          <FeaturedSliderImage key={id} imageSrc={url} alt={caption} />
+      {data?.length > 0 ? (
+        data.map(({ id, URL, imagen }) => (
+          <FeaturedSliderImage
+            key={id}
+            imageOnClickUrl={URL}
+            imageSrc={imagen.url}
+            alt={imagen.caption}
+            width={imagen.width}
+            height={imagen.height}
+          />
         ))
       ) : (
         <ImgContainer>
