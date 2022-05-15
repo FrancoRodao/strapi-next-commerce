@@ -3,14 +3,6 @@ import { CartAPI } from '../api/cart'
 import { QueryKeys } from '../constants/queryKeys.constant'
 import { filterCart } from '../helpers/filterCart'
 
-// const areFunctions = (...args) => {
-//   const fs = [args]
-//   console.log(fs)
-//   fs.forEach((f) => {
-//     console.log(typeof f)
-//   })
-// }
-
 export async function getUserCartQuery(
   options = {
     checkoutCartValidations: false,

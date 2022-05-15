@@ -1,5 +1,6 @@
 import { axiosConfigWithToken } from '../helpers/axiosConfigWithToken'
 import { instance } from './instance'
+import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 
 function signIn({ username, password }) {
   return instance
@@ -20,7 +21,11 @@ function signUp({ email, username, password }) {
     .then((res) => res.data)
 }
 
-function getMe(accessToken) {
+function getMe(accessToken, serverSideContext = null) {
+  if (!userIsAuthenticated(serverSideContext).isAuthenticated) {
+    return null
+  }
+
   const config = axiosConfigWithToken(accessToken)
 
   return instance.get('/users/me', config).then((res) => res.data)

@@ -64,7 +64,7 @@ export function CartPayment() {
 
       /*      
       updatedCart bring the products populated, 
-      with this we can know if there is enough stock to cover the car
+      with this we can know if there is enough stock to cover the cart
 
       example: if there are 8 units of a product in a user's cart 
       and the stock of the same product is 8 units but another user 

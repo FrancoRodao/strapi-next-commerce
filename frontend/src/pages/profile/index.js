@@ -343,7 +343,7 @@ export const getServerSideProps = ProtectedRoute(async (ctx) => {
   const { accessToken } = userIsAuthenticated(ctx)
 
   await queryClient.prefetchQuery(QueryKeys.GET_ME, () =>
-    AuthAPI.getMe(accessToken)
+    AuthAPI.getMe(accessToken, ctx)
   )
   await queryClient.prefetchQuery(QueryKeys.GET_USER_ORDERS, () =>
     OrdersAPI.getUserOrders(accessToken)
