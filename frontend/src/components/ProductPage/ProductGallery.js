@@ -65,7 +65,7 @@ export default function ProductGallery({ images, setImage }) {
             className={`gallery-item ${i === 0 ? 'gallery-item-selected' : ''}`}
           >
             <Image
-              alt={img.name.split('.')[0]}
+              alt={img?.name?.split('.')[0]}
               src={img.url}
               width={50}
               height={50}

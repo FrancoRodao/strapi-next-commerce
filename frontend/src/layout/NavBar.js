@@ -4,13 +4,16 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { ProductsAPI } from '../api/products'
 import { CartIcon } from '../components/Icons/Cart'
 import { ChevronIcon } from '../components/Icons/Chevron'
 import { SearchIcon } from '../components/Icons/Search'
 import { UserIcon } from '../components/Icons/User'
+import { SearchSuggestion } from '../components/SearchSuggestion'
+import { debounce } from '../helpers/debounce'
 import { isClientSide } from '../helpers/isClientSide'
 import { useGetMe, useLogout } from '../hooks/authHook'
-import { useForm } from '../hooks/useForm'
+import { useOnHrefChange } from '../hooks/useOnHrefChange'
 
 const MAX_PX_WIDTH_HAMBURGER_MENU = 768
 
@@ -343,18 +346,44 @@ export default function NavBar() {
   const { logout } = useLogout()
   const router = useRouter()
 
+  const searchInputRef = useRef()
+
   const hamburgerMenuRef = useRef()
   const [isHamburgerMenuOn, setIsHamburgerMenuOn] = useState(false)
 
-  const { formValues, handleInputChange } = useForm({
-    search: router.query.q || ''
+  const [showSearchSuggestion, setShowSearchSuggestion] = useState(false)
+  const [searchSuggestionProducts, setSearchSuggestionProducts] = useState({
+    data: [],
+    fetching: false
   })
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (formValues.search.length > 0) {
-      router.push(`/search?q=${formValues.search}`)
+    setShowSearchSuggestion(false)
+    const formValue = searchInputRef.current.value
+
+    if (formValue.length > 0) {
+      router.push(`/search?q=${formValue}`)
     }
+  }
+
+  const handleSearchChange = (e) => {
+    const formValue = e.target.value
+    setShowSearchSuggestion(true)
+    setSearchSuggestionProducts({ fetching: true })
+
+    const debounceSearchSuggestion = debounce(async () => {
+      const searchSuggestionData = await ProductsAPI.getSearchProducts(
+        formValue
+      )
+
+      setSearchSuggestionProducts({
+        data: searchSuggestionData,
+        fetching: false
+      })
+    }, 600)
+
+    debounceSearchSuggestion()
   }
 
   const handleLogout = (e) => {
@@ -388,6 +417,8 @@ export default function NavBar() {
       isClientSide() && window.removeEventListener('resize', resizeListener)
   }, [])
 
+  useOnHrefChange(() => setShowSearchSuggestion(false))
+
   return (
     <Header>
       <Nav>
@@ -414,9 +445,8 @@ export default function NavBar() {
             placeholder="Buscar productos..."
             className="search__input"
             type="search"
-            name="search"
-            value={formValues.search}
-            onChange={handleInputChange}
+            onChange={handleSearchChange}
+            ref={searchInputRef}
             required
           />
           <div className="search__iconContainer">
@@ -424,6 +454,16 @@ export default function NavBar() {
               <SearchIcon style={{ marginTop: '3px' }} />
             </Button>
           </div>
+
+          {searchInputRef.current?.value?.length > 0 && (
+            <SearchSuggestion
+              isLoading={searchSuggestionProducts.fetching}
+              products={searchSuggestionProducts.data}
+              searchTerm={searchInputRef.current.value}
+              setShowSearchSuggestion={setShowSearchSuggestion}
+              showSearchSuggestion={showSearchSuggestion}
+            />
+          )}
         </SearchForm>
 
         <Menu>

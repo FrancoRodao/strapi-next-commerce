@@ -16,6 +16,10 @@ input:focus {
   outline: transparent;
 }
 
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
 ul {
   list-style: none;
 }
