@@ -15,6 +15,8 @@ const Aside = styled.aside`
   border-radius: 5px;
   padding: 15px;
   height: fit-content;
+  width: 40%;
+  max-width: 500px;
   margin-bottom: 15px;
 
   .product-info {
@@ -29,6 +31,9 @@ const Aside = styled.aside`
       font-size: 21px;
       font-weight: 600;
       margin-bottom: 10px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     &-price {
@@ -89,6 +94,7 @@ const Aside = styled.aside`
 
   @media (max-width: 768px) {
     width: 100%;
+    max-width: none;
   }
 `
 

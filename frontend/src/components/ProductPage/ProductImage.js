@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import styled from 'styled-components'
-import Loading from '../Loading'
 
 const Container = styled.div`
   position: relative;

@@ -17,6 +17,8 @@ import { useGetProduct } from '../../hooks/productHook'
 const MainContainer = styled.div`
   padding: 15px 20px;
   min-height: 70vh;
+  max-width: 1200px;
+  margin: auto;
 
   .breads {
     display: flex;

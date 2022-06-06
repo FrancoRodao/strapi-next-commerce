@@ -15,6 +15,9 @@ const Container = styled.div`
   .center {
     text-align: center;
     margin-bottom: 5px;
+    position: relative;
+    height: 300px;
+    width: 100%;
   }
 
   .footer {
@@ -41,7 +44,7 @@ export default function PhoneCardBody({ title, price, image, offerPrice }) {
   return (
     <Container>
       <div className="center">
-        <Image src={image} alt="xiaomi9a" width="160" height="300" />
+        <Image src={image} objectFit="contain" alt={title} layout="fill" />
       </div>
       <div className="footer">
         <ProductPrice price={price} offerPrice={offerPrice} />
