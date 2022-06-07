@@ -20,12 +20,14 @@ const MainContainer = styled.div`
   max-width: 1200px;
   margin: auto;
 
-  .breads {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+  .back {
+    &-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
 
-    &__btn {
+    &-btn {
       border: none;
       background-color: transparent;
     }
@@ -70,8 +72,8 @@ export default function Product({ productId }) {
     <>
       <MainContainer>
         <>
-          <div className="breads">
-            <button className="breads__btn" type="button" onClick={handleBack}>
+          <div className="back-container">
+            <button className="back-btn" type="button" onClick={handleBack}>
               <ArrowIcon
                 style={{
                   cursor: 'pointer',
@@ -80,7 +82,6 @@ export default function Product({ productId }) {
                 }}
               />
             </button>
-            breadcrumbs
           </div>
 
           {data && image ? (

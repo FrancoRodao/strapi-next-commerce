@@ -32,44 +32,28 @@ function SignIn() {
     }
   })
 
-  const [form, setForm] = useState({
-    username: '',
-    password: ''
-  })
-
   const formSubmit = (e) => {
     e.preventDefault()
+    const userValue = e.target[0].value
+    const passwordValue = e.target[1].value
+
     setErrorUI(null)
-    signIn(form)
-  }
-
-  const changeField = (e) => {
-    const { name, value } = e.target
-
-    setForm({
-      ...form,
-      [name]: value
+    signIn({
+      username: userValue,
+      password: passwordValue
     })
   }
 
   return (
     <Login
-      title="¡Hola! Ingresa tus credenciales para iniciar sesion"
+      title="¡Hola! Ingresa tus credenciales para iniciar sesión"
       errorUI={errorUI}
     >
       <LoginForm onSubmit={formSubmit}>
-        <LoginField
-          fieldTitle="Usuario"
-          inputName="username"
-          inputOnChangeValue={changeField}
-          inputValue={form.username}
-          autoFocus
-        />
+        <LoginField fieldTitle="Usuario" inputName="username" autoFocus />
         <LoginField
           fieldTitle="Contraseña"
           inputName="password"
-          inputOnChangeValue={changeField}
-          inputValue={form.password}
           inputType="password"
         />
         <Button

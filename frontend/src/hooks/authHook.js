@@ -19,12 +19,10 @@ export function useSignIn(
       const { data } = response
 
       const userData = {
-        ...data.user
+        id: data.user.id,
+        username: data.user.username,
+        email: data.user.email
       }
-      delete userData.carrito
-      delete userData.role
-      delete userData.provider
-      delete userData.pedidos
 
       Cookies.set('accessToken', data.jwt, {
         sameSite: 'strict'
@@ -60,17 +58,10 @@ export function useSignUp(
     onError: (error) => {}
   }
 ) {
+  const router = useRouter()
+
   const { mutate, ...rest } = useMutation(AuthAPI.signUp, {
     onSuccess: (response) => {
-      const { user, jwt } = response
-
-      const userData = {
-        ...user
-      }
-      delete userData.carrito
-      delete userData.role
-      delete userData.provider
-
       if (options?.onSuccess) {
         options?.onSuccess(response)
       }
