@@ -40,17 +40,9 @@ const MainContainer = styled.div`
 
   .buy-btn {
     display: block;
-    margin-left: auto;
     width: fit-content;
+    margin-left: auto;
     font-weight: 500;
-  }
-
-  .no-items-container {
-    display: flex;
-    justify-content: center;
-    padding: 50px 0px;
-    font-size: 25px;
-    color: ${({ theme }) => theme.gray};
   }
 
   @media (max-width: 425px) {
@@ -63,6 +55,14 @@ const MainContainer = styled.div`
     .buy-btn {
       margin-right: 5px;
     }
+  }
+
+  .no-items-container {
+    display: flex;
+    justify-content: center;
+    padding: 50px 0px;
+    font-size: 25px;
+    color: ${({ theme }) => theme.gray};
   }
 `
 
@@ -91,11 +91,13 @@ function RenderCart({ cart }) {
           <p className="total">
             Total: USD {getTotalPriceCart(checkoutValidCartItems)}
           </p>
-          <Link href="checkout/cart">
-            <a href="checkout/cart">
-              <Button className="buy-btn">Continuar compra</Button>
-            </a>
-          </Link>
+          <div className="buy-btn">
+            <Link href="checkout/cart">
+              <a href="checkout/cart">
+                <Button>Continuar compra</Button>
+              </a>
+            </Link>
+          </div>
         </>
       ) : (
         <div className="no-items-container">

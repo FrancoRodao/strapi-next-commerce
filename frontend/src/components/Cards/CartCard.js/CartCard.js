@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import Loading from '../../Loading'
-import { ProductPrice, ProductPriceVertical } from '../../ProductPrice'
+import { ProductPriceVertical } from '../../ProductPrice'
 import {
   useAddCartItem,
   useDeleteCartItem,
@@ -46,6 +46,10 @@ const Container = styled.article`
   }
 
   .image-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: auto;
   }
 
   .title {
@@ -185,8 +189,10 @@ export function CartCard({
             <Image
               src={image.url}
               alt={image.alternativeText}
-              width={30}
-              height={50}
+              width={image.width}
+              height={image.height}
+              objectFit="contain"
+              layout="fill"
             />
           </div>
           <div className="info-body">
