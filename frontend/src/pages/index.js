@@ -72,7 +72,7 @@ function Home() {
         <section className="container">
           <h1 className="section-title">Lo mas vendido</h1>
           <PhoneCardsContainer>
-            <PhoneCards queryData={bestSellers} placeHolderCards={5} />
+            <PhoneCards queryData={bestSellers} placeHoldersCards={5} />
           </PhoneCardsContainer>
         </section>
 
@@ -84,7 +84,7 @@ function Home() {
         <section className="container">
           <h1 className="section-title">Ofertas</h1>
           <PhoneCardsContainer>
-            <PhoneCards queryData={offerProducts} placeHolderCards={5} />
+            <PhoneCards queryData={offerProducts} placeHoldersCards={5} />
           </PhoneCardsContainer>
         </section>
       </Container>
