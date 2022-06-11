@@ -1,30 +1,30 @@
 import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 
 const ProtectedRoute = (getServerSideProps) => async (context) => {
-  if (!getServerSideProps) {
-    // eslint-disable-next-line no-param-reassign
-    getServerSideProps = () => ({
-      /* 
+	if (!getServerSideProps) {
+		// eslint-disable-next-line no-param-reassign
+		getServerSideProps = () => ({
+			/* 
         It must return props even if they are empty, 
         if not nextjs gives an error 
       */
-      props: {}
-    })
-  }
+			props: {}
+		})
+	}
 
-  const { isAuthenticated } = userIsAuthenticated(context)
+	const { isAuthenticated } = userIsAuthenticated(context)
 
-  // can not access
-  if (!isAuthenticated) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
-      }
-    }
-  }
+	// can not access
+	if (!isAuthenticated) {
+		return {
+			redirect: {
+				destination: '/',
+				permanent: false
+			}
+		}
+	}
 
-  return getServerSideProps(context)
+	return getServerSideProps(context)
 }
 
 export { ProtectedRoute }

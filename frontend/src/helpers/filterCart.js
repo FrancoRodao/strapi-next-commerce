@@ -18,58 +18,55 @@ import { CartAPI } from '../api/cart'
  */
 
 export async function filterCart(
-  cart,
-  options = {
-    unpublishedProducts: true,
-    productsOutOfStock: true,
-    checkAndUpdateCartItemsStock: true
-  },
-  accessToken
+	cart,
+	options = {
+		unpublishedProducts: true,
+		productsOutOfStock: true,
+		checkAndUpdateCartItemsStock: true
+	},
+	accessToken
 ) {
-  const validatedCart = []
-  const cartItemsQuantityUpdatesPromises = []
+	const validatedCart = []
+	const cartItemsQuantityUpdatesPromises = []
 
-  cart.forEach((cartItem) => {
-    if (options.productsOutOfStock && cartItem.producto.cantidad <= 0) {
-      return
-    }
+	cart.forEach((cartItem) => {
+		if (options.productsOutOfStock && cartItem.producto.cantidad <= 0) {
+			return
+		}
 
-    if (
-      options.unpublishedProducts &&
-      cartItem.producto.published_at === null
-    ) {
-      return
-    }
+		if (options.unpublishedProducts && cartItem.producto.published_at === null) {
+			return
+		}
 
-    if (
-      options.checkAndUpdateCartItemsStock &&
-      cartItem.cantidad > cartItem.producto.cantidad
-    ) {
-      /* 
+		if (
+			options.checkAndUpdateCartItemsStock &&
+			cartItem.cantidad > cartItem.producto.cantidad
+		) {
+			/* 
         if there is not enough stock, the maximum possible quantity
         is assigned
       */
-      cartItemsQuantityUpdatesPromises.push(
-        CartAPI.setCartItemQuantity(
-          cartItem.id,
-          cartItem.producto.cantidad,
-          accessToken
-        )
-      )
+			cartItemsQuantityUpdatesPromises.push(
+				CartAPI.setCartItemQuantity(
+					cartItem.id,
+					cartItem.producto.cantidad,
+					accessToken
+				)
+			)
 
-      validatedCart.push({
-        ...cartItem,
-        cantidad: cartItem.producto.cantidad
-      })
-      return
-    }
+			validatedCart.push({
+				...cartItem,
+				cantidad: cartItem.producto.cantidad
+			})
+			return
+		}
 
-    validatedCart.push(cartItem)
-  })
+		validatedCart.push(cartItem)
+	})
 
-  if (cartItemsQuantityUpdatesPromises.length > 0) {
-    await Promise.all(cartItemsQuantityUpdatesPromises)
-  }
+	if (cartItemsQuantityUpdatesPromises.length > 0) {
+		await Promise.all(cartItemsQuantityUpdatesPromises)
+	}
 
-  return validatedCart
+	return validatedCart
 }

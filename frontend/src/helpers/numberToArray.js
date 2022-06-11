@@ -8,4 +8,4 @@
   @return {number[]}  an array with the number of elements
 */
 export const numberToArray = (number = 5) =>
-  Array.from(Array(number + 1).keys()).slice(1)
+	Array.from(Array(number + 1).keys()).slice(1)

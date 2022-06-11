@@ -1,46 +1,52 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint --fix --ext .js src/ && stylelint src/**/*.js",
-    "prettier": "prettier --find-config-path --write --check src/**/*.{js,css}"
-  },
-  "dependencies": {
-    "@paypal/react-paypal-js": "^7.5.0",
-    "axios": "^0.24.0",
-    "babel-plugin-styled-components": "^2.0.2",
-    "js-cookie": "^3.0.1",
-    "marked": "^4.0.12",
-    "next": "^11.1.3",
-    "prop-types": "^15.7.2",
-    "qs": "^6.10.3",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-dropzone": "^12.0.2",
-    "react-hot-toast": "^2.1.1",
-    "react-query": "^3.31.0",
-    "react-slick": "^0.28.1",
-    "sharp": "^0.29.3",
-    "slick-carousel": "^1.8.1",
-    "styled-components": "^5.3.1"
-  },
-  "devDependencies": {
-    "@next/eslint-plugin-next": "^12.0.2",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.26.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "prettier": "^2.4.1",
-    "stylelint": "^13.13.1",
-    "stylelint-config-recommended": "^5.0.0",
-    "stylelint-config-styled-components": "^0.1.1",
-    "stylelint-processor-styled-components": "^1.10.0"
-  }
+	"name": "frontend",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start --port ${PORT-3000}",
+		"prettier": "prettier --ignore-path ../.prettierignore --find-config-path --write --check src/**/*.{js,css}",
+		"stylelint": "stylelint ./src/**/*.js",
+		"eslint": "eslint --fix --ext .js src/",
+		"lint": "npm run eslint && npm run prettier && npm run stylelint"
+	},
+	"dependencies": {
+		"@paypal/react-paypal-js": "^7.5.0",
+		"axios": "^0.24.0",
+		"babel-plugin-styled-components": "^2.0.2",
+		"js-cookie": "^3.0.1",
+		"marked": "^4.0.12",
+		"next": "^11.1.3",
+		"prop-types": "^15.7.2",
+		"qs": "^6.10.3",
+		"react": "17.0.2",
+		"react-dom": "17.0.2",
+		"react-dropzone": "^12.0.2",
+		"react-hot-toast": "^2.1.1",
+		"react-query": "^3.31.0",
+		"react-slick": "^0.28.1",
+		"sharp": "^0.30.6",
+		"slick-carousel": "^1.8.1",
+		"styled-components": "^5.3.1"
+	},
+	"devDependencies": {
+		"@next/eslint-plugin-next": "^12.0.2",
+		"eslint": "^7.32.0",
+		"eslint-config-airbnb": "^18.2.1",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-import": "^2.25.2",
+		"eslint-plugin-jsx-a11y": "^6.4.1",
+		"eslint-plugin-react": "^7.26.1",
+		"eslint-plugin-react-hooks": "^4.2.0",
+		"prettier": "^2.4.1",
+		"stylelint": "^13.13.1",
+		"stylelint-config-prettier": "^9.0.3",
+		"stylelint-config-recommended": "^5.0.0",
+		"stylelint-config-styled-components": "^0.1.1",
+		"stylelint-processor-styled-components": "^1.10.0"
+	},
+	"engines": {
+		"node": "14.0.0"
+	}
 }

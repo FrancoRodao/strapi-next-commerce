@@ -15,121 +15,121 @@ import { QueryKeys } from '../../constants/queryKeys.constant'
 import { useGetProduct } from '../../hooks/productHook'
 
 const MainContainer = styled.div`
-  padding: 15px 20px;
-  min-height: 70vh;
-  max-width: 1200px;
-  margin: auto;
+	padding: 15px 20px;
+	min-height: 70vh;
+	max-width: 1200px;
+	margin: auto;
 
-  .back {
-    &-container {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+	.back {
+		&-container {
+			display: flex;
+			align-items: center;
+			margin-bottom: 10px;
+		}
 
-    &-btn {
-      border: none;
-      background-color: transparent;
-    }
-  }
+		&-btn {
+			border: none;
+			background-color: transparent;
+		}
+	}
 
-  @media (max-width: 375px) {
-    padding: 15px 0px;
-  }
+	@media (max-width: 375px) {
+		padding: 15px 0px;
+	}
 `
 
 const ProductContainer = styled.div`
-  position: relative;
-  background-color: #fff;
-  padding: 20px;
+	position: relative;
+	background-color: #fff;
+	padding: 20px;
 
-  .product {
-    display: flex;
-    flex-wrap: wrap;
-  }
+	.product {
+		display: flex;
+		flex-wrap: wrap;
+	}
 `
 
 export default function Product({ productId }) {
-  const router = useRouter()
-  const { data, isLoading } = useGetProduct(productId)
+	const router = useRouter()
+	const { data, isLoading } = useGetProduct(productId)
 
-  const [image, setImage] = useState(null)
+	const [image, setImage] = useState(null)
 
-  useEffect(() => {
-    setImage(data?.imagenes[0])
-  }, [data])
+	useEffect(() => {
+		setImage(data?.imagenes[0])
+	}, [data])
 
-  if (!isLoading && !data) {
-    return <div>404 - Este producto no existe :(</div>
-  }
+	if (!isLoading && !data) {
+		return <div>404 - Este producto no existe :(</div>
+	}
 
-  const handleBack = (e) => {
-    e.preventDefault()
-    router.back()
-  }
+	const handleBack = (e) => {
+		e.preventDefault()
+		router.back()
+	}
 
-  return (
-    <>
-      <MainContainer>
-        <>
-          <div className="back-container">
-            <button className="back-btn" type="button" onClick={handleBack}>
-              <ArrowIcon
-                style={{
-                  cursor: 'pointer',
-                  transform: 'rotate(-90deg)',
-                  marginTop: '4px'
-                }}
-              />
-            </button>
-          </div>
+	return (
+		<>
+			<MainContainer>
+				<>
+					<div className='back-container'>
+						<button className='back-btn' type='button' onClick={handleBack}>
+							<ArrowIcon
+								style={{
+									cursor: 'pointer',
+									transform: 'rotate(-90deg)',
+									marginTop: '4px'
+								}}
+							/>
+						</button>
+					</div>
 
-          {data && image ? (
-            <>
-              <ProductContainer>
-                <ProductGallery images={data.imagenes} setImage={setImage} />
+					{data && image ? (
+						<>
+							<ProductContainer>
+								<ProductGallery images={data.imagenes} setImage={setImage} />
 
-                <article className="product">
-                  <ProductImage image={image} />
+								<article className='product'>
+									<ProductImage image={image} />
 
-                  <ProductInfo
-                    id={data.id}
-                    title={data.titulo}
-                    price={data.precio}
-                    offerPrice={data.precio_oferta}
-                    quantity={data.cantidad}
-                    sold={data.vendidos}
-                  />
+									<ProductInfo
+										id={data.id}
+										title={data.titulo}
+										price={data.precio}
+										offerPrice={data.precio_oferta}
+										quantity={data.cantidad}
+										sold={data.vendidos}
+									/>
 
-                  <ProductFeatures
-                    features={data.caracteristicas}
-                    optionalFeatures={data.caracteristicas_adicionales}
-                  />
+									<ProductFeatures
+										features={data.caracteristicas}
+										optionalFeatures={data.caracteristicas_adicionales}
+									/>
 
-                  <ProductDescription description={data.descripcion} />
-                </article>
-              </ProductContainer>
-            </>
-          ) : (
-            <Loading />
-          )}
-        </>
-      </MainContainer>
-    </>
-  )
+									<ProductDescription description={data.descripcion} />
+								</article>
+							</ProductContainer>
+						</>
+					) : (
+						<Loading />
+					)}
+				</>
+			</MainContainer>
+		</>
+	)
 }
 
 export async function getServerSideProps({ params }) {
-  const { productId } = params
-  const queryClient = new QueryClient()
-  await queryClient.prefetchQuery([QueryKeys.GET_PRODUCT, productId], () =>
-    ProductsAPI.getProduct(productId)
-  )
+	const { productId } = params
+	const queryClient = new QueryClient()
+	await queryClient.prefetchQuery([QueryKeys.GET_PRODUCT, productId], () =>
+		ProductsAPI.getProduct(productId)
+	)
 
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-      productId
-    }
-  }
+	return {
+		props: {
+			dehydratedState: dehydrate(queryClient),
+			productId
+		}
+	}
 }

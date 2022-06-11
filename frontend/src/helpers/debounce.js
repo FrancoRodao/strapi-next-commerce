@@ -1,10 +1,10 @@
 export function debounce(callback, wait) {
-  let timerId
+	let timerId
 
-  return () => {
-    clearTimeout(timerId)
-    timerId = setTimeout(() => {
-      callback()
-    }, wait)
-  }
+	return () => {
+		clearTimeout(timerId)
+		timerId = setTimeout(() => {
+			callback()
+		}, wait)
+	}
 }

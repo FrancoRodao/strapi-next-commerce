@@ -5,44 +5,44 @@ import { OrdersAPI } from '../api/orders'
 import { QueryKeys } from '../constants/queryKeys.constant'
 
 export function useCreatePaypalStrapiOrder(
-  options = {
-    onSuccess: (response) => {}
-  }
+	options = {
+		onSuccess: (response) => {}
+	}
 ) {
-  const { mutate, ...rest } = useMutation(OrdersAPI.createPaypalStrapiOrder, {
-    onSuccess: (response) => {
-      if (options.onSuccess) {
-        options.onSuccess(response)
-      }
-    }
-  })
+	const { mutate, ...rest } = useMutation(OrdersAPI.createPaypalStrapiOrder, {
+		onSuccess: (response) => {
+			if (options.onSuccess) {
+				options.onSuccess(response)
+			}
+		}
+	})
 
-  return {
-    createPaypalStrapiOrder: mutate,
-    ...rest
-  }
+	return {
+		createPaypalStrapiOrder: mutate,
+		...rest
+	}
 }
 
 export function useGetUserOrder(orderId) {
-  const router = useRouter()
+	const router = useRouter()
 
-  return useQuery(
-    [QueryKeys.GET_USER_ORDER, orderId],
-    () => OrdersAPI.getUserOrder(orderId),
-    {
-      onError: (e) => {
-        if (e.response?.status === 404) {
-          toast.error('No se encontró el pedido')
-          router.push('/profile')
-        }
-      },
-      staleTime: Infinity
-    }
-  )
+	return useQuery(
+		[QueryKeys.GET_USER_ORDER, orderId],
+		() => OrdersAPI.getUserOrder(orderId),
+		{
+			onError: (e) => {
+				if (e.response?.status === 404) {
+					toast.error('No se encontró el pedido')
+					router.push('/profile')
+				}
+			},
+			staleTime: Infinity
+		}
+	)
 }
 
 export function useGetUserOrders() {
-  return useQuery(QueryKeys.GET_USER_ORDERS, () => OrdersAPI.getUserOrders(), {
-    staleTime: 6000 * 5 // 5 minutes
-  })
+	return useQuery(QueryKeys.GET_USER_ORDERS, () => OrdersAPI.getUserOrders(), {
+		staleTime: 6000 * 5 // 5 minutes
+	})
 }

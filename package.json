@@ -1,15 +1,20 @@
 {
-  "name": "strapi-next-commerce",
-  "version": "0.0.1",
-  "description": "",
-  "scripts": {
-    "backend:dev": "cd ./backend && npm run dev",
-    "frontend:dev": "cd ./frontend && npm run dev",
-    "prettier": "prettier --find-config-path --write --check frontend/src/**/*.{js,css} && prettier --find-config-path --write --check backend/**/*.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "prettier": "^2.4.1"
-  }
+	"name": "strapi-next-commerce",
+	"version": "0.0.1",
+	"description": "",
+	"scripts": {
+		"backend:dev": "cd ./backend && npm run dev",
+		"backend:start": "cd ./backend && npm run start",
+		"backend:build": "cd ./backend && npm run build",
+		"frontend:dev": "cd ./frontend && npm run dev",
+		"frontend:start": "cd ./frontend && npm run start",
+		"frontend:build": "cd ./frontend && npm run build",
+		"lint": "cd ./frontend && npm run lint && cd ../backend && npm run lint",
+		"prettier": "prettier --find-config-path --write --check frontend/src/**/*.{js,css} && prettier --find-config-path --write --check backend/**/*.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"prettier": "^2.4.1"
+	}
 }

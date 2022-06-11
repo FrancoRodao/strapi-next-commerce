@@ -5,78 +5,76 @@ import { types } from './types'
 const ModalContext = createContext()
 
 const initialState = {
-  opened: false,
-  title: '',
-  content: null
+	opened: false,
+	title: '',
+	content: null
 }
 
 // eslint-disable-next-line consistent-return
 export const modalStateReducer = (state, action) => {
-  switch (action.type) {
-    case types.init: {
-      return initialState
-    }
+	switch (action.type) {
+		case types.init: {
+			return initialState
+		}
 
-    case types.TOGGLE_MODAL: {
-      return {
-        ...state,
-        opened: !state.opened
-      }
-    }
+		case types.TOGGLE_MODAL: {
+			return {
+				...state,
+				opened: !state.opened
+			}
+		}
 
-    case types.CHANGE_MODAL_INFO: {
-      return {
-        ...state,
-        title: action.title || state.title,
-        content: action.content || state.content
-      }
-    }
+		case types.CHANGE_MODAL_INFO: {
+			return {
+				...state,
+				title: action.title || state.title,
+				content: action.content || state.content
+			}
+		}
 
-    default: {
-      if (!isProduction()) {
-        throw new Error(`Unhandled action type: ${action.type}`)
-      }
-    }
-  }
+		default: {
+			if (!isProduction()) {
+				throw new Error(`Unhandled action type: ${action.type}`)
+			}
+		}
+	}
 }
 
 export function ModalContextProvider({ children }) {
-  const [state, dispatch] = useReducer(modalStateReducer, initialState)
+	const [state, dispatch] = useReducer(modalStateReducer, initialState)
 
-  /*
+	/*
     Memorize the states to prevent unnecessary re-renders.
   */
-  const value = useMemo(
-    () => ({
-      state,
-      dispatch
-    }),
-    [state, dispatch]
-  )
+	const value = useMemo(
+		() => ({
+			state,
+			dispatch
+		}),
+		[state, dispatch]
+	)
 
-  return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
+	return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
 }
 
 export const useModalContext = () => {
-  const context = useContext(ModalContext)
+	const context = useContext(ModalContext)
 
-  if (context === undefined) {
-    throw new Error(
-      'useModalContext must be used within a ModalContextProvider'
-    )
-  }
+	if (context === undefined) {
+		throw new Error('useModalContext must be used within a ModalContextProvider')
+	}
 
-  const { state, dispatch } = context
+	const { state, dispatch } = context
 
-  return {
-    ...context,
-    toggleModal: () => dispatch({ type: types.TOGGLE_MODAL }),
-    modalInfo: {
-      title: state.title,
-      content: state.content
-    },
-    setModalInfo: ({ title, content }) => {
-      dispatch({ type: types.CHANGE_MODAL_INFO, title, content })
-    }
-  }
+	return {
+		...context,
+		toggleModal: () => dispatch({ type: types.TOGGLE_MODAL }),
+		modalInfo: {
+			title: state.title,
+			content: state.content
+		},
+		setModalInfo: ({ title, content }) => {
+			dispatch({ type: types.CHANGE_MODAL_INFO, title, content })
+		}
+	}
 }

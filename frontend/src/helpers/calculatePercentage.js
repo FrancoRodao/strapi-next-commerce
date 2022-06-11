@@ -10,4 +10,4 @@
  */
 
 export const calculatePercentage = (price, offerPrice) =>
-  Math.round((offerPrice * 100) / price) - 100
+	Math.round((offerPrice * 100) / price) - 100

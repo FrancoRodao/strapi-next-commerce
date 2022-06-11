@@ -8,10 +8,10 @@ import App from 'next/app'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
 import {
-  dehydrate,
-  Hydrate,
-  QueryClient,
-  QueryClientProvider
+	dehydrate,
+	Hydrate,
+	QueryClient,
+	QueryClientProvider
 } from 'react-query'
 import { useState } from 'react'
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -24,62 +24,62 @@ import { QueryKeys } from '../constants/queryKeys.constant'
 import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: process.env.NODE_ENV === 'production',
-      retry: 3
-    },
-    mutations: {
-      retry: 3
-    }
-  }
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: process.env.NODE_ENV === 'production',
+			retry: 3
+		},
+		mutations: {
+			retry: 3
+		}
+	}
 })
 
 function MyApp({ Component, pageProps }) {
-  const [queryClientState] = useState(() => queryClient)
+	const [queryClientState] = useState(() => queryClient)
 
-  return (
-    <QueryClientProvider client={queryClientState}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <ThemeProvider theme={styledComponentsTheme}>
-          <div id="app-modal" />
-          <Toaster position="top-right" />
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ThemeProvider>
-      </Hydrate>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  )
+	return (
+		<QueryClientProvider client={queryClientState}>
+			<Hydrate state={pageProps.dehydratedState}>
+				<ThemeProvider theme={styledComponentsTheme}>
+					<div id='app-modal' />
+					<Toaster position='top-right' />
+					<Layout>
+						<Component {...pageProps} />
+					</Layout>
+				</ThemeProvider>
+			</Hydrate>
+			<ReactQueryDevtools initialIsOpen={false} />
+		</QueryClientProvider>
+	)
 }
 
 MyApp.getInitialProps = async (appContext) => {
-  const appProps = await App.getInitialProps(appContext)
+	const appProps = await App.getInitialProps(appContext)
 
-  const queryClientInstance = new QueryClient()
-  const { isAuthenticated, accessToken } = userIsAuthenticated(appContext)
+	const queryClientInstance = new QueryClient()
+	const { isAuthenticated, accessToken } = userIsAuthenticated(appContext)
 
-  if (isAuthenticated) {
-    queryClientInstance.prefetchQuery(
-      QueryKeys.GET_ME,
-      () => AuthAPI.getMe(accessToken),
-      {
-        staleTime: 6000 * 5 // 5 minutes
-      }
-    )
-  }
+	if (isAuthenticated) {
+		queryClientInstance.prefetchQuery(
+			QueryKeys.GET_ME,
+			() => AuthAPI.getMe(accessToken),
+			{
+				staleTime: 6000 * 5 // 5 minutes
+			}
+		)
+	}
 
-  return {
-    ...appProps,
-    dehydratedState: dehydrate(queryClientInstance)
-  }
+	return {
+		...appProps,
+		dehydratedState: dehydrate(queryClientInstance)
+	}
 }
 
 export default MyApp
 
 MyApp.propTypes = {
-  Component: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  pageProps: PropTypes.object.isRequired
+	Component: PropTypes.func.isRequired,
+	// eslint-disable-next-line react/forbid-prop-types
+	pageProps: PropTypes.object.isRequired
 }

@@ -1,11 +1,11 @@
 export function axiosConfigWithToken(accessToken) {
-  if (accessToken) {
-    return {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    }
-  }
+	if (accessToken) {
+		return {
+			headers: {
+				Authorization: `Bearer ${accessToken}`
+			}
+		}
+	}
 
-  return null
+	return null
 }
