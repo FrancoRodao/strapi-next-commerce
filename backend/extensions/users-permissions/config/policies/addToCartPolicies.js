@@ -14,14 +14,7 @@ module.exports = async (ctx, next) => {
       presence: 'required'
     })
 
-  if (schema.error) {
-    ctx.response.status = 400
-    ctx.response.body = {
-      statusCode: 400,
-      msg: schema.error.message
-    }
-    return
-  }
+  if (schema.error) ctx.throw(400, schema.error.message)
 
   //TODO: KEEP IT SIMPLE STUPID - ONE ONLY PRODUCT
   const newItems = cartItems.map((cartItem) => ({
@@ -37,11 +30,7 @@ module.exports = async (ctx, next) => {
     .count({ id: newItemsProductsIds })
 
   if (countExistsItemsCart !== newItemsProductsIds.length) {
-    ctx.response.status = 400
-    ctx.response.body = {
-      statusCode: 400,
-      msg: "Error: Some product doesn't exists"
-    }
+    ctx.throw(400, "Error: Some product doesn't exists")
     return
   }
 

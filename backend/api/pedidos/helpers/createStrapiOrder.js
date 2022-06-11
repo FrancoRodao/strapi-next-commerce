@@ -83,7 +83,7 @@ module.exports = {
         resolve(createdOrder)
       } catch (error) {
         reject({
-          strapiOrderError: 'unexpected error when creating the order in strapi'
+          strapiOrderError: 'unexpected error when creating the order'
         })
       }
     })

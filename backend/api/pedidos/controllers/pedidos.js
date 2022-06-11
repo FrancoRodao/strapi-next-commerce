@@ -14,14 +14,7 @@ module.exports = {
       const userId = ctx.state.user.id
       const { orderId } = ctx.query
 
-      if (!orderId) {
-        ctx.response.status = 400
-        ctx.response.body = {
-          statusCode: 400,
-          msg: 'Invalid order id'
-        }
-        return
-      }
+      if (!orderId) ctx.throw(400, 'Invalid order id')
 
       const { payer, purchase_units } = await getPaypalOrderDetails(orderId)
 
@@ -50,6 +43,7 @@ module.exports = {
         strapiOrderId: strapiOrder.id
       }
     } catch (e) {
+      // createPaypalStrapiOrder function generates this error
       if (e.strapiOrderError) {
         ctx.response.status = 500
         ctx.response.body = {
@@ -60,6 +54,7 @@ module.exports = {
       }
 
       // no optional chaining :(
+      //( I didn't find a way to add babel to strapi without breaking it )
       if (
         e.response &&
         e.response.data &&
@@ -73,11 +68,7 @@ module.exports = {
         return
       }
 
-      ctx.response.status = 500
-      ctx.body = {
-        statusCode: 500,
-        msg: 'Unexpected error'
-      }
+      throw e // send error to strapi error handler
     }
   },
 
@@ -91,14 +82,7 @@ module.exports = {
       user: userId
     })
 
-    if (!order) {
-      ctx.response.status = 404
-      ctx.body = {
-        statusCode: 404,
-        msg: 'Order not found'
-      }
-      return
-    }
+    if (!order) ctx.throw(404, 'Order not found')
 
     ctx.response.status = 200
     ctx.body = {

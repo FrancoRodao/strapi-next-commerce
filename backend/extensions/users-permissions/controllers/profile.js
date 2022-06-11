@@ -3,53 +3,33 @@ const cloudinary = require('cloudinary').v2
 
 module.exports = {
   async updateProfileImage(ctx) {
-    try {
-      const user = ctx.state.user
+    const user = ctx.state.user
 
-      const parseMultipart = parseMultipartData(ctx)
-      const image = parseMultipart.files.image
+    const parseMultipart = parseMultipartData(ctx)
+    const image = parseMultipart.files.image
 
-      if (!image.type.includes('image/')) {
-        ctx.response.status = 400
-        ctx.response.body = {
-          statusCode: 400,
-          msg: 'The file must be an image'
-        }
-        return
-      }
+    if (!image.type.includes('image/'))
+      ctx.throw(400, 'The file must be an image')
 
-      // 5 mb
-      if (image.size > 5000000) {
-        ctx.response.status = 400
-        ctx.response.body = {
-          statusCode: 400,
-          msg: 'The image must weigh 5 mb at most'
-        }
-        return
-      }
+    // 5 mb
+    if (image.size > 5000000)
+      ctx.throw(400, 'The image must weigh 5 mb at most')
 
-      // update image to cloudinary
-      const updatedImage = await cloudinary.uploader.upload(image.path, {
-        public_id: `PROFILE-IMAGE-${user.id}`,
-        overwrite: true
-      })
+    // update image to cloudinary
+    const updatedImage = await cloudinary.uploader.upload(image.path, {
+      public_id: `PROFILE-IMAGE-${user.id}`,
+      overwrite: true
+    })
 
-      // update user profile image in strapi
-      await strapi
-        .query('user', 'users-permissions')
-        .update({ id: user.id }, { profileImageUrl: updatedImage.secure_url })
+    // update user profile image in strapi
+    await strapi
+      .query('user', 'users-permissions')
+      .update({ id: user.id }, { profileImageUrl: updatedImage.secure_url })
 
-      ctx.response.status = 201
-      ctx.response.body = {
-        statusCode: 201,
-        profileImageUrl: updatedImage.secure_url
-      }
-    } catch (error) {
-      ctx.response.status = 500
-      ctx.response.body = {
-        statusCode: 500,
-        msg: 'Unexpected error'
-      }
+    ctx.response.status = 201
+    ctx.response.body = {
+      statusCode: 201,
+      profileImageUrl: updatedImage.secure_url
     }
   },
 
@@ -58,14 +38,7 @@ module.exports = {
       const user = ctx.state.user
       const newEmail = ctx.request.body.email
 
-      if (!newEmail) {
-        ctx.status = 400
-        ctx.body = {
-          statusCode: 400,
-          msg: 'El email no es valido'
-        }
-        return
-      }
+      if (!newEmail) ctx.throw(400, 'El email no es valido')
 
       await strapi
         .query('user', 'users-permissions')
@@ -86,11 +59,7 @@ module.exports = {
         return
       }
 
-      ctx.status = 500
-      ctx.body = {
-        statusCode: 500,
-        msg: 'Unexpected error'
-      }
+      throw e // send error to strapi error handler
     }
   },
 
@@ -99,14 +68,7 @@ module.exports = {
       const user = ctx.state.user
       const newUsername = ctx.request.body.username
 
-      if (!newUsername) {
-        ctx.status = 400
-        ctx.body = {
-          statusCode: 400,
-          msg: 'El nombre de usuario no es valido'
-        }
-        return
-      }
+      if (!newUsername) ctx.throw(400, 'El nombre de usuario no es valido')
 
       await strapi
         .query('user', 'users-permissions')
@@ -127,46 +89,27 @@ module.exports = {
         return
       }
 
-      ctx.status = 500
-      ctx.body = {
-        statusCode: 500,
-        msg: 'Unexpected error'
-      }
+      throw error // send error to strapi error handler
     }
   },
 
   async changeUserPassword(ctx) {
-    try {
-      const user = ctx.state.user
-      const newPassword = ctx.request.body.password
+    const user = ctx.state.user
+    const newPassword = ctx.request.body.password
 
-      if (!newPassword) {
-        ctx.status = 400
-        ctx.body = {
-          statusCode: 400,
-          msg: 'The password is not valid'
-        }
-        return
-      }
+    if (!newPassword) ctx.throw(400, 'The password is not valid')
 
-      const hashedPassword = await strapi.plugins[
-        'users-permissions'
-      ].services.user.hashPassword({ password: newPassword })
+    const hashedPassword = await strapi.plugins[
+      'users-permissions'
+    ].services.user.hashPassword({ password: newPassword })
 
-      await strapi
-        .query('user', 'users-permissions')
-        .update({ id: user.id }, { password: hashedPassword })
+    await strapi
+      .query('user', 'users-permissions')
+      .update({ id: user.id }, { password: hashedPassword })
 
-      ctx.status = 200
-      ctx.body = {
-        statusCode: 200
-      }
-    } catch (error) {
-      ctx.status = 500
-      ctx.body = {
-        statusCode: 500,
-        msg: 'Unexpected error'
-      }
+    ctx.status = 200
+    ctx.body = {
+      statusCode: 200
     }
   }
 }

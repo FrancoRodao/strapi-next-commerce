@@ -53,7 +53,7 @@
       "path": "/orders/paypal/create",
       "handler": "pedidos.createPaypalStrapiOrder",
       "config": {
-        "policies": []
+        "policies": ["plugins::users-permissions.isAuthenticated"]
       }
     }
   ]
