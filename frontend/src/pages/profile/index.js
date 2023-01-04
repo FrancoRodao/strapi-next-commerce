@@ -314,7 +314,7 @@ function Profile() {
 			<div className='history'>
 				<h1 className='history__title'>Historial de compras</h1>
 				<div className='history__orders'>
-					{ordersData.length > 0 ? (
+					{ordersData?.length > 0 ? (
 						ordersData?.map((order) => (
 							<OrderCard
 								key={order.id}

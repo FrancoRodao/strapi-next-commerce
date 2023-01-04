@@ -26,7 +26,9 @@ import { userIsAuthenticated } from '../helpers/userIsAuthenticated'
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			refetchOnWindowFocus: process.env.NODE_ENV === 'production',
+			// TODO: FIX IT IN PRODUCTION GOES
+			// refetchOnWindowFocus: process.env.NODE_ENV === 'production',
+			refetchOnWindowFocus: false,
 			retry: 3
 		},
 		mutations: {
