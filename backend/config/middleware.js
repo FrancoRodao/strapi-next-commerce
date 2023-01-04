@@ -6,7 +6,8 @@ module.exports = {
 				'http://localhost:1337',
 				// PRODUCTION SERVERS
 				'https://strapi-next-commerce-frontend.up.railway.app',
-				'https://strapi-next-ecommerce-backend.up.railway.app'
+				'https://strapi-next-ecommerce-backend.up.railway.app',
+				'https://strapi-next-commerce.vercel.app'
 			]
 		},
 		parser: {
