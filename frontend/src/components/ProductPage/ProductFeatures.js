@@ -29,6 +29,7 @@ const Section = styled.section`
 		&-item {
 			padding: 15px 24px 15px 16px;
 			width: 50%;
+			text-align: center;
 		}
 
 		&-value {
