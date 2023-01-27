@@ -6,7 +6,9 @@ module.exports = {
   images: {
     domains: [
       'res.cloudinary.com',
-      'https://strapi-next-ecommerce-backend.up.railway.app'
+      // PRODUCTION BACKENDS ORIGINS
+      'https://strapi-next-ecommerce-backend.up.railway.app',
+      'https://strapi-next-commerce.onrender.com'
     ]
   }
 }
