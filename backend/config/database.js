@@ -13,7 +13,10 @@ module.exports = ({ env }) => ({
 				filename: env('DATABASE_FILENAME')
 			},
 			options: {
-				useNullAsDefault: true
+				useNullAsDefault: true,
+				pool: {
+					max: 5
+				}
 			}
 		}
 	}
