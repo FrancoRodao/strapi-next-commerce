@@ -15,7 +15,7 @@ module.exports = ({ env }) => ({
 			options: {
 				useNullAsDefault: true,
 				pool: {
-					max: 5
+					max: 5 // elepanthsql limitations
 				}
 			}
 		}

@@ -7,7 +7,8 @@ module.exports = {
 				// PRODUCTION SERVERS
 				'https://strapi-next-commerce-frontend.up.railway.app',
 				'https://strapi-next-ecommerce-backend.up.railway.app',
-				'https://strapi-next-commerce.vercel.app'
+				'https://strapi-next-commerce.vercel.app',
+				"https://strapi-next-commerce.onrender.com"
 			]
 		},
 		parser: {

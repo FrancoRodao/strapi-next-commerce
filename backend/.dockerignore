@@ -1,7 +1,0 @@
-.cache
-
-public/uploads
-
-node_modules
-
-.env.example
